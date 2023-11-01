@@ -17,14 +17,12 @@ public class UserResponse{
     private String name;
     private String phoneNum;
 
-//    public static UserResponse userResponse(User user){
-
-        public static UserResponse userResponse(){
+        public static UserResponse getUserResponse(User user){
             return UserResponse.builder()
-                .loginId()
-                .password()
-                .name()
-                .phoneNum()
+                .loginId(user.getLoginId())
+                .password(user.getPassword())
+                .name(user.getName())
+                .phoneNum(user.getPhoneNum())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.project.shop.user.service;
 
+import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.LoginRequest;
 import com.project.shop.user.dto.MyInfoEditRequest;
 import com.project.shop.user.dto.SignupRequest;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-//    private final UserRepository userRepository;
-
+    private final User user;
 
     //회원가입
     public void signup(SignupRequest signupRequest){
@@ -22,7 +22,8 @@ public class AuthService {
 
     //회원정보 조회
     public UserResponse myInfo(){
-        UserResponse userResponse = UserResponse.userResponse();
+        //user부분 수정
+        UserResponse userResponse = UserResponse.getUserResponse(user);
         return userResponse;
     }
     //로그인

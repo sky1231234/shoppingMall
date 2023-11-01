@@ -19,14 +19,14 @@ public class AuthController {
     //회원가입
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@RequestBody SignupRequest signupRequest){
-        authService.signup(signupRequest);
+    public void signup(@RequestBody SignupRequest signup){
+        authService.signup(signup);
     }
 
     //회원정보 조회
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse myInfo(){
+    public UserResponse myInfo(  ){
         return authService.myInfo();
     }
 
