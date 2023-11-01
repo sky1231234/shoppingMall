@@ -1,4 +1,4 @@
-# shop
+# shoppingMall
 
 ## 기능리스트 
 ### 인증
@@ -29,9 +29,20 @@
 - 장바구니 등록
 - 장바구니 수정
 - 장바구니 삭제
+- 
 ### 주문
 - 주문 등록
 - 주문내역 조회
 - 주문 조회 (상세)
 - 부분취소 등록
 - 취소 등록
+
+## Spring Security
+![image](https://github.com/sky1231234/shoppingMall/assets/101312284/3b5d93e4-eb36-4816-a2a2-ded531b0c08f)
+
+
+## ERD
+![image](https://github.com/sky1231234/shoppingMall/assets/101312284/a650ca41-e4f8-4107-ba64-b926834a691b)
+
+## 시퀀스 다이어그램
+각 기능이 어떠한 순서로 움직이는지 표현하기 위함.

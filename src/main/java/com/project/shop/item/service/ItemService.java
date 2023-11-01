@@ -1,16 +1,15 @@
-package com.project.shop.user.service;
+package com.project.shop.item.service;
 
 import com.project.shop.user.dto.LoginRequest;
 import com.project.shop.user.dto.MyInfoEditRequest;
 import com.project.shop.user.dto.SignupRequest;
 import com.project.shop.user.dto.UserResponse;
-import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class ItemService {
 
 //    private final UserRepository userRepository;
 
