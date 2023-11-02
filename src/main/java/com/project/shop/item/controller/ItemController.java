@@ -1,10 +1,10 @@
 package com.project.shop.item.controller;
 
 
-import com.project.shop.item.dto.ItemResponse;
+import com.project.shop.item.dto.request.ItemEditRequest;
+import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.response.ItemResponse;
 import com.project.shop.item.service.ItemService;
-import com.project.shop.user.dto.MyInfoEditRequest;
-import com.project.shop.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -17,29 +17,39 @@ import org.springframework.web.bind.annotation.*;
 public class ItemController {
 
     private final ItemService itemService;
+
     //상품 전체 조회
-    @GetMapping("/items")
+    @GetMapping("/item")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse myInfo(  ){
-        return itemService.myInfo();
+    public ItemResponse allItem(){
+        return itemService.itemAllList();
     }
     //상품 상세 조회
-    @GetMapping("/items")
+    @GetMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse myInfo(  ){
-        return itemService.myInfo();
+    public ItemResponse detailItem(@RequestBody int itemId){
+        return itemService.itemDetailList(itemId);
     }
 
     //상품 등록
+    @PostMapping("/item/enroll")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void itemEnroll(@RequestBody ItemRequest itemRequest){
+        itemService.itemEnroll(itemRequest);
+    }
 
     //상품 수정
-    @PutMapping("/{id}/edit")
+    @PutMapping("/item/{itemId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void myInfoEdit(@RequestBody MyInfoEditRequest myInfoEditRequest){
-        authService.edit(myInfoEditRequest);
+    public void itemEdit(@RequestBody ItemEditRequest itemEditRequest){
+        itemService.edit(itemEditRequest);
     }
 
     //상품 삭제
-
+    @DeleteMapping("/item/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void itemDelete(@RequestBody int itemId ){
+        itemService.delete(itemId);
+    }
 
 }

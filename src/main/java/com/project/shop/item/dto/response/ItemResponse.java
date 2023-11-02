@@ -1,7 +1,6 @@
-package com.project.shop.item.dto;
+package com.project.shop.item.dto.response;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.user.domain.User;
 import lombok.*;
 
 import java.util.List;
@@ -15,22 +14,20 @@ public class ItemResponse {
     private String categoryName;
     private String brandName;
     private String itemName;
-    private String itemPrice;
+    private int itemPrice;
     private String itemExplain;
     private List<ItemImgResponse> itemImgList;
-    private String itemSize;
-    private String itemColor;
+    private List<OptionResponse> optionResponseList;
 
         public static ItemResponse getResponse(Item item){
             return ItemResponse.builder()
-                .categoryName()
-                .brandName()
+                .categoryName(item.getCategory().getCategoryName())
+                .brandName(item.getCategory().getBrandName())
                 .itemName(item.getItemName())
                 .itemPrice(item.getPrice())
                 .itemExplain(item.getExplain())
-                .itemImgList(item.getPrice())
-                .itemSize()
-                .itemColor()
+                .itemImgList(ItemImgResponse.getResponse(item))
+                .optionResponseList(OptionResponse.getResponse(item))
                 .build();
     }
 }

@@ -2,6 +2,9 @@ package com.project.shop.item.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "review")
 @Entity
 public class Review {
@@ -20,6 +23,8 @@ public class Review {
     private String content;    //내용
     @Column(name = "star", nullable = false)
     private int star;    //별점
+    @OneToMany(mappedBy = "review")
+    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일

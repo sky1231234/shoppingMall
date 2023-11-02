@@ -1,10 +1,13 @@
 package com.project.shop.item.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Table(name = "option")
 @Entity
+@Getter
 public class Option {
 
     @Id

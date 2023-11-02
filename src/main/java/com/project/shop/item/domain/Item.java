@@ -1,13 +1,19 @@
 package com.project.shop.item.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "item")
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +22,8 @@ public class Item {
     @Column(name = "categoryId", nullable = false)
     private int categoryId;     //카테고리 번호
 
-    @ManyTo
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
     private Category category;
     @Column(name = "itemName", nullable = false)
     private String itemName;    //상품명
@@ -24,6 +31,15 @@ public class Item {
     private int price;    //가격
     @Column(name = "explain")
     private String explain;     //상품 설명
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemImg> itemImgList = new ArrayList<>();
+    @OneToMany(mappedBy = "item")
+    private List<Option> optionList = new ArrayList<>();
+    @OneToMany(mappedBy = "item")
+    private List<Review> reviewList = new ArrayList<>();
+    @OneToMany(mappedBy = "item")
+    private List<ReviewImg> reviewImgList = new ArrayList<>();
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일
