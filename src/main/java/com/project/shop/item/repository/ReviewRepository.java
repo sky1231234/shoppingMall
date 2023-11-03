@@ -12,6 +12,13 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    List<Review> detailReview(int reviewId);
+    //구현부를 모르겠음
 
+    //리뷰 상세 조회
+    Review detailReview(int reviewId);
+
+
+    //상품 - 리뷰 조회
+    //상품 id만 제공하면 되니까 item?
+    Item itemReview(int itemId);
 }

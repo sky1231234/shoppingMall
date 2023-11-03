@@ -6,6 +6,7 @@ import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,14 @@ public class ReviewController {
     //상품 - 리뷰 조회
     @GetMapping("/review/item")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse itemReview(@RequestBody int itemId){
+    public ItemReviewResponse itemReview(@RequestBody int itemId){
         return reviewService.itemReviewList(itemId);
     }
 
     //회원 - 리뷰 조회
     @GetMapping("/review/user")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse userReview(@RequestBody int userId){
+    public ItemReviewResponse userReview(@RequestBody int userId){
         return reviewService.userReviewList(userId);
     }
 

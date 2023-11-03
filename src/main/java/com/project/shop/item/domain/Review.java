@@ -1,5 +1,8 @@
 package com.project.shop.item.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,14 +10,21 @@ import java.util.List;
 
 @Table(name = "review")
 @Entity
+@Getter
+@Setter
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewId")
     private int reviewId;     //리뷰번호
+
     @Column(name = "itemId", nullable = false)
     private int itemId;     //상품 번호
+    @ManyToOne
+    @JoinColumn(name = "itemId")
+    private Item item;
+
     @Column(name = "userId", nullable = false)
     private int userId;     //고객 번호
     @Column(name = "title", nullable = false)
@@ -23,6 +33,7 @@ public class Review {
     private String content;    //내용
     @Column(name = "star", nullable = false)
     private int star;    //별점
+
     @OneToMany(mappedBy = "review")
     private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 

@@ -1,11 +1,13 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
 import com.project.shop.item.dto.request.ItemEditRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,27 +22,26 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     //상품 - 리뷰 조회
-    //ItemResponse 전체가 나와야함
-    public ItemResponse itemReviewList(int itemId){
-        ItemResponse itemResponse = null;
-        return itemResponse;
+    public ItemReviewResponse itemReviewList(int itemId){
+        Item itemID = reviewRepository.itemReview(itemId);
+        ItemReviewResponse itemReviewResponse = null;
+        return itemReviewResponse;
 
     }
 
     //회원 - 리뷰 조회
-    //ItemResponse 전체가 나와야함
-    public ItemResponse userReviewList(int userId){
-        ItemResponse itemResponse = null;
-        return itemResponse;
+    public ItemReviewResponse userReviewList(int userId){
+        ItemReviewResponse itemReviewResponse = null;
+        return itemReviewResponse;
 
     }
 
     //리뷰 상세 조회
     public ReviewResponse reviewDetailList(int reviewId){
-        List<Review> review = reviewRepository.detailReview(reviewId);
-
-//        return new ReviewResponse(review);
-            return review.map(ReviewResponse::new);
+        //리뷰는 하나지만 안에 리뷰 이미지는 list형태로 나오는가?-아마도?
+        Review review = reviewRepository.detailReview(reviewId);
+        ReviewResponse response = ReviewResponse.reviewResponse(review);
+        return response;
     }
 
     //리뷰 등록

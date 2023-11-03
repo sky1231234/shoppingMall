@@ -1,9 +1,12 @@
 package com.project.shop.item.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 @Table(name = "reviewImg")
 @Entity
+@Getter
 public class ReviewImg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
