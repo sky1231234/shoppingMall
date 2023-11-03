@@ -6,6 +6,7 @@ import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,26 +22,24 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //상품 - 리뷰 조회
-    //고쳐야함
     @GetMapping("/review/item")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse itemReview(){
-        return reviewService.itemAllList();
+    public ItemResponse itemReview(@RequestBody int itemId){
+        return reviewService.itemReviewList(itemId);
     }
-    //회원 - 리뷰 조회
-    //고쳐야함
 
+    //회원 - 리뷰 조회
     @GetMapping("/review/user")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse userReview(@RequestBody int itemId){
-        return reviewService.itemDetailList(itemId);
+    public ItemResponse userReview(@RequestBody int userId){
+        return reviewService.userReviewList(userId);
     }
 
     //리뷰 상세 조회
     @GetMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse detailReview(@RequestBody int reviewId){
-        return reviewService.itemDetailList(reviewId);
+    public ReviewResponse detailReview(@RequestBody int reviewId){
+        return reviewService.reviewDetailList(reviewId);
     }
 
     //리뷰 등록

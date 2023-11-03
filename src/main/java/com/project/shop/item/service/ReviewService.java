@@ -1,30 +1,46 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.Review;
 import com.project.shop.item.dto.request.ItemEditRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.ReviewResponse;
+import com.project.shop.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
 
+    private final ReviewRepository reviewRepository;
 
-    //리뷰 전체 조회
+    //상품 - 리뷰 조회
     //ItemResponse 전체가 나와야함
-    public ItemResponse itemAllList(){
+    public ItemResponse itemReviewList(int itemId){
+        ItemResponse itemResponse = null;
+        return itemResponse;
+
+    }
+
+    //회원 - 리뷰 조회
+    //ItemResponse 전체가 나와야함
+    public ItemResponse userReviewList(int userId){
         ItemResponse itemResponse = null;
         return itemResponse;
 
     }
 
     //리뷰 상세 조회
-    public ItemResponse itemDetailList(int itemId){
-        ItemResponse itemResponse = null;
-        return itemResponse;
+    public ReviewResponse reviewDetailList(int reviewId){
+        List<Review> review = reviewRepository.detailReview(reviewId);
+
+//        return new ReviewResponse(review);
+            return review.map(ReviewResponse::new);
     }
 
     //리뷰 등록
