@@ -39,7 +39,7 @@ public class ReviewController {
     //리뷰 상세 조회
     @GetMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewResponse detailReview(@RequestBody int reviewId){
+    public ReviewResponse detailReview(@RequestBody long reviewId){
         return reviewService.reviewDetailList(reviewId);
     }
 

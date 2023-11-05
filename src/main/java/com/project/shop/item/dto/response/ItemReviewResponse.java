@@ -1,10 +1,12 @@
 package com.project.shop.item.dto.response;
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,27 +19,20 @@ public class ItemReviewResponse {
     private String itemName;    //상품명
     private String itemThumbnail;   //상품 대표이미지
 
-    private List<Review> reviewList; //리뷰 리스트
-//    private int userId; //회원id
-//    private String title;   //리뷰 제목
-//    private String content; //리뷰 내용
-//    private String star;    //별점
-//    private LocalDateTime insertDate;   //리뷰 등록일
+    private List<ReviewResponse> reviewList; //리뷰 리스트
 
     //대표 이미지 불러오기
-    public static ItemReviewResponse itemReviewResponse(Review review){
+    public static ItemReviewResponse fromEntity(Item item){
+
+        var list = item.getReviewList()
+                .stream().map(x -> ReviewResponse.fromEntity(x))
+                .collect(Collectors.toList());
+
         return ItemReviewResponse.builder()
-                .categoryName(review.getItem().getCategory().getCategoryName())
-                .brandName(review.getItem().getCategory().getBrandName())
-                .itemName(review.getItem().getItemName())
-                .itemThumbnail(ReviewImgResponse.getMainUrl(review.getItemId()))
-                .reviewList(ReviewResponse.builder()
-                        .userId()
-                        .title()
-                        .content()
-                        .star()
-                        .insertDate()
-                )
+                .categoryName(item.getCategory().getCategoryName())
+                .brandName(item.getCategory().getBrandName())
+                .itemName(item.getItemName())
+                .reviewList(list)
                 .build();
     }
 }

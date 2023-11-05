@@ -12,7 +12,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    //구현부를 모르겠음
 
     //리뷰 상세 조회
     Review detailReview(int reviewId);

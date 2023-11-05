@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "review")
 @Entity
 @Getter
-@Setter
 public class Review {
 
     @Id
@@ -34,7 +33,7 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
     private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
     @Column(name = "insertDate", nullable = false)

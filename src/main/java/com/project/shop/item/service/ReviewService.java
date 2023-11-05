@@ -1,19 +1,13 @@
 package com.project.shop.item.service;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.Review;
-import com.project.shop.item.dto.request.ItemEditRequest;
-import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
-import com.project.shop.item.dto.response.ItemResponse;
 import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +16,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     //상품 - 리뷰 조회
-    public ItemReviewResponse itemReviewList(int itemId){
-        Item itemID = reviewRepository.itemReview(itemId);
-        ItemReviewResponse itemReviewResponse = null;
+    public ItemReviewResponse itemReviewList(long itemId){
+        var itemID = reviewRepository.findById(itemId);
+        ItemReviewResponse itemReviewResponse = itemID.get().;
         return itemReviewResponse;
 
     }
@@ -37,10 +31,11 @@ public class ReviewService {
     }
 
     //리뷰 상세 조회
-    public ReviewResponse reviewDetailList(int reviewId){
-        //리뷰는 하나지만 안에 리뷰 이미지는 list형태로 나오는가?-아마도?
-        Review review = reviewRepository.detailReview(reviewId);
-        ReviewResponse response = ReviewResponse.reviewResponse(review);
+    public ReviewResponse reviewDetailList(Long reviewId){
+
+        var review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new RuntimeException("review"));
+        ReviewResponse response = ReviewResponse.fromEntity(review);
         return response;
     }
 
