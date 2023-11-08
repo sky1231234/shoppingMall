@@ -11,7 +11,7 @@ public class ReviewImg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewImgId")
-    private int reviewImgId;     //리뷰 이미지 번호
+    private long reviewImgId;     //리뷰 이미지 번호
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reviewId")

@@ -18,9 +18,9 @@ public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemId")
-    private int itemId;     //상품번호
+    private long itemId;     //상품번호
     @Column(name = "categoryId", nullable = false)
-    private int categoryId;     //카테고리 번호
+    private long categoryId;     //카테고리 번호
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
@@ -33,7 +33,8 @@ public class Item {
     private String explain;     //상품 설명
 
     @OneToMany(mappedBy = "item")
-    private List<ItemImg> itemImgList = new ArrayList<>();
+    private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
+
     @OneToMany(mappedBy = "item")
     private List<Option> optionList = new ArrayList<>();
     @OneToMany(mappedBy = "item")

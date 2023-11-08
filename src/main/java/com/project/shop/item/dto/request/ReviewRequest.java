@@ -4,9 +4,9 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public record ReviewRequest(
-        @NotBlank int userId,
-        @NotBlank int itemId,
-        @NotBlank int orderId,
+        @NotBlank long userId,
+        @NotBlank long itemId,
+        @NotBlank long orderId,
         @NotBlank String title,
         @NotBlank String content,
         @NotBlank String star,

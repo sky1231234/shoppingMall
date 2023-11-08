@@ -9,9 +9,9 @@ public class Address {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "addrId")
-    private int addrId;     //배송지번호
+    private long addrId;     //배송지번호
     @Column(name = "userId", nullable = false)
-    private int userId;      //고객번호
+    private long userId;      //고객번호
     @Column(name = "name", nullable = false)
     private String name;    //받는분 이름
     @Column(name = "zipcode", nullable = false)

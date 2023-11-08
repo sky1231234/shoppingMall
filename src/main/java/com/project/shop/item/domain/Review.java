@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.user.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +17,20 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewId")
-    private int reviewId;     //리뷰번호
+    private long reviewId;     //리뷰번호
 
     @Column(name = "itemId", nullable = false)
-    private int itemId;     //상품 번호
+    private long itemId;     //상품 번호
     @ManyToOne
     @JoinColumn(name = "itemId")
     private Item item;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
     @Column(name = "userId", nullable = false)
-    private int userId;     //고객 번호
+    private long userId;     //고객 번호
     @Column(name = "title", nullable = false)
     private String title;    //제목
     @Column(name = "content", nullable = false)

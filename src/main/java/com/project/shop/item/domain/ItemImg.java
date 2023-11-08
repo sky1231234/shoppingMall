@@ -1,6 +1,8 @@
 package com.project.shop.item.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,18 +10,24 @@ import java.time.LocalDateTime;
 @Table(name = "itemImg")
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemImgId")
-    private int itemImgId;     //상품 이미지 번호
-    @Column(name = "itemId", nullable = false)
-    private int itemId;     //상품 번호
+    private long itemImgId;     //상품 이미지 번호
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "itemId")
+    private Item item;     //상품 번호
+
     @Column(name = "imgUrl", nullable = false)
     private String imgUrl;     //이미지 경로
     @Column(name = "imgName", nullable = false)
     private String imgName;    //이미지명
+
     @Column(name = "mainImg", nullable = false)
     @Enumerated(EnumType.STRING)
     private  ItemImgType itemImgType;    //대표이미지 여부

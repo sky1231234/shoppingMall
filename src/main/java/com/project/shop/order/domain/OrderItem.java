@@ -9,11 +9,11 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderItemId")
-    private int orderItemId;     //주문상품번호
+    private long orderItemId;     //주문상품번호
     @Column(name = "itemId", nullable = false)
-    private int itemId;     //상품 번호
+    private long itemId;     //상품 번호
     @Column(name = "orderId", nullable = false)
-    private int orderId;     //주문번호
+    private long orderId;     //주문번호
     @Column(name = "totalQuantity", nullable = false)
     private int totalQuantity;     //주문 총 수량
     @Column(name = "totalPrice", nullable = false)

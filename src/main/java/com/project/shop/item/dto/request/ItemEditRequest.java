@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public record ItemEditRequest(
-        @NotBlank int itemId,
+        @NotBlank long itemId,
         @NotBlank String categoryName,
         @NotBlank String brandName,
         @NotBlank String itemName,

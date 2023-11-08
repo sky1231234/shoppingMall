@@ -13,9 +13,9 @@ public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "optionId")
-    private int optionId;     //옵션번호
+    private long optionId;     //옵션번호
     @Column(name = "itemId", nullable = false)
-    private int itemId;     //상품번호
+    private long itemId;     //상품번호
     @Column(name = "color", nullable = false)
     private String color;    //색상
     @Column(name = "size", nullable = false)

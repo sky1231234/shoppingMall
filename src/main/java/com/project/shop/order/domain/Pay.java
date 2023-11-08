@@ -10,9 +10,9 @@ public class Pay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payId")
-    private int payId;     //결제번호
+    private long payId;     //결제번호
     @Column(name = "orderId", nullable = false)
-    private int orderId;     //주문 번호
+    private long orderId;     //주문 번호
     @Column(name = "usedPoint", nullable = false)
     private int usedPoint;     //사용 포인트
     @Column(name = "payCompany", nullable = false)

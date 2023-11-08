@@ -9,9 +9,9 @@ public class Point {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pointId")
-    private int pointId;    //포인트번호
+    private long pointId;    //포인트번호
     @Column(name = "userId", nullable = false)
-    private int userId;      //고객번호
+    private long userId;      //고객번호
     @Column(name = "point", nullable = false)
     private String point;   //포인트
     @Column(name = "deadlineDate", nullable = false)

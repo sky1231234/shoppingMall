@@ -9,9 +9,9 @@ public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
-    private int orderId;     //주문번호
+    private long orderId;     //주문번호
     @Column(name = "userId", nullable = false)
-    private int userId;     //고객 번호
+    private long userId;     //고객 번호
     @Column(name = "deliverFee", nullable = false)
     private int deliverFee;     //배송비
     @Column(name = "price", nullable = false)

@@ -10,11 +10,11 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cartId")
-    private int cartId;     //장바구니 번호
+    private long cartId;     //장바구니 번호
     @Column(name = "itemId", nullable = false)
-    private int itemId;     //상품 번호
+    private long itemId;     //상품 번호
     @Column(name = "userId", nullable = false)
-    private int userId;     //고객 번호
+    private long userId;     //고객 번호
     @Column(name = "quantity", nullable = false)
     private int quantity;    //수량
 
