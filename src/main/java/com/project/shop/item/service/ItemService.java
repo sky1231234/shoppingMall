@@ -28,7 +28,7 @@ public class ItemService {
     //상품 등록
     // item + itmeImg + option
     public void itemEnroll(ItemRequest itemRequest){
-
+        itemRequest
     }
 
     //상품 수정

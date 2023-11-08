@@ -2,6 +2,7 @@ package com.project.shop.item.service;
 
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
+import com.project.shop.item.domain.Review;
 import com.project.shop.item.dto.request.ReviewEditRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.response.ItemReviewResponse;
@@ -26,18 +27,17 @@ public class ReviewService {
         var list = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("itemID가 없습니다."));
 
-        ItemReviewResponse itemReviewResponse = ItemReviewResponse.fromEntity(list);
-        return itemReviewResponse;
+        return ItemReviewResponse.fromEntity(list);
 
     }
 
     //회원 - 리뷰 조회
+    //수정
     public UserReviewResponse userReviewList(long userId){
         var list = userRepository.findById(userId)
                 .orElseThrow(()->new RuntimeException("userId 없습니다."));
 
-        UserReviewResponse userReviewResponse = UserReviewResponse.fromEntity(list);
-        return userReviewResponse;
+        return UserReviewResponse.fromEntity(list);
 
     }
 
@@ -46,12 +46,13 @@ public class ReviewService {
 
         var review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new RuntimeException("reviewID가 없습니다."));
-        ReviewResponse response = ReviewResponse.fromEntity(review);
-        return response;
+
+        return ReviewResponse.fromEntity(review);
     }
 
     //리뷰 등록
     public void reviewEnroll(ReviewRequest reviewRequest){
+        reviewRepository.save(reviewRequest.toEntity());
 
     }
 

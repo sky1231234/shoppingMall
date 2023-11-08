@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class UserReviewResponse {
