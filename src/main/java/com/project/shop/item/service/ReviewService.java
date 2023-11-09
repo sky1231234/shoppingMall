@@ -53,16 +53,15 @@ public class ReviewService {
     //리뷰 등록
     public void reviewEnroll(ReviewRequest reviewRequest){
         reviewRepository.save(reviewRequest.toEntity());
-
     }
 
     //리뷰 수정
     public void edit(ReviewEditRequest reviewEditRequest){
-
+        reviewRepository.save(reviewEditRequest.toEntity());
     }
 
     //리뷰 삭제
     public void delete(long reviewId){
-
+        reviewRepository.deleteById(reviewId);
     }
 }

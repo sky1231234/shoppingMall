@@ -30,7 +30,7 @@ public class ItemReviewResponse {
     public static ItemReviewResponse fromEntity(Item item){
 
         //findByMainUrl 하는 위치 맞나?
-        //썸네일 url 한개여야하는데 받아오는 값이 list임
+        //썸네일 url 한개여야하는데 받아오는 값이 list
         var thumbnail = itemImgRepository.findByItemIdAndMainImg(item.getItemId(),"Y");
 
         var list = item.getReviewList()

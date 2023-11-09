@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 @Builder
 public class UserReviewResponse {
 
-    private List<ItemReviewResponse> itemReviewResponseList; //
+    private List<ItemReviewResponse> itemReviewResponseList;
+
       public static UserReviewResponse fromEntity(User user){
 
         var list = user.getReviewList()

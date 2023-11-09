@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping ("/api/item")
 @RequiredArgsConstructor
@@ -21,8 +23,8 @@ public class ItemController {
     //상품 전체 조회
     @GetMapping("/item")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse allItem(){
-        return itemService.itemAllList();
+    public List<ItemResponse> findAll(){
+        return itemService.itemfindAllList();
     }
     //상품 상세 조회
     @GetMapping("/item/{itemId}")
