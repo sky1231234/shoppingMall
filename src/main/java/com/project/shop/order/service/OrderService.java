@@ -1,9 +1,9 @@
 package com.project.shop.order.service;
 
-import com.project.shop.user.dto.LoginRequest;
-import com.project.shop.user.dto.MyInfoEditRequest;
-import com.project.shop.user.dto.SignupRequest;
-import com.project.shop.user.dto.UserResponse;
+import com.project.shop.user.dto.request.LoginRequest;
+import com.project.shop.user.dto.request.UserUpdateRequest;
+import com.project.shop.user.dto.request.SignupRequest;
+import com.project.shop.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class OrderService {
     }
 
     //회원정보 수정
-    public void edit(MyInfoEditRequest myInfoEditRequest){
+    public void edit(UserUpdateRequest userUpdateRequest){
 
     }
 

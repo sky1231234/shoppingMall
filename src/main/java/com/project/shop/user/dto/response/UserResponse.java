@@ -1,10 +1,12 @@
-package com.project.shop.user.dto;
+package com.project.shop.user.dto.response;
 
+import com.project.shop.item.domain.Review;
+import com.project.shop.item.dto.response.ReviewImgResponse;
+import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.user.domain.User;
 import lombok.*;
 
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -12,13 +14,15 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class UserResponse{
+
     private String loginId;
     private String password;
     private String name;
     private String phoneNum;
 
-        public static UserResponse getUserResponse(User user){
-            return UserResponse.builder()
+    public static UserResponse fromEntity(User user){
+
+        return UserResponse.builder()
                 .loginId(user.getLoginId())
                 .password(user.getPassword())
                 .name(user.getName())

@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "category")
 @Entity
 @Getter
+@Builder
 public class Category {
 
     @Id

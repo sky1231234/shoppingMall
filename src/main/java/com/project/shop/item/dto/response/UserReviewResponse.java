@@ -1,12 +1,9 @@
 package com.project.shop.item.dto.response;
 
-import com.project.shop.item.repository.ItemImgMapping;
-import com.project.shop.item.repository.ItemImgRepository;
-import com.project.shop.user.domain.User;
+import com.project.shop.item.domain.Review;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,13 +12,18 @@ import java.util.stream.Collectors;
 @Builder
 public class UserReviewResponse {
 
-    private List<ItemReviewResponse> itemReviewResponseList;
+    private ItemReviewResponse itemReviewResponseList;
 
-      public static UserReviewResponse fromEntity(User user){
+      public static UserReviewResponse fromEntity(List<Review> userReviewList){
 
-        var list = user.getReviewList()
-                .stream().map(x -> ItemReviewResponse.fromEntity(x))
-                .collect(Collectors.toList());
+          //전체 수정
+          //userReviewList 중에 한 리뷰에 대한 상품+리뷰를 포함한게 userReview
+          for (Review userReview : userReviewList) {
+
+              //list아니고 ItemReviewResponse로 리턴받음
+              var list = ItemReviewResponse.fromEntity(userReview);
+
+          }
 
         return UserReviewResponse.builder()
                 .itemReviewResponseList(list)

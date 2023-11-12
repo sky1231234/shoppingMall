@@ -1,6 +1,7 @@
 package com.project.shop.item.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,22 +27,24 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
+
     @Column(name = "itemName", nullable = false)
     private String itemName;    //상품명
     @Column(name = "price", nullable = false)
     private int price;    //가격
-    @Column(name = "explain")
+    @Column(name = "explain", nullable = false)
     private String explain;     //상품 설명
 
+    //양방향 매핑 - mappedBy된 곳은 save가 안 될 수도
     @OneToMany(mappedBy = "item")
     private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
+    @OneToMany(mappedBy = "item")
+    private List<Option> optionList = new ArrayList<>(); //옵션 리스트
 
     @OneToMany(mappedBy = "item")
-    private List<Option> optionList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
     @OneToMany(mappedBy = "item")
-    private List<Review> reviewList = new ArrayList<>();
-    @OneToMany(mappedBy = "item")
-    private List<ReviewImg> reviewImgList = new ArrayList<>();
+    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지 리스트
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일
@@ -48,5 +52,9 @@ public class Item {
     private LocalDateTime updateDate;   //상품 수정일
 
 
-
+    public Item updateCategory(Category category){
+        this.category = category;
+        return this;
+    }
 }
+

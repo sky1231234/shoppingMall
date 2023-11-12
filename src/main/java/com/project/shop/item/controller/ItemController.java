@@ -1,7 +1,7 @@
 package com.project.shop.item.controller;
 
 
-import com.project.shop.item.dto.request.ItemEditRequest;
+import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.response.ItemResponse;
 import com.project.shop.item.service.ItemService;
@@ -23,34 +23,35 @@ public class ItemController {
     //상품 전체 조회
     @GetMapping("/item")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemResponse> findAll(){
-        return itemService.itemfindAllList();
+    public List<ItemResponse> itemFindAll(){
+        return itemService.itemFindAll();
     }
+
     //상품 상세 조회
     @GetMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse detailItem(@RequestBody int itemId){
-        return itemService.itemDetailList(itemId);
+    public ItemResponse itemDetailFind(@RequestBody long itemId){
+        return itemService.itemDetailFind(itemId);
     }
 
     //상품 등록
-    @PostMapping("/item/enroll")
+    @PostMapping("/item")
     @ResponseStatus(HttpStatus.CREATED)
-    public void itemEnroll(@RequestBody ItemRequest itemRequest){
-        itemService.itemEnroll(itemRequest);
+    public void itemCreate(@RequestBody ItemRequest itemRequest){
+        itemService.create(itemRequest);
     }
 
     //상품 수정
     @PutMapping("/item/{itemId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void itemEdit(@RequestBody ItemEditRequest itemEditRequest){
-        itemService.edit(itemEditRequest);
+    public void itemUpdate(@RequestBody ItemUpdateRequest itemUpdateRequest){
+        itemService.update(itemUpdateRequest);
     }
 
     //상품 삭제
     @DeleteMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public void itemDelete(@RequestBody int itemId ){
+    public void itemDelete(@RequestBody long itemId ){
         itemService.delete(itemId);
     }
 

@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "reviewImg")
 @Entity
 @Getter
+@Builder
 public class ReviewImg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +21,6 @@ public class ReviewImg {
 
     @Column(name = "imgUrl", nullable = false)
     private String imgUrl;     //이미지 경로
-    @Column(name = "imgName", nullable = false)
-    private String imgName;    //이미지명
-
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //리뷰이미지 등록일

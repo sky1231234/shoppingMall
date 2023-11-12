@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -8,14 +9,18 @@ import java.time.LocalDateTime;
 @Table(name = "option")
 @Entity
 @Getter
+@Builder
 public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "optionId")
     private long optionId;     //옵션번호
-    @Column(name = "itemId", nullable = false)
-    private long itemId;     //상품번호
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "itemId")
+    private Item item;     //상품번호
+
     @Column(name = "color", nullable = false)
     private String color;    //색상
     @Column(name = "size", nullable = false)

@@ -1,6 +1,7 @@
 package com.project.shop.item.domain;
 
 import com.project.shop.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "review")
 @Entity
 @Getter
+@Builder
 public class Review {
 
     @Id
@@ -19,18 +21,17 @@ public class Review {
     @Column(name = "reviewId")
     private long reviewId;     //리뷰번호
 
-    @Column(name = "itemId", nullable = false)
-    private long itemId;     //상품 번호
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "itemId")
-    private Item item;
+    private Item item;     //상품
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    @Column(name = "userId", nullable = false)
-    private long userId;     //고객 번호
+//    @Column(name = "userId", nullable = false)
+//    private long userId;     //고객 번호
+
     @Column(name = "title", nullable = false)
     private String title;    //제목
     @Column(name = "content", nullable = false)
@@ -38,7 +39,7 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "review")
     private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
     @Column(name = "insertDate", nullable = false)

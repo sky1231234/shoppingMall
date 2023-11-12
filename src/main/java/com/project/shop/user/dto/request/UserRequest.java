@@ -1,4 +1,4 @@
-package com.project.shop.user.dto;
+package com.project.shop.user.dto.request;
 
 
 import javax.validation.constraints.NotBlank;

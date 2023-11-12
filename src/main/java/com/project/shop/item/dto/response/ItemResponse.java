@@ -20,7 +20,9 @@ public class ItemResponse {
     private List<ItemImgResponse> itemImgList;
     private List<OptionResponse> optionResponseList;
 
+
     public static ItemResponse fromEntity(Item item){
+
         var imgList = item.getItemImgList()
                 .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
                 .collect(Collectors.toList());

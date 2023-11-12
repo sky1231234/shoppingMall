@@ -24,9 +24,9 @@ public class ReviewResponse {
     private List<ReviewImgResponse> reviewImgResponses; //리뷰 이미지
     private LocalDateTime insertDate;   //리뷰 등록일
 
-
-    //review Entity를 ReviewResponse로 만들기
+    //review -> ReviewResponse
     public static ReviewResponse fromEntity(Review review){
+
         var list = review.getReviewImgList()
                 .stream().map(x -> new ReviewImgResponse(x.getImgUrl()))
                 .collect(Collectors.toList());
@@ -35,7 +35,7 @@ public class ReviewResponse {
                 .categoryName(review.getItem().getCategory().getCategoryName())
                 .brandName(review.getItem().getCategory().getBrandName())
                 .itemName(review.getItem().getItemName())
-                .userId(review.getUserId())
+                .userId(review.getUser().getUserId())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .star(review.getStar())

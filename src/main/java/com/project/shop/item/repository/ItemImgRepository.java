@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
 
-    List<ItemImgMapping> findByItemIdAndMainImg(long itemId, String mainImg);
+    //query어노테이션사용
+    ItemImg findByItemIdAndMainImg(long itemId, String mainImg);
 
 }
 

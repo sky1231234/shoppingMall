@@ -1,11 +1,8 @@
 package com.project.shop.item.controller;
 
 
-import com.project.shop.item.dto.request.ItemEditRequest;
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ReviewEditRequest;
+import com.project.shop.item.dto.request.ReviewUpdateRequest;
 import com.project.shop.item.dto.request.ReviewRequest;
-import com.project.shop.item.dto.response.ItemResponse;
 import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
@@ -26,36 +23,36 @@ public class ReviewController {
     //상품 - 리뷰 조회
     @GetMapping("/review/item")
     @ResponseStatus(HttpStatus.OK)
-    public ItemReviewResponse itemReview(@RequestBody int itemId){
-        return reviewService.itemReviewList(itemId);
+    public ItemReviewResponse itemReviewFindAll(@RequestBody int itemId){
+        return reviewService.itemReviewFindAll(itemId);
     }
 
     //회원 - 리뷰 조회
     @GetMapping("/review/user")
     @ResponseStatus(HttpStatus.OK)
-    public UserReviewResponse userReview(@RequestBody int userId){
-        return reviewService.userReviewList(userId);
+    public UserReviewResponse userReviewFindAll(@RequestBody int userId){
+        return reviewService.userReviewFindAll(userId);
     }
 
     //리뷰 상세 조회
     @GetMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewResponse detailReview(@RequestBody long reviewId){
-        return reviewService.reviewDetailList(reviewId);
+    public ReviewResponse reviewDetailFind(@RequestBody long reviewId){
+        return reviewService.reviewDetailFind(reviewId);
     }
 
     //리뷰 등록
-    @PostMapping("/review/enroll")
+    @PostMapping("/review")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewEnroll(@RequestBody ReviewRequest reviewRequest){
-        reviewService.reviewEnroll(reviewRequest);
+    public void reviewCreate(@RequestBody ReviewRequest reviewRequest){
+        reviewService.create(reviewRequest);
     }
 
     //리뷰 수정
     @PutMapping("/review/{reviewId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void reviewEdit(@RequestBody ReviewEditRequest reviewEditRequest){
-        reviewService.edit(reviewEditRequest);
+    public void reviewUpdate(@RequestBody ReviewUpdateRequest reviewUpdateRequest){
+        reviewService.update(reviewUpdateRequest);
     }
 
     //리뷰 삭제

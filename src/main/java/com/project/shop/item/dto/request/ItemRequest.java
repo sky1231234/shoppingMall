@@ -1,13 +1,14 @@
 package com.project.shop.item.dto.request;
 
+import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.Review;
-import com.project.shop.item.dto.response.ItemImgResponse;
+import com.project.shop.item.dto.response.OptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,30 +16,33 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 public record ItemRequest(
-        @NotBlank String categoryName,
-        @NotBlank String brandName,
+        @NotBlank CategoryRequest categoryRequest,
         @NotBlank String itemName,
-        @NotBlank String price,
+        @NotNull int price,
         @NotBlank String explain,
-        @NotBlank List<ItemImgEnrollRequest> itemImgEnrollRequestList,
-        @NotBlank List<OptionEnrollRequest> optionEnrollRequestList
+
+        //service에서 처리
+        @NotBlank List<ItemImgRequest> itemImgRequestList,
+        @NotBlank List<OptionRequest> optionRequestList
         ) {
 
-        //itemRequest를 item으로 바꿔야함
+        //itemRequest -> item
         public Item toEntity(){
 
-                var imgList = ItemRequest.get()
-                        .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
+                var imgList = this.getItemImgRequestList()
+                        .stream().map(itemImgRequest -> itemImgRequest.toEntity(itemImgRequest))
+                        .collect(Collectors.toList());
+
+                var optionList = this.getOptionRequestList()
+                        .stream().map(optionRequest -> optionRequest.toEntity(optionRequest))
                         .collect(Collectors.toList());
 
                 return Item.builder()
-                        .categoryName(categoryName)
-                        .brandName(brandName)
-                        .itemName(itemName)
-                        .price(price)
-                        .explain(explain)
-                        .itemImgEnrollRequestList(itemImgEnrollRequestList)
-                        .optionEnrollRequestList(optionEnrollRequestList)
+                        .itemName(this.getItemName())
+                        .price(this.getPrice())
+                        .explain(this.getExplain())
+                        .itemImgList(imgList)
+                        .optionList(optionList)
                         .build();
         }
 }

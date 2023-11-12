@@ -1,6 +1,7 @@
 package com.project.shop.item.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ItemImg {
 
     @Id
@@ -21,7 +23,7 @@ public class ItemImg {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "itemId")
-    private Item item;     //상품 번호
+    private Item item;     //상품
 
     @Column(name = "imgUrl", nullable = false)
     private String imgUrl;     //이미지 경로
