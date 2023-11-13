@@ -12,10 +12,10 @@ public record OptionRequest(
         @NotBlank String color
         ) {
 
-        public Option toEntity(OptionRequest optionRequest){
+        public Option toEntity(){
                 return Option.builder()
-                        .size(optionRequest.size)
-                        .color(optionRequest.color)
+                        .size(this.size)
+                        .color(this.color)
                         .build();
         }
 

@@ -21,8 +21,8 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemId")
     private long itemId;     //상품번호
-    @Column(name = "categoryId", nullable = false)
-    private long categoryId;     //카테고리 번호
+//    @Column(name = "categoryId", nullable = false)
+//    private long categoryId;     //카테고리 번호
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
@@ -35,16 +35,17 @@ public class Item {
     @Column(name = "explain", nullable = false)
     private String explain;     //상품 설명
 
-    //양방향 매핑 - mappedBy된 곳은 save가 안 될 수도
-    @OneToMany(mappedBy = "item")
-    private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
-    @OneToMany(mappedBy = "item")
-    private List<Option> optionList = new ArrayList<>(); //옵션 리스트
+    //양방향 매핑 - mappedBy된 곳은 save가 안 될 수도 => 자식에 save하면 저장 안됨, 주인에 전달하여 save하기
+    //자식
+//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+//    private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
+//
+//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+//    private List<Option> optionList = new ArrayList<>(); //옵션 리스트
+//
+//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+//    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
 
-    @OneToMany(mappedBy = "item")
-    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
-    @OneToMany(mappedBy = "item")
-    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지 리스트
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일

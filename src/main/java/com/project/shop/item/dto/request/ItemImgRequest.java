@@ -13,9 +13,9 @@ import javax.validation.constraints.NotBlank;
 public record ItemImgRequest(
         @NotBlank String imgUrl
         ) {
-        public ItemImg toEntity(ItemImgRequest itemImgRequest){
+        public ItemImg toEntity(){
                 return ItemImg.builder()
-                        .imgUrl(itemImgRequest.getImgUrl())
+                        .imgUrl(this.getImgUrl())
                         .build();
         }
 

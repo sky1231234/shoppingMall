@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class ItemResponse {
+
     private String categoryName;
     private String brandName;
     private String itemName;

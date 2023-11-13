@@ -21,6 +21,7 @@ public class Review {
     @Column(name = "reviewId")
     private long reviewId;     //리뷰번호
 
+    //주인
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "itemId")
     private Item item;     //상품
@@ -29,8 +30,6 @@ public class Review {
     @JoinColumn(name = "userId")
     private User user;
 
-//    @Column(name = "userId", nullable = false)
-//    private long userId;     //고객 번호
 
     @Column(name = "title", nullable = false)
     private String title;    //제목
@@ -39,12 +38,17 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
-    @OneToMany(mappedBy = "review")
-    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
+//    @OneToMany(mappedBy = "review")
+//    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
+
+    public Review updateItem(Item item){
+        this.item = item;
+        return this;
+    }
 
 }

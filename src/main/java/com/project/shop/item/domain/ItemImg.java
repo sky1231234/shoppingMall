@@ -38,4 +38,9 @@ public class ItemImg {
     private LocalDateTime insertDate;   //상품이미지 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품이미지수정일
+
+    public ItemImg updateItem(Item item){
+        this.item = item;
+        return this;
+    }
 }
