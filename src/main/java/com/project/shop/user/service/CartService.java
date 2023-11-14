@@ -1,4 +1,4 @@
-PointServicepackage com.project.shop.user.service;
+package com.project.shop.user.service;
 
 import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.LoginRequest;
@@ -25,9 +25,9 @@ public class CartService {
     }
 
     //회원가입
-    public void signup(SignupRequest signupRequest){
-        userRepository.save();
-    }
+//    public void signup(SignupRequest signupRequest){
+//        userRepository.save();
+//    }
 
 
     //로그인
@@ -36,9 +36,9 @@ public class CartService {
     }
 
     //회원정보 수정
-    public void update(UserUpdateRequest userUpdateRequest){
-        userRepository.save();
-    }
+//    public void update(UserUpdateRequest userUpdateRequest){
+//        userRepository.save();
+//    }
 
     //회원 탈퇴
     public void delete(long userId){

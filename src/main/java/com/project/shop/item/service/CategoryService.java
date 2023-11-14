@@ -31,8 +31,10 @@ public class CategoryService {
     }
 
     //카테고리 등록
-    public void create(CategoryRequest categoryRequest){
-        categoryRepository.save(categoryRequest.toEntity(categoryRequest));
+    public CategoryRequest create(CategoryRequest categoryRequest){
+        categoryRepository.save(categoryRequest.toEntity());
+
+        return categoryRequest;
     }
 
     //카테고리 수정

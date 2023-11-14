@@ -20,11 +20,11 @@ public record CategoryRequest(
         @NotBlank String brandName
         ) {
 
-        public Category toEntity(CategoryRequest categoryRequest){
+        public Category toEntity(){
 
                 return Category.builder()
-                        .categoryName(categoryRequest.categoryName())
-                        .brandName(categoryRequest.getBrandName())
+                        .categoryName(this.categoryName())
+                        .brandName(this.getBrandName())
                         .build();
         }
 
