@@ -37,14 +37,14 @@ public class CategoryController {
     //수정
     @PutMapping("/category/{categoryId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void categoryUpdate(@RequestBody CategoryUpdateRequest categoryUpdateRequest){
-        categoryService.update(categoryUpdateRequest);
+    public void categoryUpdate(@PathVariable("categoryId") Long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
+        categoryService.update(categoryId,categoryUpdateRequest);
     }
 
     //삭제
     @DeleteMapping("/category/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public void categoryDelete(@RequestBody long categoryId){
+    public void categoryDelete(@PathVariable("categoryId") long categoryId){
         categoryService.delete(categoryId);
     }
 

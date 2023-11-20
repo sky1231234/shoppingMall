@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,5 +25,11 @@ public class Category {
     private LocalDateTime insertDate;   //상품 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
+
+    public Category updateCategory(CategoryUpdateRequest categoryUpdateRequest){
+        this.categoryName = categoryUpdateRequest.getCategoryName();
+        this.brandName = categoryUpdateRequest.getBrandName();
+        return this;
+    }
 
 }

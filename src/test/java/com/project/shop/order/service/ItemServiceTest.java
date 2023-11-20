@@ -1,4 +1,4 @@
-package com.project.shop.item.service;
+package com.project.shop.order.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,5 @@ public class ItemServiceTest {
 
     @Test
     @DisplayName("상품 등록")
-    public String testing(){
-        return "test";
-    }
+    void
 }

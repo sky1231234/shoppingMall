@@ -30,7 +30,7 @@ public class ItemController {
     //상품 상세 조회
     @GetMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse itemDetailFind(@RequestBody long itemId){
+    public ItemResponse itemDetailFind(@PathVariable("itemId") long itemId){
         return itemService.itemDetailFind(itemId);
     }
 
@@ -44,14 +44,14 @@ public class ItemController {
     //상품 수정
     @PutMapping("/item/{itemId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void itemUpdate(@RequestBody ItemUpdateRequest itemUpdateRequest){
-        itemService.update(itemUpdateRequest);
+    public void itemUpdate(@PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
+        itemService.update(itemId, itemUpdateRequest);
     }
 
     //상품 삭제
     @DeleteMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public void itemDelete(@RequestBody long itemId ){
+    public void itemDelete(@PathVariable("itemId") long itemId){
         itemService.delete(itemId);
     }
 

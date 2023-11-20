@@ -31,19 +31,36 @@ public class CategoryService {
     }
 
     //카테고리 등록
-    public CategoryRequest create(CategoryRequest categoryRequest){
+    public void create(CategoryRequest categoryRequest){
+
+        //동일한 브랜드명, 카테고리명 조회
+        if(categoryRepository.findByCategoryNameAndBrandName(categoryRequest.getCategoryName(),categoryRequest.getBrandName()).isPresent()){
+            throw new RuntimeException("등록된 카테고리 있음");
+        }
+
         categoryRepository.save(categoryRequest.toEntity());
 
-        return categoryRequest;
     }
 
     //카테고리 수정
-    public void update(CategoryUpdateRequest categoryUpdateRequest){
-        //        categoryRepository.save(categoryRequest);
+    public void update(Long categoryId, CategoryUpdateRequest categoryUpdateRequest){
+
+        //수정할 카테고리Id 확인
+        if(!categoryRepository.findById(categoryId).isPresent()){
+            throw new RuntimeException("카테고리Id 없음");
+        }
+        //수정하기
+        // category.updateCategory(categoryUpdateRequest)
+//        categoryRepository.save(updateCategory);
     }
 
     //카테고리 삭제
     public void delete(long categoryId){
+
+        if(!categoryRepository.findById(categoryId).isPresent()){
+            throw new RuntimeException("카테고리Id 없음");
+        }
+
         categoryRepository.deleteById(categoryId);
     }
 }

@@ -1,6 +1,7 @@
 package com.project.shop.item.dto.response;
 
 import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Review;
 import lombok.*;
 
@@ -21,16 +22,17 @@ public class ItemResponse {
     private List<ItemImgResponse> itemImgList;
     private List<OptionResponse> optionResponseList;
 
+    private static ItemImg itemImg;
 
     public static ItemResponse fromEntity(Item item){
 
-        var imgList = item.getItemImgList()
-                .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
-                .collect(Collectors.toList());
-
-        var optionList = item.getOptionList()
-                .stream().map(x -> new OptionResponse(x.getSize(), x.getColor()))
-                .collect(Collectors.toList());
+//        var imgList = item.getItemImgList()
+//                .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
+//                .collect(Collectors.toList());
+//
+//        var optionList = item.getOptionList()
+//                .stream().map(x -> new OptionResponse(x.getSize(), x.getColor()))
+//                .collect(Collectors.toList());
 
         return ItemResponse.builder()
                 .categoryName(item.getCategory().getCategoryName())
@@ -38,8 +40,17 @@ public class ItemResponse {
                 .itemName(item.getItemName())
                 .itemPrice(item.getPrice())
                 .itemExplain(item.getExplain())
-                .itemImgList(imgList)
-                .optionResponseList(optionList)
+                .itemImgList(itemImg.updateItem(item))
                 .build();
     }
+
+    public ItemResponse Entity(Item item){
+        this.categoryName = item.getCategory().getCategoryName();
+        this.brandName = item.getCategory().getBrandName();
+        this.itemName = item.getItemName();
+        this.itemPrice = item.getPrice();
+        this.itemExplain = item.getExplain();
+        this.itemImgList = ItemImgResponse.toResponse(item);
+        this.optionResponseList = OptionResponse.toResponse(item);
+
 }

@@ -43,10 +43,10 @@ public class ItemService {
     //상품 상세 조회
     public ItemResponse itemDetailFind(long itemId){
 
-        var review = itemRepository.findById(itemId)
+        var item = itemRepository.findById(itemId)
                 .orElseThrow(()->new ItemException(NOT_FOUND_ITEM));
 
-        return ItemResponse.fromEntity(review);
+        return ItemResponse.fromEntity(item);
     }
 
     //상품 등록
@@ -97,7 +97,7 @@ public class ItemService {
     }
 
     //상품 수정
-    public void update(ItemUpdateRequest itemUpdateRequest){
+    public void update(Long itemId, ItemUpdateRequest itemUpdateRequest){
 //        기존꺼 삭제하고 수정?
 //        itemRepository.save(itemUpdateRequest.toEntity(itemUpdateRequest));
     }

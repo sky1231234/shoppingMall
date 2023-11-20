@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.response.ItemImgResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "itemImg")
 @Entity
@@ -39,7 +41,7 @@ public class ItemImg {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품이미지수정일
 
-    public ItemImg updateItem(Item item){
+    public List<ItemImgResponse> updateItem(Item item){
         this.item = item;
         return this;
     }
