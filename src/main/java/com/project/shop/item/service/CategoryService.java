@@ -45,18 +45,23 @@ public class CategoryService {
 
     //카테고리 수정
     public void update(Long categoryId, CategoryUpdateRequest categoryUpdateRequest){
-        Category category = checkCategoryId(categoryId);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("카테고리Id 없음"));
+
+        //여기서 수정할때는 updateCategory
+        //itemservice에서 수정할때 item을 업데이트안하고 카테고리만 업데이트함
+        // 파라미터로 itemRequest도 넘겨야함
         category.updateCategory(categoryUpdateRequest);
     }
 
     //카테고리 삭제
     public void delete(long categoryId){
-        checkCategoryId(categoryId);
+
+        if(!categoryRepository.findById(categoryId).isPresent()){
+            throw new RuntimeException("NOT_FOUND_CATEGORYID");
+        }
+
         categoryRepository.deleteById(categoryId);
     }
 
-    public Category checkCategoryId(long categoryId){
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("카테고리Id 없음"));
-    }
 }
