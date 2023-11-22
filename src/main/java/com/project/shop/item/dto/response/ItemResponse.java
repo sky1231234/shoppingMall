@@ -19,20 +19,18 @@ public class ItemResponse {
     private String itemName;
     private int itemPrice;
     private String itemExplain;
-    private List<ItemImgResponse> itemImgList;
+    private List<ItemImgResponse> itemImgResponseList;
     private List<OptionResponse> optionResponseList;
 
-    private static ItemImg itemImg;
+    public static ItemResponse fromEntity(Item item) {
 
-    public static ItemResponse fromEntity(Item item){
+        var imgList = item.getItemImgList()
+                .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
+                .collect(Collectors.toList());
 
-//        var imgList = item.getItemImgList()
-//                .stream().map(x -> new ItemImgResponse(x.getImgUrl()))
-//                .collect(Collectors.toList());
-//
-//        var optionList = item.getOptionList()
-//                .stream().map(x -> new OptionResponse(x.getSize(), x.getColor()))
-//                .collect(Collectors.toList());
+        var optionList = item.getOptionList()
+                .stream().map(x -> new OptionResponse(x.getSize(), x.getColor()))
+                .collect(Collectors.toList());
 
         return ItemResponse.builder()
                 .categoryName(item.getCategory().getCategoryName())
@@ -40,17 +38,8 @@ public class ItemResponse {
                 .itemName(item.getItemName())
                 .itemPrice(item.getPrice())
                 .itemExplain(item.getExplain())
-                .itemImgList(itemImg.updateItem(item))
+                .itemImgResponseList(imgList)
+                .optionResponseList(optionList)
                 .build();
     }
-
-    public ItemResponse Entity(Item item){
-        this.categoryName = item.getCategory().getCategoryName();
-        this.brandName = item.getCategory().getBrandName();
-        this.itemName = item.getItemName();
-        this.itemPrice = item.getPrice();
-        this.itemExplain = item.getExplain();
-        this.itemImgList = ItemImgResponse.toResponse(item);
-        this.optionResponseList = OptionResponse.toResponse(item);
-
 }

@@ -28,15 +28,6 @@ public record ItemRequest(
 
         //itemRequest -> item
         public Item toEntity(){
-
-//                var imgList = this.getItemImgRequestList()
-//                        .stream().map(itemImgRequest -> itemImgRequest.toEntity(itemImgRequest))
-//                        .collect(Collectors.toList());
-//
-//                var optionList = this.getOptionRequestList()
-//                        .stream().map(optionRequest -> optionRequest.toEntity(optionRequest))
-//                        .collect(Collectors.toList());
-
                 return Item.builder()
                         .itemName(this.getItemName())
                         .price(this.getPrice())

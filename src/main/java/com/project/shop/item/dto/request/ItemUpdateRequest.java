@@ -16,32 +16,28 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public record ItemUpdateRequest(
         @NotBlank long itemId,
-        @NotBlank String categoryName,
-        @NotBlank String brandName,
-        @NotBlank Category category,
+        @NotBlank CategoryUpdateRequest categoryUpdateRequest,
         @NotBlank String itemName,
         @NotBlank int price,
         @NotBlank String explain,
-        @NotBlank List<ItemImgRequest> itemImgRequestList,
-        @NotBlank List<OptionRequest> optionRequestList) {
 
-    public Item toEntity(ItemUpdateRequest itemUpdateRequest){
+        @NotBlank List<ItemImgUpdateRequest> itemImgUpdateRequestList,
+        @NotBlank List<OptionUpdateRequest> optionUpdateRequestList) {
 
-        var imgList = itemUpdateRequest.getItemImgRequestList()
-                .stream().map(itemImgRequest -> itemImgRequest.toEntity(itemImgRequest))
-                .collect(Collectors.toList());
+    public Item toEntity(){
 
-        var optionList = itemUpdateRequest.getOptionRequestList()
-                .stream().map(optionRequest -> optionRequest.toEntity(optionRequest))
-                .collect(Collectors.toList());
+//        var imgList = itemUpdateRequest.getItemImgRequestList()
+//                .stream().map(itemImgRequest -> itemImgRequest.toEntity(itemImgRequest))
+//                .collect(Collectors.toList());
+//
+//        var optionList = itemUpdateRequest.getOptionRequestList()
+//                .stream().map(optionRequest -> optionRequest.toEntity(optionRequest))
+//                .collect(Collectors.toList());
 
         return Item.builder()
-                .category(category)
-                .itemName(itemName)
-                .price(price)
-                .explain(explain)
-                .itemImgList(imgList)
-                .optionList(optionList)
+                .itemName(this.getItemName())
+                .price(this.getPrice())
+                .explain(this.getExplain())
                 .build();
     }
 }

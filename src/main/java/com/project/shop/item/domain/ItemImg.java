@@ -41,8 +41,9 @@ public class ItemImg {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품이미지수정일
 
-    public List<ItemImgResponse> updateItem(Item item){
+    public ItemImg updateItem(Item item){
         this.item = item;
         return this;
     }
+
 }

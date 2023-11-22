@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import com.project.shop.item.dto.response.CategoryResponse;
@@ -44,23 +45,18 @@ public class CategoryService {
 
     //카테고리 수정
     public void update(Long categoryId, CategoryUpdateRequest categoryUpdateRequest){
-
-        //수정할 카테고리Id 확인
-        if(!categoryRepository.findById(categoryId).isPresent()){
-            throw new RuntimeException("카테고리Id 없음");
-        }
-        //수정하기
-        // category.updateCategory(categoryUpdateRequest)
-//        categoryRepository.save(updateCategory);
+        Category category = checkCategoryId(categoryId);
+        category.updateCategory(categoryUpdateRequest);
     }
 
     //카테고리 삭제
     public void delete(long categoryId){
-
-        if(!categoryRepository.findById(categoryId).isPresent()){
-            throw new RuntimeException("카테고리Id 없음");
-        }
-
+        checkCategoryId(categoryId);
         categoryRepository.deleteById(categoryId);
+    }
+
+    public Category checkCategoryId(long categoryId){
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("카테고리Id 없음"));
     }
 }

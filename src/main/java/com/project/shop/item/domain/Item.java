@@ -37,12 +37,12 @@ public class Item {
 
     //양방향 매핑 - mappedBy된 곳은 save가 안 될 수도 => 자식에 save하면 저장 안됨, 주인에 전달하여 save하기
     //자식
-//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-//    private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
-//
-//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-//    private List<Option> optionList = new ArrayList<>(); //옵션 리스트
-//
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<ItemImg> itemImgList = new ArrayList<>(); //상품 이미지 리스트
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Option> optionList = new ArrayList<>(); //옵션 리스트
+
 //    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
 //    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
 
