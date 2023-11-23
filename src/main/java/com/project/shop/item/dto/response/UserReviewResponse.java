@@ -1,8 +1,12 @@
 package com.project.shop.item.dto.response;
 
+import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Review;
+import com.project.shop.user.domain.User;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,21 +16,27 @@ import java.util.List;
 @Builder
 public class UserReviewResponse {
 
-    private ItemReviewResponse itemReviewResponseList;
+    private User user;
+    private Item item;
+    private String categoryName;
+    private String brandName;    //브랜드명
+    private String itemName;    //상품명
+    private ItemImg itemThumbnail;   //상품 대표이미지
+
+    private UserInReviewResponse reviewList; //리뷰 리스트
 
       public static UserReviewResponse fromEntity(List<Review> userReviewList){
 
-          //전체 수정
-          //userReviewList 중에 한 리뷰에 대한 상품+리뷰를 포함한게 userReview
-          for (Review userReview : userReviewList) {
+          ArrayList<UserInReviewResponse> reviewEntitylist = new ArrayList<>();
 
-              //list아니고 ItemReviewResponse로 리턴받음
-              var list = ItemReviewResponse.fromEntity(userReview);
-
+          for (Review review : userReviewList) {
+              var list = UserInReviewResponse.fromEntity(review);
+              reviewEntitylist.add(list);
           }
 
         return UserReviewResponse.builder()
-                .itemReviewResponseList(list)
+                .categoryName(userReviewList)
+                .reviewList()
                 .build();
     }
 }

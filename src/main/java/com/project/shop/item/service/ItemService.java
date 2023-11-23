@@ -123,7 +123,7 @@ public class ItemService {
         itemImgRepository.deleteAll(itemImgList);
 
         List<ItemImg> itemImgUpdateList = itemUpdateRequest
-                .itemImgUpdateRequestList()
+                .getItemImgUpdateRequestList()
                 .stream()
                 .map(ItemImgUpdateRequest::toEntity)
                 .collect(Collectors.toList());

@@ -1,12 +1,7 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.domain.Review;
-import com.project.shop.item.domain.ReviewImg;
-import com.project.shop.item.dto.request.ItemImgRequest;
-import com.project.shop.item.dto.request.ReviewImgRequest;
-import com.project.shop.item.dto.request.ReviewUpdateRequest;
-import com.project.shop.item.dto.request.ReviewRequest;
+import com.project.shop.item.domain.*;
+import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
@@ -31,25 +26,31 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewImgRepository reviewImgRepository;
 
+    private final ItemRepository itemRepository;
     private final ItemImgRepository itemImgRepository;
     private final UserRepository userRepository;
 
     //상품 - 리뷰 조회
     public ItemReviewResponse itemReviewFindAll(long itemId){
-        //수정 썸네일 형식
-        ItemImg thumbnail = itemImgRepository.findByItemIdAndMainImg(itemId,"Y");
-        List<Review> list = reviewRepository.findByItemId(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUNT_ITEM"));
 
-        return ItemReviewResponse.fromEntity(thumbnail, list);
+        List<Review> reviewList = reviewRepository.findAllByItemId(itemId);
+
+        //수정 썸네일 형식 sql문 돌리기
+        ItemImg thumbnail = itemImgRepository.findByItemIdAndMainImg(itemId,"Y");
+
+        return ItemReviewResponse.fromEntity(item, thumbnail, reviewList);
 
     }
 
     //회원 - 리뷰 조회
     public UserReviewResponse userReviewFindAll(long userId){
-        //수정
-        List<Review> list = reviewRepository.findByUserId(userId);
 
-        return UserReviewResponse.fromEntity(list);
+        //검색해서 나오느 상품번호의 상품 정보 가져와야함
+        List<Review> userList = reviewRepository.findAllByUserId(userId);
+
+        return UserReviewResponse.fromEntity(userList);
 
     }
 
@@ -87,11 +88,31 @@ public class ReviewService {
     //리뷰 수정
     public void update(long reviewId, ReviewUpdateRequest reviewUpdateRequest){
 
+        //review
         Review review = reviewRepository.findById(reviewId)
                         .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW"));
 
         review.editReview(reviewUpdateRequest);
 
+        //reviewImg
+        List<ReviewImg> reviewImgList = reviewImgRepository.findByReviewId(reviewId);
+
+        if(reviewImgList.isEmpty()){
+            throw new RuntimeException("NOT_FOUND_REVIEW_IMG");
+        }
+        reviewImgRepository.deleteAll(reviewImgList);
+
+        List<ReviewImg> reviewImgUpdateList = reviewUpdateRequest
+                .getReviewImgUpdateRequest()
+                .stream()
+                .map(ReviewImgUpdateRequest::toEntity)
+                .collect(Collectors.toList());
+
+        for (ReviewImg reviewImg : reviewImgUpdateList) {
+            reviewImg.updateReview(review);
+        }
+
+        reviewImgRepository.saveAll(reviewImgUpdateList);
     }
 
     //리뷰 삭제

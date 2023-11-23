@@ -2,16 +2,21 @@ package com.project.shop.item.domain;
 
 import com.project.shop.item.dto.request.ReviewImgUpdateRequest;
 import com.project.shop.item.dto.request.ReviewUpdateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 @Table(name = "reviewImg")
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ReviewImg {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewImgId")
@@ -33,8 +38,4 @@ public class ReviewImg {
         this.review = review;
     }
 
-    public void editReviewImg(Review review, ReviewUpdateRequest reviewUpdateRequest){
-        this.review = review;
-        this.imgUrl = ReviewImgUpdateRequest.;
-    }
 }

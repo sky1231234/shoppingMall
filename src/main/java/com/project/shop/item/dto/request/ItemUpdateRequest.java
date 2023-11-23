@@ -26,14 +26,6 @@ public record ItemUpdateRequest(
 
     public Item toEntity(){
 
-//        var imgList = itemUpdateRequest.getItemImgRequestList()
-//                .stream().map(itemImgRequest -> itemImgRequest.toEntity(itemImgRequest))
-//                .collect(Collectors.toList());
-//
-//        var optionList = itemUpdateRequest.getOptionRequestList()
-//                .stream().map(optionRequest -> optionRequest.toEntity(optionRequest))
-//                .collect(Collectors.toList());
-
         return Item.builder()
                 .itemName(this.getItemName())
                 .price(this.getPrice())

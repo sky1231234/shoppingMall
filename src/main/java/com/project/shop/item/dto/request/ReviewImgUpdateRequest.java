@@ -1,7 +1,5 @@
 package com.project.shop.item.dto.request;
 
-import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.domain.Review;
 import com.project.shop.item.domain.ReviewImg;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

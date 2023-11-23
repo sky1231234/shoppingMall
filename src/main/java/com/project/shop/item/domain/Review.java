@@ -47,11 +47,10 @@ public class Review {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public Review editReview(ReviewUpdateRequest reviewUpdateRequest){
+    public void editReview(ReviewUpdateRequest reviewUpdateRequest){
         this.title = reviewUpdateRequest.getTitle();
         this.content = reviewUpdateRequest.getContent();
         this.star = reviewUpdateRequest.getStar();
-        return this;
     }
 
 }

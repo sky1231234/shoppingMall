@@ -15,11 +15,10 @@ import java.util.List;
 public record ReviewUpdateRequest(
         @NotBlank User user,
         @NotBlank Item item,
-        @NotBlank long reviewId,
         @NotBlank String title,
         @NotBlank String content,
         @NotBlank int star,
-        @NotBlank List<ReviewImgRequest> reviewImgRequestList){
+        @NotBlank List<ReviewImgUpdateRequest> reviewImgUpdateRequest){
 
     public Review toEntity(){
         return Review.builder()
