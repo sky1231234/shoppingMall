@@ -1,6 +1,8 @@
 package com.project.shop.item.dto.request;
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
+import com.project.shop.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,28 +13,22 @@ import java.util.stream.Collectors;
 @Builder
 @Getter
 public record ReviewRequest(
-        @NotBlank long userId,
-        @NotBlank long itemId,
+        @NotBlank User user,
+        @NotBlank Item item,
         @NotBlank String title,
         @NotBlank String content,
-        @NotBlank String star,
+        @NotBlank int star,
         @NotBlank List<ReviewImgRequest> reviewImgRequestList
         ) {
 
-        public Review toEntity(ReviewRequest reviewRequest){
-
-                var imgList = reviewRequest.getReviewImgRequestList()
-                        .stream().map(reviewImgRequest -> reviewImgRequest.toEntity(reviewImgRequest))
-                        .collect(Collectors.toList());
+        public Review toEntity(){
 
                 return Review.builder()
-                        //수정 userid를 전달하면 user로 어떻게 전달할
-                        .user()
-                        .itemId(reviewRequest.getItemId())
-                        .title(reviewRequest.getTitle())
-                        .content(reviewRequest.getContent())
-                        .star(reviewRequest.getStar())
-                        .reviewImgEnrollRequestList(imgList)
+                        .user(this.getUser())
+                        .item(this.getItem())
+                        .title(this.getTitle())
+                        .content(this.getContent())
+                        .star(this.getStar())
                         .build();
         }
 }

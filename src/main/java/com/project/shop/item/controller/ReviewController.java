@@ -37,7 +37,7 @@ public class ReviewController {
     //리뷰 상세 조회
     @GetMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewResponse reviewDetailFind(@RequestBody long reviewId){
+    public ReviewResponse reviewDetailFind(@PathVariable("reviewId") long reviewId){
         return reviewService.reviewDetailFind(reviewId);
     }
 
@@ -51,14 +51,14 @@ public class ReviewController {
     //리뷰 수정
     @PutMapping("/review/{reviewId}}")
     @ResponseStatus(HttpStatus.OK)
-    public void reviewUpdate(@RequestBody ReviewUpdateRequest reviewUpdateRequest){
-        reviewService.update(reviewUpdateRequest);
+    public void reviewUpdate(@PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
+        reviewService.update(reviewId, reviewUpdateRequest);
     }
 
     //리뷰 삭제
     @DeleteMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public void reviewDelete(@RequestBody int reviewId){
+    public void reviewDelete(@PathVariable("reviewId") long reviewId){
         reviewService.delete(reviewId);
     }
 

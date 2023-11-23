@@ -1,9 +1,8 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.ReviewUpdateRequest;
 import com.project.shop.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +12,8 @@ import java.util.List;
 @Table(name = "review")
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Review {
 
@@ -28,7 +29,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User user;
+    private User user;  //고객
 
 
     @Column(name = "title", nullable = false)
@@ -38,16 +39,18 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
-//    @OneToMany(mappedBy = "review")
-//    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public Review updateItem(Item item){
-        this.item = item;
+    public Review editReview(ReviewUpdateRequest reviewUpdateRequest){
+        this.title = reviewUpdateRequest.getTitle();
+        this.content = reviewUpdateRequest.getContent();
+        this.star = reviewUpdateRequest.getStar();
         return this;
     }
 

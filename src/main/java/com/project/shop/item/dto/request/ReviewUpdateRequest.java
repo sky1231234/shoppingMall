@@ -1,28 +1,33 @@
 package com.project.shop.item.dto.request;
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
+import com.project.shop.user.domain.User;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+
 @Builder
+@Getter
 public record ReviewUpdateRequest(
-        @NotBlank long userId,
+        @NotBlank User user,
+        @NotBlank Item item,
         @NotBlank long reviewId,
         @NotBlank String title,
         @NotBlank String content,
-        @NotBlank String star,
+        @NotBlank int star,
         @NotBlank List<ReviewImgRequest> reviewImgRequestList){
 
     public Review toEntity(){
         return Review.builder()
-                .userId(userId)
-                .itemId(reviewId)
-                .title(title)
-                .content(content)
-                .star(star)
-                .reviewImgEnrollRequestList(reviewImgRequestList)
+                .user(this.getUser())
+                .item(this.getItem())
+                .title(this.getTitle())
+                .content(this.getContent())
+                .star(this.getStar())
                 .build();
     }
 }

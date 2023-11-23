@@ -1,20 +1,24 @@
 package com.project.shop.item.dto.request;
 
-
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Review;
 import com.project.shop.item.domain.ReviewImg;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
-public record ReviewImgRequest(
-        @NotBlank Review review,
+@Getter
+@AllArgsConstructor
+@Builder
+public record ReviewImgUpdateRequest(
         @NotBlank String imgUrl
-
         ) {
+
         public ReviewImg toEntity(){
                 return ReviewImg.builder()
-                        .review(this.review)
-                        .imgUrl(this.imgUrl)
+                        .imgUrl(this.getImgUrl())
                         .build();
         }
 

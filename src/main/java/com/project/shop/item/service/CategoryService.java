@@ -48,9 +48,6 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("카테고리Id 없음"));
 
-        //여기서 수정할때는 updateCategory
-        //itemservice에서 수정할때 item을 업데이트안하고 카테고리만 업데이트함
-        // 파라미터로 itemRequest도 넘겨야함
         category.updateCategory(categoryUpdateRequest);
     }
 

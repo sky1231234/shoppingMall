@@ -1,5 +1,6 @@
 package com.project.shop.item.dto.response;
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
 import lombok.*;
 
@@ -17,17 +18,20 @@ public class ReviewResponse {
     private String categoryName;    //카테고리명
     private String brandName;       //브랜드명
     private String itemName;    //상품명
+    private String mainItemImg; //상품 대표 이미지
+
     private long userId; //회원id
     private String title;   //리뷰 제목
     private String content; //리뷰 내용
     private int star;    //별점
+
     private List<ReviewImgResponse> reviewImgResponses; //리뷰 이미지
     private LocalDateTime insertDate;   //리뷰 등록일
 
     //review -> ReviewResponse
     public static ReviewResponse fromEntity(Review review){
 
-        var list = review.getReviewImgList()
+        var reviewImgList = review.getReviewImgList()
                 .stream().map(x -> new ReviewImgResponse(x.getImgUrl()))
                 .collect(Collectors.toList());
 
@@ -35,11 +39,12 @@ public class ReviewResponse {
                 .categoryName(review.getItem().getCategory().getCategoryName())
                 .brandName(review.getItem().getCategory().getBrandName())
                 .itemName(review.getItem().getItemName())
+//                .mainItemImg(review.getItem().getItemImgList().)
                 .userId(review.getUser().getUserId())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .star(review.getStar())
-                .reviewImgResponses(list)
+                .reviewImgResponses(reviewImgList)
                 .insertDate(review.getInsertDate())
                 .build();
     }

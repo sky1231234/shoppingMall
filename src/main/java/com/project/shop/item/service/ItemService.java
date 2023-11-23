@@ -94,7 +94,7 @@ public class ItemService {
     }
 
     //상품 수정
-    //    item + itmeImg + option
+    //item + itmeImg + option
     public void update(Long itemId, ItemUpdateRequest itemUpdateRequest){
 
         var category = categoryRepository
@@ -111,7 +111,7 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-        item.updateCategory(category.get());
+        item.editItem(category.get(),itemUpdateRequest);
 
         //itemImg
         //기존 이미지 삭제하고 다시 등록
