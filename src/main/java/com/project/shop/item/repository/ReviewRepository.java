@@ -1,6 +1,7 @@
 package com.project.shop.item.repository;
 
 
+import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
 import com.project.shop.item.domain.Review;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findAllByItemId(long itemId);
+    List<Review> findAllByItemId(Item item);
 
     List<Review> findAllByUserId(long userId);
 

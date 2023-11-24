@@ -27,16 +27,24 @@ public class UserReviewResponse {
 
       public static UserReviewResponse fromEntity(List<Review> userReviewList){
 
-          ArrayList<UserInReviewResponse> reviewEntitylist = new ArrayList<>();
 
-          for (Review review : userReviewList) {
-              var list = UserInReviewResponse.fromEntity(review);
-              reviewEntitylist.add(list);
-          }
+          ArrayList<UserInReviewResponse> reviewEntitylist = new ArrayList<>();
+//          var builder = UserReviewResponse.builder()
+//                  .categoryName(userReviewList)
+//                  .reviewList()
+//                  .build();
+//
+//          for (Review review : userReviewList) {
+//              var list = UserInReviewResponse.fromEntity(review);
+//
+//
+//              reviewEntitylist.add(list);
+//          }
 
         return UserReviewResponse.builder()
-                .categoryName(userReviewList)
-                .reviewList()
+//                .categoryName(userReviewList)
+                .reviewList(userReviewList)
                 .build();
     }
+
 }

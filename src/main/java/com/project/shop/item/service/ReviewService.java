@@ -4,6 +4,7 @@ import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
+import com.project.shop.item.dto.response.UserInReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
 import com.project.shop.item.exception.ItemException;
 import com.project.shop.item.repository.ItemImgRepository;
@@ -14,6 +15,7 @@ import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class ReviewService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUNT_ITEM"));
 
-        List<Review> reviewList = reviewRepository.findAllByItemId(itemId);
+        List<Review> reviewList = reviewRepository.findAllByItemId(item);
 
         //수정 썸네일 형식 sql문 돌리기
         ItemImg thumbnail = itemImgRepository.findByItemIdAndMainImg(itemId,"Y");
@@ -47,8 +49,16 @@ public class ReviewService {
     //회원 - 리뷰 조회
     public UserReviewResponse userReviewFindAll(long userId){
 
-        //검색해서 나오느 상품번호의 상품 정보 가져와야함
+
+        //수정하기
         List<Review> userList = reviewRepository.findAllByUserId(userId);
+
+        ArrayList<Item> itemData = new ArrayList<>();
+
+        for (Review review : userList) {
+            var item = review.getItem();
+            itemData.add(item);
+        }
 
         return UserReviewResponse.fromEntity(userList);
 
