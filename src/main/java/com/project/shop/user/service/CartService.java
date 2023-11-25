@@ -1,47 +1,68 @@
 package com.project.shop.user.service;
 
-import com.project.shop.user.domain.User;
-import com.project.shop.user.dto.request.LoginRequest;
-import com.project.shop.user.dto.request.SignupRequest;
-import com.project.shop.user.dto.request.UserUpdateRequest;
-import com.project.shop.user.dto.response.UserResponse;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.item.repository.ItemImgRepository;
+import com.project.shop.user.domain.Cart;
+import com.project.shop.user.dto.request.CartRequest;
+import com.project.shop.user.dto.request.CartUpdateRequest;
+import com.project.shop.user.dto.response.CartResponse;
+import com.project.shop.user.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
-    private final User user;
-    private final UserRepository userRepository;
+    private final CartRepository cartRepository ;
+    private final ItemImgRepository itemImgRepository ;
 
-    //회원정보 조회
-    public UserResponse userDetailFind(long userId){
-        var data = userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("userID가 없습니다."));
+    //회원별 장바구니 조회
+    public List<CartResponse> cartFindByUserId(long userId){
 
-        return UserResponse.fromEntity(data);
-    }
+        List<Cart> carts = cartRepository.findAllByUserId(userId);
 
-    //회원가입
-//    public void signup(SignupRequest signupRequest){
-//        userRepository.save();
-//    }
+        for (Cart cart : carts) {
+            var mainImg = itemImgRepository.findByItemIdAndMainImg(cart.getItemId(),"Y");
+        }
 
-
-    //로그인
-    public void login(LoginRequest loginRequest){
+        return carts
+                .stream()
+                .map(CartResponse.fromEntity(cart, mainImg))
+                .collect(Collectors.toList());
 
     }
 
-    //회원정보 수정
-//    public void update(UserUpdateRequest userUpdateRequest){
-//        userRepository.save();
-//    }
+    //장바구니 등록
+    public void create(CartRequest cartRequest){
 
-    //회원 탈퇴
-    public void delete(long userId){
-        userRepository.deleteById(userId);
+        //해당 회원이 장바구니 등록해놓은게 있는지 확인
+        if(cartRepository.findByUserIdAndOptionNum(cartRequest.getItemId(),cartRequest.getOptionNum()).isPresent())
+            throw new RuntimeException("NOT_FOUND_CART");
+
+        // 등록되어있는 장바구니 없으면 새로 등록
+        cartRepository.save(cartRequest.toEntity());
+
     }
+
+    //장바구니 수정
+    public void update(long cartId, CartUpdateRequest cartUpdateRequest){
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CARTID"));
+
+        cart.updateCart(cartUpdateRequest);
+    }
+
+    //장바구니 삭제
+    public void delete(long cartId){
+
+        if(!cartRepository.findById(cartId).isPresent()){
+            throw new RuntimeException("NOT_FOUND_CARTID");
+        }
+
+        cartRepository.deleteById(cartId);
+    }
+
 }

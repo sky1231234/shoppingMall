@@ -7,6 +7,7 @@ import com.project.shop.user.domain.User;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -25,25 +26,19 @@ public class UserReviewResponse {
 
     private UserInReviewResponse reviewList; //리뷰 리스트
 
-      public static UserReviewResponse fromEntity(List<Review> userReviewList){
+      public static UserReviewResponse fromEntity(List<Review> userReviewList, List<Item> itemData){
 
 
           ArrayList<UserInReviewResponse> reviewEntitylist = new ArrayList<>();
-//          var builder = UserReviewResponse.builder()
-//                  .categoryName(userReviewList)
-//                  .reviewList()
-//                  .build();
-//
-//          for (Review review : userReviewList) {
-//              var list = UserInReviewResponse.fromEntity(review);
-//
-//
+
+          for (Review review : userReviewList) {
+              var list = UserInReviewResponse.fromEntity(review);
 //              reviewEntitylist.add(list);
-//          }
+          }
 
         return UserReviewResponse.builder()
 //                .categoryName(userReviewList)
-                .reviewList(userReviewList)
+                .reviewList(list)
                 .build();
     }
 

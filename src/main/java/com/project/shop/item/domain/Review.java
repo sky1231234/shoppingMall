@@ -31,7 +31,6 @@ public class Review {
     @JoinColumn(name = "userId")
     private User user;  //고객
 
-
     @Column(name = "title", nullable = false)
     private String title;    //제목
     @Column(name = "content", nullable = false)
@@ -51,6 +50,10 @@ public class Review {
         this.title = reviewUpdateRequest.getTitle();
         this.content = reviewUpdateRequest.getContent();
         this.star = reviewUpdateRequest.getStar();
+    }
+
+    public void getItem(Item item){
+        this.item = item;
     }
 
 }

@@ -49,18 +49,18 @@ public class ReviewService {
     //회원 - 리뷰 조회
     public UserReviewResponse userReviewFindAll(long userId){
 
-
         //수정하기
         List<Review> userList = reviewRepository.findAllByUserId(userId);
 
-        ArrayList<Item> itemData = new ArrayList<>();
+        List<Item> itemData = new ArrayList<>();
 
+        //리뷰 하나 + 상품 정보 하나
         for (Review review : userList) {
             var item = review.getItem();
-            itemData.add(item);
+
         }
 
-        return UserReviewResponse.fromEntity(userList);
+        return UserReviewResponse.fromEntity(userList,itemData);
 
     }
 
