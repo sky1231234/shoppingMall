@@ -23,7 +23,7 @@ public class Review {
     private long reviewId;     //리뷰번호
 
     //주인
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;     //상품
 

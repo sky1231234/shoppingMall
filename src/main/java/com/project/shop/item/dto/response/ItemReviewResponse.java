@@ -30,7 +30,6 @@ public class ItemReviewResponse {
         ArrayList<ItemInReviewResponse> reviewEntitylist = new ArrayList<>();
 
         for (Review review : reviewList) {
-            //reviewResponse 자체를 가져오기
             var list = ItemInReviewResponse.fromEntity(review);
             reviewEntitylist.add(list);
         }

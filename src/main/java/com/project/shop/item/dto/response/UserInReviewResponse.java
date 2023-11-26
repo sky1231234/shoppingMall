@@ -20,22 +20,16 @@ public class UserInReviewResponse {
     private String title;   //리뷰 제목
     private String content; //리뷰 내용
     private int star;    //별점
-    private List<ReviewImgResponse> reviewImgResponses; //리뷰 이미지
     private LocalDateTime insertDate;   //리뷰 등록일
 
     //review -> ReviewResponse
     public static UserInReviewResponse fromEntity(Review review){
 
-        var reviewImgList = review.getReviewImgList()
-                .stream().map(x -> new ReviewImgResponse(x.getImgUrl()))
-                .collect(Collectors.toList());
-
-        return UserInReviewResponse.builder()
+               return UserInReviewResponse.builder()
                 .user(review.getUser())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .star(review.getStar())
-                .reviewImgResponses(reviewImgList)
                 .insertDate(review.getInsertDate())
                 .build();
     }

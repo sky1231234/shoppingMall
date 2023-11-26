@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Option;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
+//import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class ItemService {
     public ItemResponse itemDetailFind(long itemId){
 
         var item = itemRepository.findById(itemId)
-                .orElseThrow(()->new ItemException(NOT_FOUND_ITEM));
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
 
         return ItemResponse.fromEntity(item);
     }
@@ -51,18 +52,15 @@ public class ItemService {
     // item + itmeImg + option
     public void create(ItemRequest itemRequest){
         //category
-        var category = categoryRepository
+        Category category = categoryRepository
                 .findByCategoryNameAndBrandName(
                         itemRequest.getCategoryRequest().getCategoryName(),
-                        itemRequest.getCategoryRequest().getBrandName());
-
-        if(!category.isPresent()){
-            throw new RuntimeException("NOT_FOUND_CATEGORY");
-        }
+                        itemRequest.getCategoryRequest().getBrandName())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
 
         //item
         var item = itemRequest.toEntity();
-        item.updateCategory(category.get());
+        item.updateCategory(category);
         itemRepository.save(item);
 
         //itemImg
@@ -94,31 +92,28 @@ public class ItemService {
     }
 
     //상품 수정
-    //item + itmeImg + option
+    //category + item + itmeImg + option
     public void update(Long itemId, ItemUpdateRequest itemUpdateRequest){
 
-        var category = categoryRepository
+        Category category = categoryRepository
                         .findByCategoryNameAndBrandName(
                                 itemUpdateRequest.getCategoryUpdateRequest().getCategoryName(),
                                 itemUpdateRequest.getCategoryUpdateRequest().getBrandName()
-                        );
-
-        if(!category.isPresent()){
-            throw new RuntimeException("NOT_FOUND_CATEGORY");
-        }
+                        )
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
 
         //item
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-        item.editItem(category.get(),itemUpdateRequest);
+        item.editItem(category,itemUpdateRequest);
 
         //itemImg
         //기존 이미지 삭제하고 다시 등록
         List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);
 
         if(itemImgList.isEmpty()){
-            throw new RuntimeException("NOT_FOUND_OPTION");
+            throw new RuntimeException("NOT_FOUND_IMG");
         }
         itemImgRepository.deleteAll(itemImgList);
 

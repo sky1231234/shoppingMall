@@ -22,19 +22,15 @@ public class Cart {
     private long cartId;     //장바구니 번호
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "itemId")
     private Item item;
-
-    @Column(name = "itemId", nullable = false)
-    private long itemId;    //상품번호
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private User user;
 
-    //추가???
-    @Column(name = "optionNum", nullable = false)
-    private long optionNum;    //옵션번호
+    @Column(name = "optionId", nullable = false)
+    private long optionId;    //옵션번호
 
     @Column(name = "count", nullable = false)
     private int count;    //수량
@@ -44,8 +40,9 @@ public class Cart {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public void updateCart(CartUpdateRequest cartUpdateRequest){
+    public Cart updateCart(CartUpdateRequest cartUpdateRequest){
         this.count = cartUpdateRequest.getCount();
-        this.optionNum = cartUpdateRequest.getOptionNum();
+        this.optionId = cartUpdateRequest.getOptionNum();
+        return this;
     }
 }

@@ -1,47 +1,65 @@
 package com.project.shop.user.service;
 
-import com.project.shop.user.domain.User;
-import com.project.shop.user.dto.request.LoginRequest;
-import com.project.shop.user.dto.request.SignupRequest;
-import com.project.shop.user.dto.request.UserUpdateRequest;
-import com.project.shop.user.dto.response.UserResponse;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.user.domain.Address;
+import com.project.shop.user.dto.request.AddressRequest;
+import com.project.shop.user.dto.request.AddressUpdateRequest;
+import com.project.shop.user.dto.response.AddressResponse;
+import com.project.shop.user.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+//import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
 @RequiredArgsConstructor
 public class AddressService {
 
-    private final User user;
-    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
-    //회원정보 조회
-    public UserResponse userDetailFind(long userId){
-        var data = userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("userID가 없습니다."));
+    //주소 전체 조회
+    public List<AddressResponse> addressFindAll(long userId){
 
-        return UserResponse.fromEntity(data);
-    }
-
-    //회원가입
-    public void signup(SignupRequest signupRequest){
-        userRepository.save();
-    }
-
-
-    //로그인
-    public void login(LoginRequest loginRequest){
+        return addressRepository.findAllByUserId(userId)
+                .stream()
+                .map(AddressResponse::fromEntity)
+                .collect(Collectors.toList());
 
     }
 
-    //회원정보 수정
-    public void update(UserUpdateRequest userUpdateRequest){
-        userRepository.save();
+    //주소 상세 조회
+    public AddressResponse addressDetailFind(long addressId){
+
+        //회원 확인하기
+
+        var address = addressRepository.findById(addressId)
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_ADDRESS"));
+
+        return AddressResponse.fromEntity(address);
     }
 
-    //회원 탈퇴
-    public void delete(long userId){
-        userRepository.deleteById(userId);
+    //주소 등록
+    public void create(AddressRequest addressRequest){
+
+        addressRepository.save(addressRequest.toEntity());
+
+    }
+
+    //주소 수정
+    public void update(Long addressId, AddressUpdateRequest addressUpdateRequest){
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ADDRESS"));
+
+        address.editAddress(addressUpdateRequest);
+
+    }
+
+    //주소 삭제
+    public void delete(long addressId){
+        addressRepository.deleteById(addressId);
     }
 }

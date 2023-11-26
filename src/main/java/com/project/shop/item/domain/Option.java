@@ -31,8 +31,7 @@ public class Option {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //옵션 수정일
 
-    public Option updateItem(Item item){
+    public void updateItem(Item item){
         this.item = item;
-        return this;
     }
 }

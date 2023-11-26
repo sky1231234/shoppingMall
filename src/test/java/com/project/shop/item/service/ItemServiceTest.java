@@ -9,6 +9,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @DisplayName("상품 서비스 테스트")
 public class ItemServiceTest {
 
+    private int id;
+    private String email;
+    private String password;
+
 
     @Test
     @DisplayName("상품 등록")

@@ -1,47 +1,56 @@
 package com.project.shop.user.service;
 
-import com.project.shop.user.domain.User;
-import com.project.shop.user.dto.request.LoginRequest;
-import com.project.shop.user.dto.request.SignupRequest;
-import com.project.shop.user.dto.request.UserUpdateRequest;
-import com.project.shop.user.dto.response.UserResponse;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.user.domain.Point;
+import com.project.shop.user.dto.request.PointRequest;
+import com.project.shop.user.dto.request.PointUpdateRequest;
+import com.project.shop.user.dto.response.PointResponse;
+import com.project.shop.user.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PointService {
 
-    private final User user;
-    private final UserRepository userRepository;
+    private final PointRepository pointRepository;
 
-    //회원정보 조회
-    public UserResponse userDetailFind(long userId){
-        var data = userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("userID가 없습니다."));
+    //포인트 전체 조회
+    public List<PointResponse> pointFindAll(){
 
-        return UserResponse.fromEntity(data);
-    }
+        //로그인된 userId 받기
+        long userId = 5;
 
-    //회원가입
-//    public void signup(SignupRequest signupRequest){
-//        userRepository.save();
-//    }
+        //포인트 합계, 소멸 예정 포인트 계산하기
 
-
-    //로그인
-    public void login(LoginRequest loginRequest){
+        return pointRepository.findAllByUserId(userId)
+                .stream()
+                .map(PointResponse::fromEntity)
+                .collect(Collectors.toList());
 
     }
 
-    //회원정보 수정
-//    public void update(UserUpdateRequest userUpdateRequest){
-//        userRepository.save();
-//    }
+   
+    //포인트 등록
+    public void create(PointRequest pointRequest){
+        pointRepository.save(pointRequest.toEntity());
 
-    //회원 탈퇴
-    public void delete(long userId){
-        userRepository.deleteById(userId);
+    }
+
+    //포인트 수정
+    public void update(Long pointId, PointUpdateRequest pointUpdateRequest){
+
+        Point point = pointRepository.findById(pointId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_POINT"));
+
+        point.editPoint(pointUpdateRequest);
+
+    }
+
+    //포인트 삭제
+    public void delete(long pointId){
+        pointRepository.deleteById(pointId);
     }
 }
