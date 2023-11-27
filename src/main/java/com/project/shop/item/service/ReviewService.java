@@ -34,10 +34,33 @@ public class ReviewService {
 
         List<Review> reviewList = reviewRepository.findAllByItemId(item);
 
-        //수정 썸네일 형식 sql문 돌리기
-        ItemImg thumbnail = itemImgRepository.findByItemIdAndMainImg(itemId,"Y");
+        var list = reviewList.stream().map(x -> {
+            return ItemReviewResponse.ReviewItem.builder()
+                    .userId(x.getUser().getUserId())
+                    .reviewTitle(x.getTitle())
+                    .reviewContent(x.getContent())
+                    .reviewStar(x.getStar())
+                    .insertDate(x.getInsertDate())
+                    .build();
+        }).toList();
 
-        return ItemReviewResponse.fromEntity(item, thumbnail, reviewList);
+        return ItemReviewResponse.builder()
+                .itemId(item.getItemId())
+                .categoryName(item.getCategory().getCategoryName())
+                .brandName(item.getCategory().getBrandName())
+                .itemName(item.getItemName())
+                .itemThumbnail(item.getItemImgList().stream()
+                        .filter(y -> y.getItemImgType() == ItemImgType.Y)
+                        .map(y -> {
+                            return ItemReviewResponse.Thumbnail.builder()
+                                    .imgId(y.getItemImgId())
+                                    .url(y.getImgUrl())
+                                    .build();
+                        })
+                        .findFirst().orElse(null)
+                )
+                .reviewList(list)
+                .build();
 
     }
 
@@ -79,10 +102,41 @@ public class ReviewService {
         var review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_REVIEW"));
 
-        //상품 메인 이미지 불러오기
-//        itemImgRepository.findByItemIdAndMainImg();
+        List<ReviewImg> img = reviewImgRepository.findByReviewId(reviewId);
 
-        return ReviewResponse.fromEntity(review);
+        var imgList = img.stream()
+                .map(x -> {
+                    return ReviewResponse.ReviewImg.builder()
+                            .imgId(x.getReviewImgId())
+                            .url(x.getImgUrl())
+                            .build();
+                })
+                .toList();
+
+        var item = review.getItem();
+
+        return ReviewResponse.builder()
+                .itemId(item.getItemId())
+                .categoryName(item.getCategory().getCategoryName())
+                .brandName(item.getCategory().getBrandName())
+                .itemName(item.getItemName())
+                .thumbnail(item.getItemImgList().stream()
+                        .filter(y -> y.getItemImgType() == ItemImgType.Y)
+                        .map(y -> {
+                            return ReviewResponse.Thumbnail.builder()
+                                    .imgId(y.getItemImgId())
+                                    .url(y.getImgUrl())
+                                    .build();
+                        })
+                        .findFirst().orElse(null)
+                )
+                .userId(review.getUser().getUserId())
+                .reviewTitle(review.getTitle())
+                .reviewContent(review.getContent())
+                .reviewStar(review.getStar())
+                .reviewImgResponses(imgList)
+                .insertDate(review.getInsertDate())
+                .build();
     }
 
     //리뷰 등록

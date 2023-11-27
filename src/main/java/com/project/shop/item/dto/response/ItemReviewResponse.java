@@ -7,6 +7,7 @@ import com.project.shop.item.domain.Review;
 import com.project.shop.item.repository.ItemImgRepository;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,29 +17,47 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ItemReviewResponse {
+//    {
+//        "itemId" : 1,
+//        "itemName" : "상품명",
+//        "categoryName" : "카테고리명",
+//        "brandName" : "브랜드명",
+//        "thumbnail" : {
+//              "imgId" : 1,
+//              "url" : "dd"
+//          },
+//        "reviewList" : [
+//              {
+//                  "userId" : 1,
+//                  "reviewTitle" : "리뷰제목",
+//                  "reviewContent" : "리뷰내용",
+//                  "reviewStar" : "별점",
+//                  "insertDate" : "리뷰등록일일"
+//              }
+//          ],...
+//    }
+
+    private long itemId;    //상품id
     private String categoryName;    //카테고리명
     private String brandName;    //브랜드명
-
     private String itemName;    //상품명
-    //수정 itemimg아니고 string
-    private ItemImg itemThumbnail;   //상품 대표이미지
+    private Thumbnail itemThumbnail;   //상품 대표이미지
 
-    private List<ItemInReviewResponse> reviewList; //리뷰 리스트
+    private List<ReviewItem> reviewList; //리뷰 리스트
 
-    public static ItemReviewResponse fromEntity(Item item, ItemImg itemThumbnail, List<Review> reviewList){
-
-        ArrayList<ItemInReviewResponse> reviewEntitylist = new ArrayList<>();
-
-        for (Review review : reviewList) {
-            var list = ItemInReviewResponse.fromEntity(review);
-            reviewEntitylist.add(list);
-        }
-
-        return ItemReviewResponse.builder()
-                .categoryName(item.getCategory().getCategoryName())
-                .brandName(item.getCategory().getBrandName())
-                .itemThumbnail(itemThumbnail)
-                .reviewList(reviewEntitylist)
-                .build();
+    @Builder
+    public static class Thumbnail{
+        private long imgId;
+        private String url;
     }
+
+    @Builder
+    public static class ReviewItem{
+        private long userId;
+        private String reviewTitle;
+        private String reviewContent;
+        private int reviewStar;
+        private LocalDateTime insertDate;
+    }
+
 }
