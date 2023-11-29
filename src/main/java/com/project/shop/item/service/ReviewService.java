@@ -173,6 +173,7 @@ public class ReviewService {
         if(reviewImgList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_REVIEW_IMG");
         }
+        //수정할 이미지 개수가 기존과 다르면?
         reviewImgRepository.deleteAll(reviewImgList);
 
         List<ReviewImg> reviewImgUpdateList = reviewUpdateRequest

@@ -52,8 +52,5 @@ public class Review {
         this.star = reviewUpdateRequest.getStar();
     }
 
-    public void getItem(Item item){
-        this.item = item;
-    }
 
 }

@@ -21,11 +21,11 @@ public record CartRequest(
         @NotNull long optionNum// 옵션 번호
         ) {
 
-        public Cart toEntity(Item item){
+        public Cart toEntity(){
                 return Cart.builder()
-                        .item(item)
-                        .count(this.count)
-                        .optionId(this.optionNum)
+                        .item(this.getItemId())
+                        .count(this.getCount())
+                        .optionId(this.getOptionNum())
                         .build();
         }
 

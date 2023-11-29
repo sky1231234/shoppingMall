@@ -22,8 +22,6 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemId")
     private long itemId;     //상품번호
-//    @Column(name = "categoryId", nullable = false)
-//    private long categoryId;     //카테고리 번호
 
     @ManyToOne
     @JoinColumn(name = "categoryId")

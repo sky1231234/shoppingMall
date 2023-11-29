@@ -20,11 +20,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository ;
 
-    //카테고리 조회
-    //카테고리 이름 별로 / 브랜드 별로 조회?
+    //브랜드별 조회 - 메인
+    //브랜드별로 카테고리 나열
     public List<CategoryResponse> categoryFindAll(){
 
-        return categoryRepository.findAll()
+        return categoryRepository.findByCategoryName()
                 .stream()
                 .map(CategoryResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class CategoryService {
     //카테고리 수정
     public void update(Long categoryId, CategoryUpdateRequest categoryUpdateRequest){
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("카테고리Id 없음"));
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY_ID"));
 
         category.updateCategory(categoryUpdateRequest);
     }
@@ -54,8 +54,8 @@ public class CategoryService {
     //카테고리 삭제
     public void delete(long categoryId){
 
-        if(!categoryRepository.findById(categoryId).isPresent()){
-            throw new RuntimeException("NOT_FOUND_CATEGORYID");
+        if(categoryRepository.findById(categoryId).isEmpty()){
+            throw new RuntimeException("NOT_FOUND_CATEGORY_ID");
         }
 
         categoryRepository.deleteById(categoryId);

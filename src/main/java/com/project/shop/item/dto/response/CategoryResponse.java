@@ -15,14 +15,25 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class CategoryResponse {
+    private long categoryId;
     private String categoryName;
     private String brandName;
 
+//    {
+//        "categoryId" : 1,
+//        "category" : [
+//                  {
+//                  "categoryName" : "나이키",
+//                  }
+//              ]
+//    }
+    //카테고리(브랜드별) 조회
     public static CategoryResponse fromEntity(Category category){
 
         return CategoryResponse.builder()
+                .categoryId(category.getCategoryId())
                 .categoryName(category.getCategoryName())
-                .brandName(category.getBrandName())
                 .build();
     }
+
 }

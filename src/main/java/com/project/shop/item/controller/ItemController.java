@@ -3,6 +3,7 @@ package com.project.shop.item.controller;
 
 import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.response.ItemListResponse;
 import com.project.shop.item.dto.response.ItemResponse;
 import com.project.shop.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ItemController {
     //상품 전체 조회
     @GetMapping("/item")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemResponse> itemFindAll(){
+    public List<ItemListResponse> itemFindAll(){
         return itemService.itemFindAll();
     }
 

@@ -60,6 +60,7 @@ public class ReviewResponse {
         private long imgId;
         private String url;
     }
+
     //review -> ReviewResponse
 //    public static ReviewResponse fromEntity(Review review){
 

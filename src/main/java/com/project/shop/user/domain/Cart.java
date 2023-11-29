@@ -45,4 +45,9 @@ public class Cart {
         this.optionId = cartUpdateRequest.getOptionNum();
         return this;
     }
+
+    public Cart updateCount(){
+        this.count += 1;
+        return this;
+    }
 }

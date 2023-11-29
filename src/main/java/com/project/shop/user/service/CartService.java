@@ -1,6 +1,9 @@
 package com.project.shop.user.service;
 
+import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImgType;
 import com.project.shop.item.domain.Option;
+import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
@@ -28,53 +31,63 @@ public class CartService {
     //회원별 장바구니 조회
     public List<CartResponse> cartFindByUserId(long userId){
 
-        List<Cart> carts = cartRepository.findAllByUserId(userId);
+        List<Cart> cart = cartRepository.findAllByUserId(userId);
 
-        for (Cart cart : carts) {
-            var item = itemRepository.findById(cart.getItemId());
-            var mainImg = itemImgRepository.findByItemIdAndMainImg(cart.getItemId(),"Y");
-            var option = optionRepository.findById(cart.getOptionId());
+        return cart.stream()
+                .map(x -> {
+                    var item = x.getItem();
+                    Option option = optionRepository.findById(x.getOptionId())
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-            //cart + item + mainImg + option
-            CartResponse.builder()
-                    .itemId(cart.getItem().getItemId())
-                    .itemName(cart.getItem().getItemName())
-                    .itemThumbnail(mainImg)
-                    .itemSize()
-                    .itemColor(option)
-                    .count(cart.getCount())
-                    .build();
-        }
-
-        return carts
-                .stream()
-                .map(CartResponse.fromEntity(cartData))
-                .collect(Collectors.toList());
+                    return CartResponse.builder()
+                            .itemId(item.getItemId())
+                            .categoryName(item.getCategory().getCategoryName())
+                            .brandName(item.getCategory().getBrandName())
+                            .itemName(item.getItemName())
+                            .itemSize(option.getSize())
+                            .itemColor(option.getSize())
+                            .count(x.getCount())
+                            .itemThumbnail(item.getItemImgList().stream()
+                                    .filter(y -> y.getItemImgType() == ItemImgType.Y)
+                                    .map(y -> {
+                                        return CartResponse.Thumbnail.builder()
+                                                .imgId(y.getItemImgId())
+                                                .url(y.getImgUrl())
+                                                .build();
+                                    })
+                                    .findFirst().orElse(null)
+                            )
+                            .build();
+                })
+                .toList();
 
     }
 
     //장바구니 등록
-    public void create(CartRequest cartRequest){
+    public void create(long userId, CartRequest cartRequest){
 
         //해당 회원이 장바구니 등록해놓은게 있는지 확인
-        if(cartRepository.findByUserIdAndOptionNum(cartRequest.getItemId(),cartRequest.getOptionNum()).isPresent())
-            throw new RuntimeException("NOT_FOUND_CART");
+        //없으면 새로 등록
 
-        //item repository
+        Cart cart = cartRepository.findByUserIdAndAndItemIdAndOptionNum(userId, cartRequest.getItemId(),cartRequest.getOptionNum())
+                .orElse(x -> {
+                    Item item = itemRepository.findById(x.);
+                    return cartRepository.save(cartRequest.toEntity())
+                };
 
-        // 등록되어있는 장바구니 없으면 새로 등록
-        cartRepository.save(cartRequest.toEntity());
+        //등록한게 있으면 수량 +1
+        Cart count = cart.updateCount();
+        cartRepository.save(count);
 
     }
 
     //장바구니 수정
     public void update(long cartId, CartUpdateRequest cartUpdateRequest){
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CARTID"));
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CART_ID"));
 
-        Cart cart1 = cart.updateCart(cartUpdateRequest);
-
-        cartRepository.save(cart1);
+        Cart update = cart.updateCart(cartUpdateRequest);
+        cartRepository.save(update);
     }
 
     //장바구니 삭제

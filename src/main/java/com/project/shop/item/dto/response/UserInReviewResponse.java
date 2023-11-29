@@ -22,7 +22,6 @@ public class UserInReviewResponse {
     private int star;    //별점
     private LocalDateTime insertDate;   //리뷰 등록일
 
-    //review -> ReviewResponse
     public static UserInReviewResponse fromEntity(Review review){
 
                return UserInReviewResponse.builder()

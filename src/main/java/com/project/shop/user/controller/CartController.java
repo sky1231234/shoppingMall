@@ -29,8 +29,8 @@ public class CartController {
     //장바구니 등록
     @PostMapping("/cart")
     @ResponseStatus(HttpStatus.CREATED)
-    public void cartCreate(@RequestBody CartRequest cartRequest){
-        cartService.create(cartRequest);
+    public void cartCreate(@RequestBody long userId, CartRequest cartRequest){
+        cartService.create(userId, cartRequest);
     }
 
     //장바구니 수정

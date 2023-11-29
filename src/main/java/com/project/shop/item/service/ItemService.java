@@ -1,11 +1,10 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.domain.Category;
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.domain.Option;
+import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
+import com.project.shop.item.dto.response.ItemListResponse;
 import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.exception.ItemException;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
@@ -30,22 +29,84 @@ public class ItemService {
     private final ItemImgRepository itemImgRepository;
 
     //상품 전체 조회
-    public List<ItemResponse> itemFindAll(){
+    public List<ItemListResponse> itemFindAll(){
 
         return itemRepository.findAll()
                 .stream()
-                .map(ItemResponse::fromEntity)
-                .collect(Collectors.toList());
+                .map(x -> {
+                    return ItemListResponse.builder()
+                            .itemId(x.getItemId())
+                            .categoryName(x.getCategory().getCategoryName())
+                            .brandName(x.getCategory().getBrandName())
+                            .itemName(x.getItemName())
+                            .itemPrice(x.getPrice())
+                            .thumbnail(x.getItemImgList().stream()
+                                    .filter(y -> y.getItemImgType() == ItemImgType.Y)
+                                    .map(y-> {
+                                        return ItemListResponse.Thumbnail.builder()
+                                                .imgId(y.getItemImgId())
+                                                .url(y.getImgUrl())
+                                                .build();
+                                    })
+                                    .findFirst().orElse(null)
+                            ).build();
+                })
+                .toList();
 
     }
 
     //상품 상세 조회
     public ItemResponse itemDetailFind(long itemId){
 
-        var item = itemRepository.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
 
-        return ItemResponse.fromEntity(item);
+        var itemImg = item.getItemImgList().stream()
+                .filter(y -> y.getItemImgType() == ItemImgType.N)
+                .map(y -> {
+                    return ItemResponse.ItemImgResponse.builder()
+                            .imgId(y.getItemImgId())
+                            .url(y.getImgUrl())
+                            .build();
+                })
+                .toList();
+
+        var size = item.getOptionList().stream()
+                .map(x -> {
+                    return ItemResponse.OptionSize.builder()
+                            .optionId(x.getOptionId())
+                            .size(x.getSize())
+                            .build();
+                }).toList();
+
+        var color = item.getOptionList().stream()
+                .map(x -> {
+                    return ItemResponse.OptionColor.builder()
+                            .optionId(x.getOptionId())
+                            .color(x.getColor())
+                            .build();
+                }).toList();
+
+        return ItemResponse.builder()
+                .itemId(item.getItemId())
+                .categoryName(item.getCategory().getCategoryName())
+                .brandName(item.getCategory().getBrandName())
+                .itemName(item.getItemName())
+                .itemExplain(item.getExplain())
+                .itemPrice(item.getPrice())
+                .itemThumbnail(item.getItemImgList().stream()
+                        .filter(y -> y.getItemImgType() == ItemImgType.Y)
+                        .map(y -> {
+                            return ItemResponse.ItemImgResponse.builder()
+                                    .imgId(y.getItemImgId())
+                                    .url(y.getImgUrl())
+                                    .build();
+                        })
+                        .findFirst().orElse(null))
+                .itemImgResponseList(itemImg)
+                .optionSizeList(size)
+                .optionColorList(color)
+                .build();
     }
 
     //상품 등록
@@ -113,7 +174,7 @@ public class ItemService {
         List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);
 
         if(itemImgList.isEmpty()){
-            throw new RuntimeException("NOT_FOUND_IMG");
+            throw new RuntimeException("NOT_FOUND_ITEM_IMG");
         }
         itemImgRepository.deleteAll(itemImgList);
 
