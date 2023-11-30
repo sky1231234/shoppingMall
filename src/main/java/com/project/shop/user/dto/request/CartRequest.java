@@ -21,9 +21,9 @@ public record CartRequest(
         @NotNull long optionNum// 옵션 번호
         ) {
 
-        public Cart toEntity(){
+        public Cart toEntity(Item item){
                 return Cart.builder()
-                        .item(this.getItemId())
+                        .item(item)
                         .count(this.getCount())
                         .optionId(this.getOptionNum())
                         .build();

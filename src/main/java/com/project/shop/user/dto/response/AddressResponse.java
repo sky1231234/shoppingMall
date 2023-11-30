@@ -13,6 +13,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddressResponse {
 
+//    {
+//        "addrId" : 1,
+//        "receiverName" : "받는사람이름",
+//        "zipcode" : "우편번호",
+//        "address" : "주소",
+//        "addressDetail" : "상세주소",
+//        "receiverPhoneNum" : "받는사람전화번호",
+//        "defaultAddr" : "기본배송지 여부",
+//    }
+
     private long addressId;
     private String receiverName;
     private String zipcode;

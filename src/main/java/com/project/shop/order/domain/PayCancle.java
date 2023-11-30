@@ -12,7 +12,7 @@ public class PayCancle {
     @Column(name = "payCancleId")
     private long payCancleId;     //결제취소번호
     @Column(name = "orderId", nullable = false)
-    private long orderId;     //주문 번호
+    private Order order;     //주문 번호
     @Column(name = "usedPoint", nullable = false)
     private int usedPoint;     //취소 포인트
     @Column(name = "payCompany", nullable = false)

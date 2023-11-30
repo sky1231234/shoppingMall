@@ -23,9 +23,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewImgRepository reviewImgRepository;
-
     private final ItemRepository itemRepository;
-    private final ItemImgRepository itemImgRepository;
 
     //상품 - 리뷰 조회
     public ItemReviewResponse itemReviewFindAll(long itemId){

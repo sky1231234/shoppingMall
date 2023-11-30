@@ -1,10 +1,12 @@
 package com.project.shop.user.service;
 
 import com.project.shop.user.domain.Point;
+import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.PointRequest;
 import com.project.shop.user.dto.request.PointUpdateRequest;
 import com.project.shop.user.dto.response.PointResponse;
 import com.project.shop.user.repository.PointRepository;
+import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +18,44 @@ import java.util.stream.Collectors;
 public class PointService {
 
     private final PointRepository pointRepository;
+    private final UserRepository userRepository;
 
     //포인트 전체 조회
-    public List<PointResponse> pointFindAll(){
+    public PointResponse pointFindAll(long userId){
 
-        //로그인된 userId 받기
-        long userId = 5;
+        var sumPoint = pointRepository.findSumPoint(userId);
+        var disappearPoint = pointRepository.findDisappearPoint(userId);
 
-        //포인트 합계, 소멸 예정 포인트 계산하기
+        List<Point> pointList = pointRepository.findAllByUserId(userId);
 
-        return pointRepository.findAllByUserId(userId)
-                .stream()
-                .map(PointResponse::fromEntity)
-                .collect(Collectors.toList());
+        var list =  pointList.stream().map( x -> {
+            return PointResponse.PointList.builder()
+                    .pointId(x.getPointId())
+                    .point(x.getPoint())
+                    .deadlineDate(x.getDeadlineDate())
+                    .state(x.getPointType())
+                    .date(x.getInsertDate())
+                    .build();
+                })
+                .toList();
 
+        return PointResponse.builder()
+                .sumPoint(sumPoint)
+                .disappearPoint(disappearPoint)
+                .pointList(list)
+                .build();
     }
 
    
     //포인트 등록
     public void create(PointRequest pointRequest){
-        pointRepository.save(pointRequest.toEntity());
+
+        //userId 받아오기
+        long userId = 5;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        pointRepository.save(pointRequest.toEntity(user));
 
     }
 
@@ -45,7 +65,8 @@ public class PointService {
         Point point = pointRepository.findById(pointId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_POINT"));
 
-        point.editPoint(pointUpdateRequest);
+        Point update = point.editPoint(pointUpdateRequest);
+        pointRepository.save(update);
 
     }
 

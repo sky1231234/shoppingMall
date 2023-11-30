@@ -12,7 +12,7 @@ public class Pay {
     @Column(name = "payId")
     private long payId;     //결제번호
     @Column(name = "orderId", nullable = false)
-    private long orderId;     //주문 번호
+    private Order order;     //주문 번호
     @Column(name = "usedPoint", nullable = false)
     private int usedPoint;     //사용 포인트
     @Column(name = "payCompany", nullable = false)

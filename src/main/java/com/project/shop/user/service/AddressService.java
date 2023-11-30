@@ -33,9 +33,7 @@ public class AddressService {
     //주소 상세 조회
     public AddressResponse addressDetailFind(long addressId){
 
-        //회원 확인하기
-
-        var address = addressRepository.findById(addressId)
+        Address address = addressRepository.findById(addressId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ADDRESS"));
 
         return AddressResponse.fromEntity(address);
@@ -55,7 +53,7 @@ public class AddressService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ADDRESS"));
 
         address.editAddress(addressUpdateRequest);
-
+        addressRepository.save(address);
     }
 
     //주소 삭제

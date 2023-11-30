@@ -38,13 +38,14 @@ public class Address {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //배송지 수정일
 
-    public void editAddress(AddressUpdateRequest addressUpdateRequest){
+    public Address editAddress(AddressUpdateRequest addressUpdateRequest){
         this.name = addressUpdateRequest.getReceiverName();
         this.zipcode = addressUpdateRequest.getZipcode();
         this.address = addressUpdateRequest.getAddress();
         this.addrDetail = addressUpdateRequest.getAddressDetail();
         this.phoneNum = addressUpdateRequest.getReceiverPhoneNum();
         this.addressType = addressUpdateRequest.getDefaultAddr();
+        return this;
     }
 
 }

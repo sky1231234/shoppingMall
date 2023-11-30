@@ -67,18 +67,19 @@ public class CartService {
     public void create(long userId, CartRequest cartRequest){
 
         //해당 회원이 장바구니 등록해놓은게 있는지 확인
-        //없으면 새로 등록
 
-        Cart cart = cartRepository.findByUserIdAndAndItemIdAndOptionNum(userId, cartRequest.getItemId(),cartRequest.getOptionNum())
-                .orElse(x -> {
-                    Item item = itemRepository.findById(x.);
-                    return cartRepository.save(cartRequest.toEntity())
-                };
+        Optional<Cart> cart = cartRepository.findByUserIdAndAndItemIdAndOptionNum(userId, cartRequest.getItemId(),cartRequest.getOptionNum());
 
-        //등록한게 있으면 수량 +1
-        Cart count = cart.updateCount();
-        cartRepository.save(count);
-
+//              등록한게 있으면 수량 +1
+                if(cart.isPresent()){
+                        Cart count = cart.get().updateCount();
+                        cartRepository.save(count);
+                }else{
+                    //등록된 장바구니 없으면 새로 등록
+                    Item item = itemRepository.findById(cart.get().getItem().getItemId())
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+                    cartRepository.save(cartRequest.toEntity(item));
+                }
     }
 
     //장바구니 수정
@@ -94,7 +95,7 @@ public class CartService {
     public void delete(long cartId){
 
         if(!cartRepository.findById(cartId).isPresent()){
-            throw new RuntimeException("NOT_FOUND_CARTID");
+            throw new RuntimeException("NOT_FOUND_CART_ID");
         }
 
         cartRepository.deleteById(cartId);

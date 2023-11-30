@@ -1,4 +1,4 @@
-package com.project.shop.order.dto;
+package com.project.shop.order.dto.request;
 
 import javax.validation.constraints.NotBlank;
 

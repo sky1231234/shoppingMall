@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class CategoryResponse {
-    private long categoryId;
-    private String categoryName;
-    private String brandName;
 
 //    {
 //        "categoryId" : 1,
@@ -27,6 +24,11 @@ public class CategoryResponse {
 //                  }
 //              ]
 //    }
+
+    private long categoryId;
+    private String categoryName;
+    private String brandName;
+
     //카테고리(브랜드별) 조회
     public static CategoryResponse fromEntity(Category category){
 

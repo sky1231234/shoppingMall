@@ -35,9 +35,10 @@ public class Point {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //포인트 수정일
 
-    public void editPoint(PointUpdateRequest pointUpdateRequest){
+    public Point editPoint(PointUpdateRequest pointUpdateRequest){
         this.point = pointUpdateRequest.getPoint();
         this.deadlineDate = pointUpdateRequest.getDeadlineDate();
         this.pointType = pointUpdateRequest.getState();
+        return this;
     }
 }

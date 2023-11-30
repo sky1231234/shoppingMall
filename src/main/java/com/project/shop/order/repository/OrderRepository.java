@@ -1,9 +1,14 @@
 package com.project.shop.order.repository;
 
 
-import com.project.shop.user.domain.User;
+import com.project.shop.order.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends JpaRepository<User, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    List<Order> findByUserId(long userId);
 
 }

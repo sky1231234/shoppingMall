@@ -21,10 +21,10 @@ public class PointController {
     private final PointService pointService;
 
     //포인트 전체 조회
-    @GetMapping("/point")
+    @GetMapping("/point/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<PointResponse> pointFindAll(){
-        return pointService.pointFindAll();
+    public PointResponse pointFindAll(@PathVariable("userId") long userId){
+        return pointService.pointFindAll(userId);
     }
     
 

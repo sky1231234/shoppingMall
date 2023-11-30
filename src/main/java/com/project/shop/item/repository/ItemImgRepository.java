@@ -9,9 +9,7 @@ import java.util.Optional;
 
 
 public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
-//
-//    //query어노테이션사용해서 메인이미지 가져오기
-//    ItemImg findByItemIdAndMainImg(long itemId, String mainImg);
+
     List<ItemImg> findByItemId(long itemId);
 
 }

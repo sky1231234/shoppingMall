@@ -1,17 +1,26 @@
 package com.project.shop.order.domain;
 
+import com.project.shop.user.domain.User;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Table(name = "order")
 @Entity
+@Getter
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
     private long orderId;     //주문번호
-    @Column(name = "userId", nullable = false)
-    private long userId;     //고객 번호
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;     //고객 번호
+
+    @Column(name = "orderNum", nullable = false)
+    private String orderNum;     //주문완료번호
     @Column(name = "deliverFee", nullable = false)
     private int deliverFee;     //배송비
     @Column(name = "price", nullable = false)
