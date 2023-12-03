@@ -1,6 +1,7 @@
 package com.project.shop.user.domain;
 
 import com.project.shop.item.domain.Category;
+import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.user.dto.request.PointUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,4 +42,12 @@ public class Point {
         this.pointType = pointUpdateRequest.getState();
         return this;
     }
+
+    public Point cancelPoint(OrderCancelRequest orderCancelRequest){
+        this.point = orderCancelRequest.getPoint();
+        this.deadlineDate = orderCancelRequest.getDeadlineDate();
+        this.pointType = orderCancelRequest.getState();
+        return this;
+    }
+
 }

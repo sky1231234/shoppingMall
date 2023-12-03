@@ -1,11 +1,8 @@
 package com.project.shop.order.dto.request;
 
-import com.project.shop.item.domain.Item;
 import com.project.shop.order.domain.Order;
-import com.project.shop.order.domain.OrderItem;
 import com.project.shop.order.domain.OrderType;
 import com.project.shop.order.domain.Pay;
-import com.project.shop.order.dto.response.OrderItemResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public record OrderRequest(
+public record OrderUpdateRequest(
 
 //{
 //              "orderTotalPrice" : "주문상품 총 가격",
@@ -62,32 +59,5 @@ public record OrderRequest(
         @NotNull List<OrderItemRequest> orderItemRequestList
 
         ) {
-
-        //orderRequest -> order
-        public Order orderToEntity(){
-            return Order.builder()
-                    .price(this.getOrderTotalPrice())
-                    .deliverFee(this.getDeliverFee())
-                    .receiverName(this.getReceiverName())
-                    .zipcode(this.getZipcode())
-                    .address(this.getAddress())
-                    .addrDetail(this.getAddressDetail())
-                    .phoneNum(this.getReceiverPhoneNum())
-                    .msg(this.getAddrMsg())
-                    .build();
-        }
-
-        public Pay payToEntity(Order order){
-            return Pay.builder()
-                    .order(order)
-                    .usedPoint(this.getUsedPoint())
-                    .payCompany(this.getPayCompany())
-                    .cardNum(this.getCardNum())
-                    .payPrice(this.getPayPrice())
-                    .orderType(OrderType.완료)
-                    .build();
-        }
-
-
 
 }

@@ -121,8 +121,7 @@ public class ItemService {
 
         //item
         var item = itemRequest.toEntity();
-        item.updateCategory(category);
-        itemRepository.save(item);
+        itemRepository.save(item.updateCategory(category));
 
         //itemImg
         List<ItemImg> itemImgList = itemRequest
@@ -137,7 +136,7 @@ public class ItemService {
 
         itemImgRepository.saveAll(itemImgList);
 
-        //optiton
+        //option
         List<Option> optionList = itemRequest
                 .getOptionRequestList()
                 .stream()
@@ -153,7 +152,7 @@ public class ItemService {
     }
 
     //상품 수정
-    //category + item + itmeImg + option
+    //category + item + itemImg + option
     public void update(Long itemId, ItemUpdateRequest itemUpdateRequest){
 
         Category category = categoryRepository
@@ -167,7 +166,7 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-        item.editItem(category,itemUpdateRequest);
+        itemRepository.save(item.editItem(category,itemUpdateRequest));
 
         //itemImg
         //기존 이미지 삭제하고 다시 등록
@@ -191,23 +190,22 @@ public class ItemService {
         itemImgRepository.saveAll(itemImgUpdateList);
 
     //option
-      List<Option> optionList = optionRepository.findByItemId(itemId);
 
-      if(optionList.isEmpty()){
-          throw new RuntimeException("NOT_FOUND_OPTION");
-      }
-      optionRepository.deleteAll(optionList);
+        List<Option> optionUpdateList = itemUpdateRequest
+                .optionUpdateRequestList()
+                .stream()
+                .map(x -> {
+                    var option = optionRepository.findByColorAndSize(x.color(), x.size());
 
-      List<Option> optionUpdateList = itemUpdateRequest
-              .optionUpdateRequestList()
-              .stream().map(OptionUpdateRequest::toEntity)
-              .collect(Collectors.toList());
+                    if(option.isEmpty())
+                        x.toEntity();
 
-        for (Option option : optionUpdateList) {
-            option.updateItem(item);
-        }
+                    return
+                })
+                .collect(Collectors.toList());
 
         optionRepository.saveAll(optionUpdateList);
+
     }
 
     //상품 삭제

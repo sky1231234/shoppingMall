@@ -26,9 +26,10 @@ public class Category {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public void updateCategory(CategoryUpdateRequest categoryUpdateRequest){
+    public Category updateCategory(CategoryUpdateRequest categoryUpdateRequest){
         this.categoryName = categoryUpdateRequest.getCategoryName();
         this.brandName = categoryUpdateRequest.getBrandName();
+        return this;
     }
 
 }

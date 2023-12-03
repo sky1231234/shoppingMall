@@ -7,14 +7,14 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 public record OptionUpdateRequest(
-        @NotBlank String size,
-        @NotBlank String color
+        @NotBlank String color,
+        @NotBlank String size
         ) {
 
         public Option toEntity(){
                 return Option.builder()
-                        .size(this.size)
                         .color(this.color)
+                        .size(this.size)
                         .build();
         }
 

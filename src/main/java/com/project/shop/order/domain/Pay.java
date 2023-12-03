@@ -1,18 +1,27 @@
 package com.project.shop.order.domain;
 
+import com.project.shop.order.dto.request.OrderUpdateRequest;
+import lombok.Builder;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Table(name = "pay")
 @Entity
+@Getter
+@Builder
 public class Pay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payId")
     private long payId;     //결제번호
-    @Column(name = "orderId", nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "orderId")
     private Order order;     //주문 번호
+
     @Column(name = "usedPoint", nullable = false)
     private int usedPoint;     //사용 포인트
     @Column(name = "payCompany", nullable = false)
@@ -29,5 +38,19 @@ public class Pay {
     private LocalDateTime insertDate;   //결제일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //결제 수정일
+
+    public Pay updatePay(OrderUpdateRequest orderUpdateRequest){
+        this.usedPoint = orderUpdateRequest.getUsedPoint();
+        this.payCompany = orderUpdateRequest.getPayCompany();
+        this.cardNum = orderUpdateRequest.getCardNum();
+        this.payPrice = orderUpdateRequest.getPayPrice();
+        return this;
+    }
+
+    public Pay cancelOrder(OrderType orderType){
+        this.orderType = orderType;
+        return this;
+    }
+
 
 }

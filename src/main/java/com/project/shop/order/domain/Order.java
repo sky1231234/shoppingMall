@@ -1,6 +1,11 @@
 package com.project.shop.order.domain;
 
+import com.project.shop.item.domain.Category;
+import com.project.shop.item.domain.Item;
+import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.order.dto.request.OrderUpdateRequest;
 import com.project.shop.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -9,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "order")
 @Entity
 @Getter
+@Builder
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +52,20 @@ public class Order {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //주문 수정일
 
+    public Order updateOrder(OrderUpdateRequest orderUpdateRequest){
+        this.price = orderUpdateRequest.getOrderTotalPrice();
+        this.deliverFee = orderUpdateRequest.getDeliverFee();
+        this.receiverName = orderUpdateRequest.getReceiverName();
+        this.zipcode = orderUpdateRequest.getZipcode();
+        this.address = orderUpdateRequest.getAddress();
+        this.addrDetail = orderUpdateRequest.getAddressDetail();
+        this.phoneNum = orderUpdateRequest.getReceiverPhoneNum();
+        this.msg = orderUpdateRequest.getAddrMsg();
+        return this;
+    }
+
+    public Order cancelOrder(OrderType orderType){
+        this.orderType = orderType;
+        return this;
+    }
 }

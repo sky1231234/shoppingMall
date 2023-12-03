@@ -48,7 +48,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY_ID"));
 
-        category.updateCategory(categoryUpdateRequest);
+        categoryRepository.save(category.updateCategory(categoryUpdateRequest));
     }
 
     //카테고리 삭제
