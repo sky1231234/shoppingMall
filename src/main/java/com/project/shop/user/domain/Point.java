@@ -43,11 +43,11 @@ public class Point {
         return this;
     }
 
-    public Point cancelPoint(OrderCancelRequest orderCancelRequest){
-        this.point = orderCancelRequest.getPoint();
-        this.deadlineDate = orderCancelRequest.getDeadlineDate();
-        this.pointType = orderCancelRequest.getState();
-        return this;
-    }
+//    public Point cancelPoint(OrderCancelRequest orderCancelRequest){
+//        this.point = orderCancelRequest.getPoint();
+//        this.deadlineDate = orderCancelRequest.getDeadlineDate();
+//        this.pointType = orderCancelRequest.getState();
+//        return this;
+//    }
 
 }

@@ -1,22 +1,33 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.repository.ItemRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("상품 서비스 테스트")
+@SpringBootTest
 public class ItemServiceTest {
 
-    private int id;
-    private String email;
-    private String password;
+    @Autowired
+    private ItemService itemService;
+    @Autowired
+    private ItemRepository itemRepository;
 
+    @BeforeEach
+    @BeforeAll
+    public void start(){
+
+    }
 
     @Test
-    @DisplayName("상품 등록")
-    public String testing(){
-        return "test";
+    @DisplayName("아이템 조회")
+    public void item(){
+        var result = itemService.itemFindAll();
+
+        Assertions.assertThat(result).isNotEmpty();
     }
 }

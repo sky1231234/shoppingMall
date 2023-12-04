@@ -207,17 +207,18 @@ public class OrderService {
         orderRepository.save(order);
 
         //orderItem
-        orderRequest.getOrderItemRequestList().stream()
+        var result = orderRequest.getOrderItemRequestList().stream()
                 .map(x -> {
                     var item = itemRepository.findById(x.getItemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
                     var option = optionRepository.findByColorAndSize(x.getItemColor(),x.getItemSize())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-                    //여기 order???
-                    var orderItem =  x.toEntity(item,order,option);
-                    return orderItemRepository.save(orderItem);
-                });
+                    return x.toEntity(item,order,option);
+                }).toList();
+
+        orderItemRepository.saveAll(result);
+
         //pay
         payRepository.save(orderRequest.payToEntity(order));
 
