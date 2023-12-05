@@ -21,7 +21,7 @@ public class ItemImg {
     @Column(name = "itemImgId")
     private long itemImgId;     //상품 이미지 번호
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;     //상품
 
@@ -39,8 +39,9 @@ public class ItemImg {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품이미지수정일
 
-    public void updateItem(Item item){
+    public ItemImg updateItem(Item item){
         this.item = item;
+        return this;
     }
 
 }

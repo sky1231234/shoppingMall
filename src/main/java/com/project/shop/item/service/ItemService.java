@@ -110,7 +110,7 @@ public class ItemService {
     }
 
     //상품 등록
-    // item + itmeImg + option
+    // item + itemImg + option
     public void create(ItemRequest itemRequest){
         //category
         Category category = categoryRepository
@@ -127,12 +127,11 @@ public class ItemService {
         List<ItemImg> itemImgList = itemRequest
                 .getItemImgRequestList()
                 .stream()
-                .map(ItemImgRequest::toEntity)
+                .map(x -> {
+                    var entity = x.toEntity();
+                    return entity.updateItem(item);
+                })
                 .collect(Collectors.toList());
-
-        for (ItemImg itemImg : itemImgList) {
-            itemImg.updateItem(item);
-        }
 
         itemImgRepository.saveAll(itemImgList);
 
@@ -140,12 +139,11 @@ public class ItemService {
         List<Option> optionList = itemRequest
                 .getOptionRequestList()
                 .stream()
-                .map(OptionRequest::toEntity)
+                .map( x-> {
+                    var entity = x.toEntity();
+                    return entity.updateItem(item);
+                })
                 .collect(Collectors.toList());
-
-        for (Option option : optionList) {
-            option.updateItem(item);
-        }
 
         optionRepository.saveAll(optionList);
 
@@ -180,12 +178,11 @@ public class ItemService {
         List<ItemImg> itemImgUpdateList = itemUpdateRequest
                 .getItemImgUpdateRequestList()
                 .stream()
-                .map(ItemImgUpdateRequest::toEntity)
+                .map(x -> {
+                    var entity = x.toEntity();
+                    return entity.updateItem(item);
+                })
                 .collect(Collectors.toList());
-
-        for (ItemImg itemImg : itemImgUpdateList) {
-            itemImg.updateItem(item);
-        }
 
         itemImgRepository.saveAll(itemImgUpdateList);
 
@@ -194,14 +191,8 @@ public class ItemService {
         List<Option> optionUpdateList = itemUpdateRequest
                 .optionUpdateRequestList()
                 .stream()
-                .map(x -> {
-                    var option = optionRepository.findByColorAndSize(x.color(), x.size());
-
-                    if(option.isEmpty())
-                        x.toEntity();
-
-                    return
-                })
+                .filter(x -> optionRepository.findByItemIdAndColorAndSize(itemId,x.color(), x.size()).isEmpty())
+                .map(OptionUpdateRequest::toEntity)
                 .collect(Collectors.toList());
 
         optionRepository.saveAll(optionUpdateList);

@@ -21,11 +21,11 @@ public class Cart {
     @Column(name = "cartId")
     private long cartId;     //장바구니 번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId")
     private User user;
 

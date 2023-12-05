@@ -3,6 +3,8 @@ package com.project.shop.order.domain;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.order.dto.request.OrderItemRequest;
+import com.project.shop.order.dto.request.OrderUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,11 +21,12 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderItemId")
     private long orderItemId;     //주문상품번호
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;     //상품 번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
     private Order order;     //주문번호
 
@@ -36,18 +39,11 @@ public class OrderItem {
     private int totalPrice;     //주문상품 총 가격
     @Column(name = "itemPrice", nullable = false)
     private int itemPrice;     //상품 가격
-    @Column(name = "state", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OrderType orderType;    //주문상태
 
-    public OrderItem createOrderItem(){
-        this.item = category;
-        this.order = itemUpdateRequest.getItemName();
-        return this;
-    }
-
-    public OrderItem cancelOrder(OrderType orderType){
-        this.orderType = orderType;
+    public OrderItem updateOrderItem(OrderItemRequest orderItemRequest, int price, long opitonId){
+        this.totalQuantity = orderItemRequest.getItemCount();
+        this.totalPrice = orderItemRequest.getItemCount() * price;
+        this.itemOptionId = opitonId;
         return this;
     }
 

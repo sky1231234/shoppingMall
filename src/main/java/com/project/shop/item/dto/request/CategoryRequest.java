@@ -23,7 +23,7 @@ public record CategoryRequest(
         public Category toEntity(){
                 return Category.builder()
                         .categoryName(this.categoryName())
-                        .brandName(this.getBrandName())
+                        .brandName(this.brandName())
                         .build();
         }
 

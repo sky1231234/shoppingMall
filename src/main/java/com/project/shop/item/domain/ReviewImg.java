@@ -22,7 +22,7 @@ public class ReviewImg {
     @Column(name = "reviewImgId")
     private long reviewImgId;     //리뷰 이미지 번호
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewId")
     private Review review;     //리뷰 번호
 
@@ -34,8 +34,9 @@ public class ReviewImg {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //리뷰이미지수정일
 
-    public void updateReview(Review review){
+    public ReviewImg updateReview(Review review){
         this.review = review;
+        return this;
     }
 
 }

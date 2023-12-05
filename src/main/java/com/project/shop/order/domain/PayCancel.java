@@ -17,12 +17,13 @@ public class PayCancel {
     @Column(name = "payCancelId")
     private long payCancelId;     //결제취소번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
     private Order order;     //주문 번호
 
-    @Column(name = "usedPoint", nullable = false)
-    private int usedPoint;     //취소 포인트
+    @Column(name = "orderNum", nullable = false)
+    private String orderNum;     //주문 비즈니스키
+
     @Column(name = "payCompany", nullable = false)
     private String payCompany;     //카드사
     @Column(name = "cardNum", nullable = false)

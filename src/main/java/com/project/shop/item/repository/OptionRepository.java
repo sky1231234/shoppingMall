@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface OptionRepository extends JpaRepository<Option, Long> {
 
     List<Option> findByItemId(Long itemId);
-    Optional<Option> findByColorAndSize(String color, String size);
+    Optional<Option> findByItemIdAndColorAndSize(long itemId, String color, String size);
 }

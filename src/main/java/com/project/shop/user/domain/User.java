@@ -2,6 +2,9 @@ package com.project.shop.user.domain;
 
 import com.project.shop.item.domain.Option;
 import com.project.shop.item.domain.Review;
+import com.project.shop.item.domain.ReviewImg;
+import com.project.shop.order.domain.Order;
+import com.project.shop.order.domain.OrderItem;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -31,8 +34,18 @@ public class User {
     private String phoneNum;    //전화번호
 
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Review> reviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Order> orderList = new ArrayList<>(); //리뷰 이미지
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Cart> cartList = new ArrayList<>(); //주문상품 리스트
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Point> pointList = new ArrayList<>(); //주문상품 리스트
+
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //가입일

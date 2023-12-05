@@ -29,7 +29,7 @@ public class ReviewService {
 
         var list = reviewList.stream().map(x -> {
             return ItemReviewResponse.ReviewItem.builder()
-                    .userId(x.getUser().getUserId())
+                    .userId(x.getUsers().getUserId())
                     .reviewTitle(x.getTitle())
                     .reviewContent(x.getContent())
                     .reviewStar(x.getStar())
@@ -123,7 +123,7 @@ public class ReviewService {
                         })
                         .findFirst().orElse(null)
                 )
-                .userId(review.getUser().getUserId())
+                .userId(review.getUsers().getUserId())
                 .reviewTitle(review.getTitle())
                 .reviewContent(review.getContent())
                 .reviewStar(review.getStar())
@@ -141,12 +141,11 @@ public class ReviewService {
         List<ReviewImg> reviewImgList = reviewRequest
                 .getReviewImgRequestList()
                 .stream()
-                .map(ReviewImgRequest::toEntity)
+                .map(x -> {
+                    var entity = x.toEntity();
+                    return entity.updateReview(review);
+                })
                 .collect(Collectors.toList());
-
-        for (ReviewImg reviewImg : reviewImgList) {
-            reviewImg.updateReview(review);
-        }
 
         reviewImgRepository.saveAll(reviewImgList);
     }
@@ -158,7 +157,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                         .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW"));
 
-        review.editReview(reviewUpdateRequest);
+        reviewRepository.save(review.editReview(reviewUpdateRequest));
 
         //reviewImg
         List<ReviewImg> reviewImgList = reviewImgRepository.findByReviewId(reviewId);
@@ -172,12 +171,11 @@ public class ReviewService {
         List<ReviewImg> reviewImgUpdateList = reviewUpdateRequest
                 .getReviewImgUpdateRequest()
                 .stream()
-                .map(ReviewImgUpdateRequest::toEntity)
+                .map(x -> {
+                    var entity = x.toEntity();
+                    return entity.updateReview(review);
+                })
                 .collect(Collectors.toList());
-
-        for (ReviewImg reviewImg : reviewImgUpdateList) {
-            reviewImg.updateReview(review);
-        }
 
         reviewImgRepository.saveAll(reviewImgUpdateList);
     }

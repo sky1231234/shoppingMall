@@ -14,8 +14,8 @@ public record OptionRequest(
 
         public Option toEntity(){
                 return Option.builder()
-                        .size(this.size)
-                        .color(this.color)
+                        .size(this.size())
+                        .color(this.color())
                         .build();
         }
 

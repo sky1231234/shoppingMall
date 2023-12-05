@@ -36,13 +36,6 @@ public class OrderController {
         return orderService.orderFindByUser(userId);
     }
 
-//    //주문내역 상품별 조회
-//    @GetMapping("/order/item/{itemId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public OrderItemResponse orderFindByItem(@PathVariable("itemId") long itemId){
-//        return orderService.orderFindByItem(itemId);
-//    }
-
     //주문내역 상세 조회
     @GetMapping("/order/{orderId}")
     @ResponseStatus(HttpStatus.OK)

@@ -23,12 +23,12 @@ public record AddressRequest(
 
         public Address toEntity(){
                 return Address.builder()
-                        .name(this.getReceiverName())
-                        .zipcode(this.getZipcode())
-                        .address(this.getAddress())
-                        .addrDetail(this.getAddressDetail())
-                        .phoneNum(this.getReceiverPhoneNum())
-                        .addressType(this.getDefaultAddr())
+                        .name(this.receiverName())
+                        .zipcode(this.zipcode())
+                        .address(this.address())
+                        .addrDetail(this.addressDetail())
+                        .phoneNum(this.receiverPhoneNum())
+                        .addressType(this.defaultAddr())
                         .build();
         }
 }

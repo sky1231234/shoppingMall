@@ -17,7 +17,7 @@ public class Option {
     @Column(name = "optionId")
     private long optionId;     //옵션번호
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;     //상품번호
 

@@ -18,6 +18,7 @@ import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
 import com.project.shop.user.domain.Point;
+import com.project.shop.user.domain.PointType;
 import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.PointRequest;
 import com.project.shop.user.repository.PointRepository;
@@ -26,89 +27,106 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class OrderCancelService {
 
     private final UserRepository userRepository ;
+    private final ItemRepository itemRepository ;
     private final PointRepository pointRepository ;
     private final OrderRepository orderRepository ;
     private final OrderItemRepository orderItemRepository ;
-    private final PayRepository payRepository ;
     private final PayCancelRepository payCancelRepository ;
 
 
     //부분 취소 등록
     public void partCancelCreate(long orderId, OrderPartCancelRequest orderPartCancelRequest){
 
-        var state = orderPartCancelRequest.getPayCancelType();
+        OrderType orderType;
+        PayCancelType payCancelType;
+        PointType pointType;
+        if(orderPartCancelRequest.getPayCancelType().equals("부분취소")){
+            orderType = OrderType.부분취소;
+            payCancelType = PayCancelType.부분취소;
+            pointType = PointType.사용취소;
+        }else
+            throw new RuntimeException("NOT_FOUND_CANCEL");
 
-        //order 주문상태 부분취소
+        //order 주문 상태 취소 등록
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
 
-        orderRepository.save(order.cancelOrder(state));
+        var orderEntity = orderPartCancelRequest.cancelToEntity(order, orderType);
+        orderRepository.save(orderEntity);
 
-        //orderItem itemId별로 상태 부분취소
-        orderPartCancelRequest.getItem().stream().map(
-                x -> {
-                    var orderItem = orderItemRepository.findByItemId(x.getItemId());
+        //orderItem 취소 상품만 등록
+        var cancelOrderItem = orderPartCancelRequest.getItem().stream()
+                .map(x -> {
+                    var item = itemRepository.findById(x.itemId())
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-                    return orderItemRepository.save(orderItem.cancelOrder(state));
-                }
-        );
+                    var orderItem = orderItemRepository.findByItemIdAndOrderId(x.itemId(),orderId);
 
-        //pay 상태 부분취소
-        Pay pay = payRepository.findByOrderId(orderId);
-        payRepository.save(pay.cancelOrder(state));
-
-        //payCancel 등록
-        payCancelRepository.save(orderPartCancelRequest.toEntity(order));
-    }
-
-    //취소 등록
-    public void orderCancelCreate(long orderId, OrderCancelRequest orderCancelRequest){
-
-        var state = OrderType.취소;
-
-        //order 주문상태 취소
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
-
-        orderRepository.save(order.cancelOrder(state));
-
-        //orderItem 상태 취소
-        List<OrderItem> orderItem = orderItemRepository.findByOrderId(orderId);
-
-        if(orderItem.isEmpty())
-            throw new RuntimeException("NOT_FOUND_ORDER_ITEM");
-
-        //1
-        orderItem.stream().map(x -> {
-            return orderItemRepository.save(x.cancelOrder(state));
-        });
-
-        //2
-        for (OrderItem order1 : orderItem) {
-            orderItemRepository.save(order1.cancelOrder(state));
-        }
-
-        //pay 상태 취소
-        Pay pay = payRepository.findByOrderId(orderId);
-        payRepository.save(pay.cancelOrder(state));
+                    return OrderItem.builder()
+                    .item(item)
+                    .order(order)
+                    .itemOptionId(orderItem.getItemOptionId())
+                    .totalQuantity(orderItem.getTotalQuantity())
+                    .totalPrice(orderItem.getTotalPrice())
+                    .itemPrice(orderItem.getItemPrice())
+                    .build();
+                })
+                .toList();
+        orderItemRepository.saveAll(cancelOrderItem);
 
         //payCancel 등록
-        payCancelRepository.save(orderCancelRequest.toEntity(order));
+        var payCancelEntity = orderPartCancelRequest.payCancelToEntity(order,payCancelType);
+        payCancelRepository.save(payCancelEntity);
 
         //사용 취소 포인트 등록
-
         //userId 받아오기
         long userId = 5;
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        Point point = pointRepository.findAllByUserId()
+        var point = orderPartCancelRequest.pointToEntity(user,order.getPoint(),pointType);
+        pointRepository.save(point);
+    }
+
+    //취소 등록
+    public void orderCancelCreate(long orderId, OrderCancelRequest orderCancelRequest){
+
+        OrderType orderType;
+        PayCancelType payCancelType;
+        PointType pointType;
+        if(orderCancelRequest.getPayCancelType().equals("취소")){
+            orderType = OrderType.취소;
+            payCancelType = PayCancelType.취소;
+            pointType = PointType.사용취소;
+        }else
+            throw new RuntimeException("NOT_FOUND_CANCEL");
+
+        //order 주문 상태 취소 등록
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
+
+        var orderEntity = orderCancelRequest.cancelToEntity(order, orderType);
+        orderRepository.save(orderEntity);
+
+        //payCancel 등록
+        var payCancelEntity = orderCancelRequest.payCancelToEntity(order,payCancelType);
+        payCancelRepository.save(payCancelEntity);
+
+        //사용 취소 포인트 등록
+        //userId 받아오기
+        long userId = 5;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        var point = orderCancelRequest.pointToEntity(user,order.getPoint(),pointType);
+        pointRepository.save(point);
 
     }
 

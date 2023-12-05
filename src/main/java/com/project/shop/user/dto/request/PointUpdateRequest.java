@@ -23,9 +23,9 @@ public record PointUpdateRequest(
 
     public Point toEntity(){
         return Point.builder()
-                .point(this.getPoint())
-                .deadlineDate(this.getDeadlineDate())
-                .pointType(this.getState())
+                .point(this.point())
+                .deadlineDate(this.deadlineDate())
+                .pointType(this.state())
                 .build();
     }
 }

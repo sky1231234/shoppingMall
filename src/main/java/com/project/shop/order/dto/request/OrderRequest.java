@@ -1,6 +1,7 @@
 package com.project.shop.order.dto.request;
 
 import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.Option;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.domain.OrderItem;
 import com.project.shop.order.domain.OrderType;
@@ -63,28 +64,25 @@ public record OrderRequest(
 
         ) {
 
-        //orderRequest -> order
         public Order orderToEntity(){
             return Order.builder()
-                    .price(this.getOrderTotalPrice())
-                    .deliverFee(this.getDeliverFee())
-                    .receiverName(this.getReceiverName())
-                    .zipcode(this.getZipcode())
-                    .address(this.getAddress())
-                    .addrDetail(this.getAddressDetail())
-                    .phoneNum(this.getReceiverPhoneNum())
-                    .msg(this.getAddrMsg())
+                    .price(this.orderTotalPrice())
+                    .deliverFee(this.deliverFee( ))
+                    .receiverName(this.receiverName())
+                    .zipcode(this.zipcode())
+                    .address(this.address())
+                    .addrDetail(this.addressDetail())
+                    .phoneNum(this.receiverPhoneNum())
+                    .msg(this.addrMsg())
                     .build();
         }
 
         public Pay payToEntity(Order order){
             return Pay.builder()
                     .order(order)
-                    .usedPoint(this.getUsedPoint())
-                    .payCompany(this.getPayCompany())
-                    .cardNum(this.getCardNum())
-                    .payPrice(this.getPayPrice())
-                    .orderType(OrderType.완료)
+                    .payCompany(this.payCompany())
+                    .cardNum(this.cardNum())
+                    .payPrice(this.payPrice())
                     .build();
         }
 

@@ -29,9 +29,9 @@ public record ItemRequest(
         //itemRequest -> item
         public Item toEntity(){
                 return Item.builder()
-                        .itemName(this.getItemName())
-                        .price(this.getPrice())
-                        .explain(this.getExplain())
+                        .itemName(this.itemName())
+                        .price(this.price())
+                        .explain(this.explain())
                         .build();
         }
 }

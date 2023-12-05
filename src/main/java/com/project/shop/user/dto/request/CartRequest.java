@@ -24,8 +24,8 @@ public record CartRequest(
         public Cart toEntity(Item item){
                 return Cart.builder()
                         .item(item)
-                        .count(this.getCount())
-                        .optionId(this.getOptionNum())
+                        .count(this.count())
+                        .optionId(this.optionNum())
                         .build();
         }
 

@@ -52,8 +52,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ADDRESS"));
 
-        address.editAddress(addressUpdateRequest);
-        addressRepository.save(address);
+        addressRepository.save(address.editAddress(addressUpdateRequest));
     }
 
     //주소 삭제

@@ -27,9 +27,9 @@ public class Review {
     @JoinColumn(name = "itemId")
     private Item item;     //상품
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User user;  //고객
+    private User users;  //고객
 
     @Column(name = "title", nullable = false)
     private String title;    //제목
@@ -46,10 +46,11 @@ public class Review {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public void editReview(ReviewUpdateRequest reviewUpdateRequest){
+    public Review editReview(ReviewUpdateRequest reviewUpdateRequest){
         this.title = reviewUpdateRequest.getTitle();
         this.content = reviewUpdateRequest.getContent();
         this.star = reviewUpdateRequest.getStar();
+        return this;
     }
 
 

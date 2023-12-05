@@ -2,33 +2,42 @@ package com.project.shop.order.domain;
 
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ReviewImg;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
 import com.project.shop.user.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "order")
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
     private long orderId;     //주문번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;     //고객 번호
 
     @Column(name = "orderNum", nullable = false)
-    private String orderNum;     //주문완료번호
+    private String orderNum;     //주문비즈니스키
     @Column(name = "deliverFee", nullable = false)
     private int deliverFee;     //배송비
+    @Column(name = "point", nullable = false)
+    private int point;     //포인트
     @Column(name = "price", nullable = false)
     private int price;     //가격
     @Column(name = "state", nullable = false)
@@ -52,6 +61,16 @@ public class Order {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //주문 수정일
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItemList = new ArrayList<>(); //리뷰 이미지
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Pay> payList = new ArrayList<>(); //리뷰 이미지
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<PayCancel> payCancelList = new ArrayList<>(); //리뷰 이미지
+
+
     public Order updateOrder(OrderUpdateRequest orderUpdateRequest){
         this.price = orderUpdateRequest.getOrderTotalPrice();
         this.deliverFee = orderUpdateRequest.getDeliverFee();
@@ -64,8 +83,4 @@ public class Order {
         return this;
     }
 
-    public Order cancelOrder(OrderType orderType){
-        this.orderType = orderType;
-        return this;
-    }
 }

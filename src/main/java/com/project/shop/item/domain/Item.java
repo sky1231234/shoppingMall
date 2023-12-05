@@ -1,6 +1,8 @@
 package com.project.shop.item.domain;
 
 import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.order.domain.OrderItem;
+import com.project.shop.user.domain.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +25,7 @@ public class Item {
     @Column(name = "itemId")
     private long itemId;     //상품번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId")
     private Category category;
 
@@ -42,8 +44,14 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Option> optionList = new ArrayList<>(); //옵션 리스트
 
-//    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-//    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Review> reviewList = new ArrayList<>(); //리뷰 리스트
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItemList = new ArrayList<>(); //주문상품 리스트
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Cart> cartList = new ArrayList<>(); //주문상품 리스트
 
 
     @Column(name = "insertDate", nullable = false)

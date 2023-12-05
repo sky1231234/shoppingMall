@@ -22,11 +22,11 @@ public record ReviewUpdateRequest(
 
     public Review toEntity(){
         return Review.builder()
-                .user(this.getUser())
-                .item(this.getItem())
-                .title(this.getTitle())
-                .content(this.getContent())
-                .star(this.getStar())
+                .users(this.user())
+                .item(this.item())
+                .title(this.title())
+                .content(this.content())
+                .star(this.star())
                 .build();
     }
 }

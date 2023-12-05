@@ -19,7 +19,7 @@ public class Point {
     @Column(name = "pointId")
     private long pointId;    //포인트번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
@@ -42,12 +42,5 @@ public class Point {
         this.pointType = pointUpdateRequest.getState();
         return this;
     }
-
-//    public Point cancelPoint(OrderCancelRequest orderCancelRequest){
-//        this.point = orderCancelRequest.getPoint();
-//        this.deadlineDate = orderCancelRequest.getDeadlineDate();
-//        this.pointType = orderCancelRequest.getState();
-//        return this;
-//    }
 
 }

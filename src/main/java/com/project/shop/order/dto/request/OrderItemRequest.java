@@ -18,7 +18,7 @@ import java.util.List;
 public record OrderItemRequest(
 
 //{
-//
+//              "orderItemId" : "주문상품id",
 //              "itemId" : "상품id",
 //              "itemCount" : "주문상품 수량",
 //              "itemPrice" : "상품 총 가격"
@@ -26,25 +26,23 @@ public record OrderItemRequest(
 //              "itemColor" : "주문상품 색상",
 //}
 
+        @NotNull long orderItemId,
         @NotNull long itemId,
         @NotNull int itemCount,
         @NotNull int itemPrice,
         @NotBlank String itemSize,
         @NotBlank String itemColor
 
-        ) {
+) {
 
-        //orderRequest -> orderItem
-        public OrderItem toEntity(Item item, Order order, Option option){
-            return OrderItem.builder()
-                    .item(item)
-                    .order(order)
-                    .totalQuantity(this.getItemCount())
-                    .itemPrice(this.getItemPrice())
-                    .itemOptionId(option.getOptionId())
-                    .build();
-        }
-
-
+    public OrderItem toEntity(Item item, Order order, Option option){
+        return OrderItem.builder()
+                .item(item)
+                .order(order)
+                .totalQuantity(this.itemCount())
+                .itemPrice(this.itemPrice())
+                .itemOptionId(option.getOptionId())
+                .build();
+    }
 
 }

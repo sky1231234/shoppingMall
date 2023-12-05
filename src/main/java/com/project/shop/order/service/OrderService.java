@@ -128,10 +128,6 @@ public class OrderService {
 
     }
 
-    //주문내역 상품별 조회
-//    public OrderItemResponse orderFindByItem(long orderId){
-//    }
-
     //주문내역 상세 조회
     public OrderDetailResponse orderDetailFind(long orderId){
 
@@ -175,7 +171,6 @@ public class OrderService {
 
         var payData = OrderDetailResponse.Pay.builder()
                 .payId(pay.getPayId())
-                .usedPoint(pay.getUsedPoint())
                 .payCompany(pay.getPayCompany())
                 .cardNum(pay.getCardNum())
                 .payPrice(pay.getPayPrice())
@@ -211,7 +206,7 @@ public class OrderService {
                 .map(x -> {
                     var item = itemRepository.findById(x.getItemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
-                    var option = optionRepository.findByColorAndSize(x.getItemColor(),x.getItemSize())
+                    var option = optionRepository.findByItemIdAndColorAndSize(x.getItemId(),x.getItemColor(),x.getItemSize())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
                     return x.toEntity(item,order,option);
@@ -234,12 +229,24 @@ public class OrderService {
         orderRepository.save(order.updateOrder(orderUpdateRequest));
 
         //orderItem
-        //주문 수정 상품 비교
-//        orderUpdateRequest.getOrderItemRequestList().stream()
-//                .map(x -> {
-//                    x.getItemId()
-//            return
-//        });
+        var result = orderUpdateRequest.getOrderItemRequestList()
+                .stream()
+                .map(x -> {
+
+                    var orderItem = orderItemRepository.findById(x.getOrderItemId())
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
+
+                        var item = itemRepository.findById(x.getItemId())
+                                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+
+                        var option = optionRepository.findByItemIdAndColorAndSize(x.getItemId(),x.getItemColor(),x.getItemSize())
+                                .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
+
+                        return orderItem.updateOrderItem(x, item.getPrice(), option.getOptionId());
+
+        }).toList();
+
+        orderItemRepository.saveAll(result);
 
         //pay
         Pay pay = payRepository.findByOrderId(orderId);

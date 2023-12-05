@@ -18,8 +18,8 @@ public record ReviewImgUpdateRequest(
 
         public ReviewImg toEntity(){
                 return ReviewImg.builder()
-                        .review(this.getReview())
-                        .imgUrl(this.getImgUrl())
+                        .review(this.review())
+                        .imgUrl(this.imgUrl())
                         .build();
         }
 
