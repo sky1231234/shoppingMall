@@ -25,11 +25,13 @@ import com.project.shop.user.repository.PointRepository;
 import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderCancelService {
 
@@ -47,7 +49,7 @@ public class OrderCancelService {
         OrderType orderType;
         PayCancelType payCancelType;
         PointType pointType;
-        if(orderPartCancelRequest.getPayCancelType().equals("부분취소")){
+        if(orderPartCancelRequest.payCancelType().equals("부분취소")){
             orderType = OrderType.부분취소;
             payCancelType = PayCancelType.부분취소;
             pointType = PointType.사용취소;
@@ -62,12 +64,12 @@ public class OrderCancelService {
         orderRepository.save(orderEntity);
 
         //orderItem 취소 상품만 등록
-        var cancelOrderItem = orderPartCancelRequest.getItem().stream()
+        var cancelOrderItem = orderPartCancelRequest.item().stream()
                 .map(x -> {
                     var item = itemRepository.findById(x.itemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-                    var orderItem = orderItemRepository.findByItemIdAndOrderId(x.itemId(),orderId);
+                    var orderItem = orderItemRepository.findByItemAndOrder(item,order);
 
                     return OrderItem.builder()
                     .item(item)
@@ -101,7 +103,7 @@ public class OrderCancelService {
         OrderType orderType;
         PayCancelType payCancelType;
         PointType pointType;
-        if(orderCancelRequest.getPayCancelType().equals("취소")){
+        if(orderCancelRequest.payCancelType().equals("취소")){
             orderType = OrderType.취소;
             payCancelType = PayCancelType.취소;
             pointType = PointType.사용취소;

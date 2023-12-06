@@ -41,8 +41,8 @@ public class OrderItem {
     private int itemPrice;     //상품 가격
 
     public OrderItem updateOrderItem(OrderItemRequest orderItemRequest, int price, long opitonId){
-        this.totalQuantity = orderItemRequest.getItemCount();
-        this.totalPrice = orderItemRequest.getItemCount() * price;
+        this.totalQuantity = orderItemRequest.itemCount();
+        this.totalPrice = orderItemRequest.itemCount() * price;
         this.itemOptionId = opitonId;
         return this;
     }

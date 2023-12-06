@@ -10,11 +10,13 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CategoryService {
 
@@ -35,7 +37,7 @@ public class CategoryService {
     public void create(CategoryRequest categoryRequest){
 
         //동일한 브랜드명, 카테고리명 조회
-        if(categoryRepository.findByCategoryNameAndBrandName(categoryRequest.getCategoryName(),categoryRequest.getBrandName()).isPresent()){
+        if(categoryRepository.findByCategoryNameAndBrandName(categoryRequest.categoryName(),categoryRequest.brandName()).isPresent()){
             throw new RuntimeException("등록된 카테고리 있음");
         }
 

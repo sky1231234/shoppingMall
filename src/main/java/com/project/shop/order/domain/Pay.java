@@ -39,9 +39,9 @@ public class Pay {
     private LocalDateTime updateDate;   //결제 수정일
 
     public Pay updatePay(OrderUpdateRequest orderUpdateRequest){
-        this.payCompany = orderUpdateRequest.getPayCompany();
-        this.cardNum = orderUpdateRequest.getCardNum();
-        this.payPrice = orderUpdateRequest.getPayPrice();
+        this.payCompany = orderUpdateRequest.payCompany();
+        this.cardNum = orderUpdateRequest.cardNum();
+        this.payPrice = orderUpdateRequest.payPrice();
         return this;
     }
 

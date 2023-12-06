@@ -49,7 +49,7 @@ public class ReviewController {
     }
 
     //리뷰 수정
-    @PutMapping("/review/{reviewId}}")
+    @PutMapping("/review/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public void reviewUpdate(@PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
         reviewService.update(reviewId, reviewUpdateRequest);

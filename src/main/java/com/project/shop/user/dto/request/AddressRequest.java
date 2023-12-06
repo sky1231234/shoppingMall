@@ -2,15 +2,9 @@ package com.project.shop.user.dto.request;
 
 import com.project.shop.user.domain.Address;
 import com.project.shop.user.domain.AddressType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
 public record AddressRequest(
         @NotBlank String receiverName,
         @NotBlank String zipcode,

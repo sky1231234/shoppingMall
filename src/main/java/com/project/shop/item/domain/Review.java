@@ -38,6 +38,7 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
+    @Builder.Default
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
 
@@ -47,9 +48,9 @@ public class Review {
     private LocalDateTime updateDate;   //상품 수정일
 
     public Review editReview(ReviewUpdateRequest reviewUpdateRequest){
-        this.title = reviewUpdateRequest.getTitle();
-        this.content = reviewUpdateRequest.getContent();
-        this.star = reviewUpdateRequest.getStar();
+        this.title = reviewUpdateRequest.title();
+        this.content = reviewUpdateRequest.content();
+        this.star = reviewUpdateRequest.star();
         return this;
     }
 

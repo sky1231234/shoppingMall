@@ -34,7 +34,7 @@ public class CartController {
     }
 
     //장바구니 수정
-    @PutMapping("/cart/{cartId}}")
+    @PutMapping("/cart/{cartId}")
     @ResponseStatus(HttpStatus.OK)
     public void cartUpdate(@PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
         cartService.update(cartId, cartUpdateRequest);

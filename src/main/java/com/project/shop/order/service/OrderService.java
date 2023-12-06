@@ -20,10 +20,12 @@ import com.project.shop.user.domain.User;
 import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderService {
 
@@ -41,7 +43,10 @@ public class OrderService {
         //회원번호 받아오기
         long userId = 5;
 
-        List<Order> orderList = orderRepository.findByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        List<Order> orderList = orderRepository.findByUsers(user);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -50,7 +55,7 @@ public class OrderService {
         return orderList.stream()
                 .map( x -> {
 
-                    List<OrderItem> orderItemList = orderItemRepository.findByOrderId(x.getOrderId());
+                    List<OrderItem> orderItemList = orderItemRepository.findByOrder(x);
 
                     if(orderItemList.isEmpty()){
                         throw new RuntimeException("NOT_FOUND_ORDER_ITEM");
@@ -103,7 +108,7 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        List<Order> orderList = orderRepository.findByUserId(userId);
+        List<Order> orderList = orderRepository.findByUsers(user);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -134,7 +139,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
 
-        List<OrderItem> orderItem = orderItemRepository.findByOrderId(orderId);
+        List<OrderItem> orderItem = orderItemRepository.findByOrder(order);
 
         if(orderItem.isEmpty())
             throw new RuntimeException("NOT_FOUND_ORDER_ITEM");
@@ -167,7 +172,7 @@ public class OrderService {
                             .build();
                 }).toList();
 
-        Pay pay = payRepository.findByOrderId(orderId);
+        Pay pay = payRepository.findByOrder(order);
 
         var payData = OrderDetailResponse.Pay.builder()
                 .payId(pay.getPayId())
@@ -202,11 +207,11 @@ public class OrderService {
         orderRepository.save(order);
 
         //orderItem
-        var result = orderRequest.getOrderItemRequestList().stream()
+        var result = orderRequest.orderItemRequestList().stream()
                 .map(x -> {
-                    var item = itemRepository.findById(x.getItemId())
+                    var item = itemRepository.findById(x.itemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
-                    var option = optionRepository.findByItemIdAndColorAndSize(x.getItemId(),x.getItemColor(),x.getItemSize())
+                    var option = optionRepository.findByItemAndColorAndSize(item,x.itemColor(),x.itemSize())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
                     return x.toEntity(item,order,option);
@@ -229,17 +234,17 @@ public class OrderService {
         orderRepository.save(order.updateOrder(orderUpdateRequest));
 
         //orderItem
-        var result = orderUpdateRequest.getOrderItemRequestList()
+        var result = orderUpdateRequest.orderItemRequestList()
                 .stream()
                 .map(x -> {
 
-                    var orderItem = orderItemRepository.findById(x.getOrderItemId())
+                    var orderItem = orderItemRepository.findById(x.orderItemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
 
-                        var item = itemRepository.findById(x.getItemId())
+                        var item = itemRepository.findById(x.itemId())
                                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-                        var option = optionRepository.findByItemIdAndColorAndSize(x.getItemId(),x.getItemColor(),x.getItemSize())
+                        var option = optionRepository.findByItemAndColorAndSize(item,x.itemColor(),x.itemSize())
                                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
                         return orderItem.updateOrderItem(x, item.getPrice(), option.getOptionId());
@@ -249,7 +254,7 @@ public class OrderService {
         orderItemRepository.saveAll(result);
 
         //pay
-        Pay pay = payRepository.findByOrderId(orderId);
+        Pay pay = payRepository.findByOrder(order);
         payRepository.save(pay.updatePay(orderUpdateRequest));
 
     }

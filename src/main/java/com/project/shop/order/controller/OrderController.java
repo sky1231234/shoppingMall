@@ -51,7 +51,7 @@ public class OrderController {
     }
 
     //주문 수정
-    @PutMapping("/order/{orderId}}")
+    @PutMapping("/order/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public void orderUpdate(@PathVariable("orderId") long orderId, @RequestBody OrderUpdateRequest orderUpdateRequest){
         orderService.update(orderId, orderUpdateRequest);

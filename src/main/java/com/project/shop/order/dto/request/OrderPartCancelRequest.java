@@ -4,18 +4,13 @@ import com.project.shop.order.domain.*;
 import com.project.shop.user.domain.Point;
 import com.project.shop.user.domain.PointType;
 import com.project.shop.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
+
 public record OrderPartCancelRequest(
 
 //{
@@ -77,7 +72,7 @@ public record OrderPartCancelRequest(
 
     public Point pointToEntity(User user, int point, PointType pointType){
         return Point.builder()
-                .user(user)
+                .users(user)
                 .point(point)
                 .deadlineDate(LocalDateTime.now().plusWeeks(1))
                 .pointType(pointType)

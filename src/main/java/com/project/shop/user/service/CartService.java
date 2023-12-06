@@ -8,30 +8,37 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.user.domain.Cart;
+import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.CartRequest;
 import com.project.shop.user.dto.request.CartUpdateRequest;
 import com.project.shop.user.dto.response.CartResponse;
 import com.project.shop.user.repository.CartRepository;
+import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository ;
-    private final ItemImgRepository itemImgRepository ;
+    private final UserRepository userRepository ;
     private final ItemRepository itemRepository ;
     private final OptionRepository optionRepository ;
 
     //회원별 장바구니 조회
     public List<CartResponse> cartFindByUserId(long userId){
 
-        List<Cart> cart = cartRepository.findAllByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        List<Cart> cart = cartRepository.findAllByUsers(user);
 
         return cart.stream()
                 .map(x -> {
@@ -68,7 +75,13 @@ public class CartService {
 
         //해당 회원이 장바구니 등록해놓은게 있는지 확인
 
-        Optional<Cart> cart = cartRepository.findByUserIdAndAndItemIdAndOptionNum(userId, cartRequest.getItemId(),cartRequest.getOptionNum());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        Item item = itemRepository.findById(cartRequest.itemId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+
+        Optional<Cart> cart = cartRepository.findByUsersAndAndItemAndOptionId(user,item,cartRequest.optionNum());
 
 //              등록한게 있으면 수량 +1
                 if(cart.isPresent()){
@@ -76,9 +89,9 @@ public class CartService {
                         cartRepository.save(count);
                 }else{
                     //등록된 장바구니 없으면 새로 등록
-                    Item item = itemRepository.findById(cart.get().getItem().getItemId())
+                    Item newCart = itemRepository.findById(cart.get().getItem().getItemId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
-                    cartRepository.save(cartRequest.toEntity(item));
+                    cartRepository.save(cartRequest.toEntity(newCart));
                 }
     }
 

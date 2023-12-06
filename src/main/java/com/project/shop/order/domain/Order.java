@@ -30,7 +30,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User user;     //고객 번호
+    private User users;     //고객 번호
 
     @Column(name = "orderNum", nullable = false)
     private String orderNum;     //주문비즈니스키
@@ -61,25 +61,28 @@ public class Order {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //주문 수정일
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItemList = new ArrayList<>(); //리뷰 이미지
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Pay> payList = new ArrayList<>(); //리뷰 이미지
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<PayCancel> payCancelList = new ArrayList<>(); //리뷰 이미지
 
 
     public Order updateOrder(OrderUpdateRequest orderUpdateRequest){
-        this.price = orderUpdateRequest.getOrderTotalPrice();
-        this.deliverFee = orderUpdateRequest.getDeliverFee();
-        this.receiverName = orderUpdateRequest.getReceiverName();
-        this.zipcode = orderUpdateRequest.getZipcode();
-        this.address = orderUpdateRequest.getAddress();
-        this.addrDetail = orderUpdateRequest.getAddressDetail();
-        this.phoneNum = orderUpdateRequest.getReceiverPhoneNum();
-        this.msg = orderUpdateRequest.getAddrMsg();
+        this.price = orderUpdateRequest.orderTotalPrice();
+        this.deliverFee = orderUpdateRequest.deliverFee();
+        this.receiverName = orderUpdateRequest.receiverName();
+        this.zipcode = orderUpdateRequest.zipcode();
+        this.address = orderUpdateRequest.address();
+        this.addrDetail = orderUpdateRequest.addressDetail();
+        this.phoneNum = orderUpdateRequest.receiverPhoneNum();
+        this.msg = orderUpdateRequest.addrMsg();
         return this;
     }
 

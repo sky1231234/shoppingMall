@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     //상품 수정
-    @PutMapping("/item/{itemId}}")
+    @PutMapping("/item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public void itemUpdate(@PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
         itemService.update(itemId, itemUpdateRequest);

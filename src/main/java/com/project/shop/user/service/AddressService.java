@@ -1,12 +1,15 @@
 package com.project.shop.user.service;
 
 import com.project.shop.user.domain.Address;
+import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.AddressRequest;
 import com.project.shop.user.dto.request.AddressUpdateRequest;
 import com.project.shop.user.dto.response.AddressResponse;
 import com.project.shop.user.repository.AddressRepository;
+import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,15 +18,20 @@ import java.util.stream.Collectors;
 //import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AddressService {
 
     private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     //주소 전체 조회
     public List<AddressResponse> addressFindAll(long userId){
 
-        return addressRepository.findAllByUserId(userId)
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        return addressRepository.findAllByUsers(user)
                 .stream()
                 .map(AddressResponse::fromEntity)
                 .collect(Collectors.toList());

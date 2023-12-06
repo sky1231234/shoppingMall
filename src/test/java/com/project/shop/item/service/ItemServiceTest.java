@@ -13,19 +13,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ItemServiceTest {
 
     @Autowired
-    private ItemService itemService;
+    ItemService itemService;
     @Autowired
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
     @BeforeEach
-    @BeforeAll
     public void start(){
 
     }
 
     @Test
     @DisplayName("아이템 조회")
-    public void item(){
+    void item(){
         var result = itemService.itemFindAll();
 
         Assertions.assertThat(result).isNotEmpty();

@@ -26,8 +26,8 @@ public class Cart {
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId")
-    private User user;
+    @JoinColumn(name = "userId")
+    private User users;
 
     @Column(name = "optionId", nullable = false)
     private long optionId;    //옵션번호
@@ -41,8 +41,8 @@ public class Cart {
     private LocalDateTime updateDate;   //상품 수정일
 
     public Cart updateCart(CartUpdateRequest cartUpdateRequest){
-        this.count = cartUpdateRequest.getCount();
-        this.optionId = cartUpdateRequest.getOptionNum();
+        this.count = cartUpdateRequest.count();
+        this.optionId = cartUpdateRequest.optionNum();
         return this;
     }
 

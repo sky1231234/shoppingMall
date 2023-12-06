@@ -25,7 +25,7 @@ public class UserInReviewResponse {
     public static UserInReviewResponse fromEntity(Review review){
 
                return UserInReviewResponse.builder()
-                .user(review.getUser())
+                .user(review.getUsers())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .star(review.getStar())

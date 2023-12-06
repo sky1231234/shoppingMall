@@ -1,19 +1,9 @@
 package com.project.shop.order.dto.request;
 
-import com.project.shop.order.domain.Order;
-import com.project.shop.order.domain.OrderType;
-import com.project.shop.order.domain.Pay;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
 public record OrderUpdateRequest(
 
 //{

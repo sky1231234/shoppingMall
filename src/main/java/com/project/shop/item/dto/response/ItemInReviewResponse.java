@@ -31,7 +31,7 @@ public class ItemInReviewResponse {
                 .collect(Collectors.toList());
 
         return ItemInReviewResponse.builder()
-                .user(review.getUser())
+                .user(review.getUsers())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .star(review.getStar())

@@ -35,9 +35,9 @@ public class CategoryController {
     }
 
     //수정
-    @PutMapping("/category/{categoryId}}")
+    @PutMapping("/category/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public void categoryUpdate(@PathVariable("categoryId") Long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
+    public void categoryUpdate(@PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
         categoryService.update(categoryId,categoryUpdateRequest);
     }
 

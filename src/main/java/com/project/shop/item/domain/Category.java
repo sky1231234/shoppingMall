@@ -33,12 +33,13 @@ public class Category {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
+    @Builder.Default
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Item> itemList = new ArrayList<>(); //상품 이미지 리스트
 
     public Category updateCategory(CategoryUpdateRequest categoryUpdateRequest){
-        this.categoryName = categoryUpdateRequest.getCategoryName();
-        this.brandName = categoryUpdateRequest.getBrandName();
+        this.categoryName = categoryUpdateRequest.categoryName();
+        this.brandName = categoryUpdateRequest.brandName();
         return this;
     }
 

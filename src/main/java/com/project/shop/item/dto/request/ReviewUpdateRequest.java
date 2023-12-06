@@ -4,14 +4,11 @@ import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
 import com.project.shop.user.domain.User;
 import lombok.Builder;
-import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-
 @Builder
-@Getter
 public record ReviewUpdateRequest(
         @NotBlank User user,
         @NotBlank Item item,

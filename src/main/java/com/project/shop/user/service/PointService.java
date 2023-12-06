@@ -9,11 +9,13 @@ import com.project.shop.user.repository.PointRepository;
 import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PointService {
 
@@ -26,7 +28,10 @@ public class PointService {
         var sumPoint = pointRepository.findSumPoint(userId);
         var disappearPoint = pointRepository.findDisappearPoint(userId);
 
-        List<Point> pointList = pointRepository.findAllByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        List<Point> pointList = pointRepository.findAllByUsers(user);
 
         var list =  pointList.stream().map( x -> {
             return PointResponse.PointList.builder()

@@ -21,7 +21,7 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User user;
+    private User users;
 
     @Column(name = "point", nullable = false)
     private int point;   //포인트
@@ -37,9 +37,9 @@ public class Point {
     private LocalDateTime updateDate;   //포인트 수정일
 
     public Point editPoint(PointUpdateRequest pointUpdateRequest){
-        this.point = pointUpdateRequest.getPoint();
-        this.deadlineDate = pointUpdateRequest.getDeadlineDate();
-        this.pointType = pointUpdateRequest.getState();
+        this.point = pointUpdateRequest.point();
+        this.deadlineDate = pointUpdateRequest.deadlineDate();
+        this.pointType = pointUpdateRequest.state();
         return this;
     }
 

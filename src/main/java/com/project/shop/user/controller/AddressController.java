@@ -40,7 +40,7 @@ public class AddressController {
     }
 
     //수정
-    @PutMapping("/address/{addressId}}")
+    @PutMapping("/address/{addressId}")
     @ResponseStatus(HttpStatus.OK)
     public void addressUpdate(@PathVariable("addressId") Long addressId, @RequestBody AddressUpdateRequest addressUpdateRequest){
         addressService.update(addressId,addressUpdateRequest);

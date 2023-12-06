@@ -1,19 +1,11 @@
 package com.project.shop.user.dto.request;
 
-import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.user.domain.Cart;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
 @Builder
 public record CartRequest(
         @NotNull long itemId, // 상품 번호

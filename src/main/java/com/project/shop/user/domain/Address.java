@@ -17,8 +17,10 @@ public class Address {
     @Column(name = "addrId")
     private long addrId;     //배송지번호
 
-    @Column(name = "userId", nullable = false)
-    private long userId;      //고객번호
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User users;      //고객번호
+
     @Column(name = "name", nullable = false)
     private String name;    //받는분 이름
     @Column(name = "zipcode", nullable = false)
@@ -39,12 +41,12 @@ public class Address {
     private LocalDateTime updateDate;   //배송지 수정일
 
     public Address editAddress(AddressUpdateRequest addressUpdateRequest){
-        this.name = addressUpdateRequest.getReceiverName();
-        this.zipcode = addressUpdateRequest.getZipcode();
-        this.address = addressUpdateRequest.getAddress();
-        this.addrDetail = addressUpdateRequest.getAddressDetail();
-        this.phoneNum = addressUpdateRequest.getReceiverPhoneNum();
-        this.addressType = addressUpdateRequest.getDefaultAddr();
+        this.name = addressUpdateRequest.receiverName();
+        this.zipcode = addressUpdateRequest.zipcode();
+        this.address = addressUpdateRequest.address();
+        this.addrDetail = addressUpdateRequest.addressDetail();
+        this.phoneNum = addressUpdateRequest.receiverPhoneNum();
+        this.addressType = addressUpdateRequest.defaultAddr();
         return this;
     }
 

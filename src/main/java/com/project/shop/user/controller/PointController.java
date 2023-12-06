@@ -36,7 +36,7 @@ public class PointController {
     }
 
     //포인트 수정
-    @PutMapping("/point/{pointId}}")
+    @PutMapping("/point/{pointId}")
     @ResponseStatus(HttpStatus.OK)
     public void pointUpdate(@PathVariable("pointId") long pointId, @RequestBody PointUpdateRequest pointUpdateRequest){
         pointService.update(pointId, pointUpdateRequest);

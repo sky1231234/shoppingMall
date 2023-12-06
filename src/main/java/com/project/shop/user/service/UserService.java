@@ -1,19 +1,17 @@
 package com.project.shop.user.service;
 
-import com.project.shop.user.domain.User;
 import com.project.shop.user.dto.request.LoginRequest;
-import com.project.shop.user.dto.request.UserUpdateRequest;
-import com.project.shop.user.dto.request.SignupRequest;
 import com.project.shop.user.dto.response.UserResponse;
 import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class AuthService {
+public class UserService {
 
-    private final User user;
     private final UserRepository userRepository;
 
     //회원정보 조회
@@ -25,9 +23,9 @@ public class AuthService {
     }
 
     //회원가입
-    public void signup(SignupRequest signupRequest){
-        userRepository.save();
-    }
+//    public void signup(SignupRequest signupRequest){
+//        userRepository.save();
+//    }
 
 
     //로그인
@@ -36,9 +34,9 @@ public class AuthService {
     }
 
     //회원정보 수정
-    public void update(UserUpdateRequest userUpdateRequest){
-        userRepository.save();
-    }
+//    public void update(UserUpdateRequest userUpdateRequest){
+//        userRepository.save();
+//    }
 
     //회원 탈퇴
     public void delete(long userId){

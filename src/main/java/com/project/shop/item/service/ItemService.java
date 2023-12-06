@@ -12,6 +12,7 @@ import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 //import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ItemService {
 
@@ -115,8 +117,8 @@ public class ItemService {
         //category
         Category category = categoryRepository
                 .findByCategoryNameAndBrandName(
-                        itemRequest.getCategoryRequest().getCategoryName(),
-                        itemRequest.getCategoryRequest().getBrandName())
+                        itemRequest.categoryRequest().categoryName(),
+                        itemRequest.categoryRequest().brandName())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
 
         //item
@@ -125,7 +127,7 @@ public class ItemService {
 
         //itemImg
         List<ItemImg> itemImgList = itemRequest
-                .getItemImgRequestList()
+                .itemImgRequestList()
                 .stream()
                 .map(x -> {
                     var entity = x.toEntity();
@@ -137,7 +139,7 @@ public class ItemService {
 
         //option
         List<Option> optionList = itemRequest
-                .getOptionRequestList()
+                .optionRequestList()
                 .stream()
                 .map( x-> {
                     var entity = x.toEntity();
@@ -155,8 +157,8 @@ public class ItemService {
 
         Category category = categoryRepository
                         .findByCategoryNameAndBrandName(
-                                itemUpdateRequest.getCategoryUpdateRequest().getCategoryName(),
-                                itemUpdateRequest.getCategoryUpdateRequest().getBrandName()
+                                itemUpdateRequest.categoryUpdateRequest().categoryName(),
+                                itemUpdateRequest.categoryUpdateRequest().brandName()
                         )
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
 
@@ -168,7 +170,7 @@ public class ItemService {
 
         //itemImg
         //기존 이미지 삭제하고 다시 등록
-        List<ItemImg> itemImgList = itemImgRepository.findByItemId(itemId);
+        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
 
         if(itemImgList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ITEM_IMG");
@@ -176,7 +178,7 @@ public class ItemService {
         itemImgRepository.deleteAll(itemImgList);
 
         List<ItemImg> itemImgUpdateList = itemUpdateRequest
-                .getItemImgUpdateRequestList()
+                .itemImgUpdateRequestList()
                 .stream()
                 .map(x -> {
                     var entity = x.toEntity();
@@ -191,7 +193,7 @@ public class ItemService {
         List<Option> optionUpdateList = itemUpdateRequest
                 .optionUpdateRequestList()
                 .stream()
-                .filter(x -> optionRepository.findByItemIdAndColorAndSize(itemId,x.color(), x.size()).isEmpty())
+                .filter(x -> optionRepository.findByItemAndColorAndSize(item,x.color(), x.size()).isEmpty())
                 .map(OptionUpdateRequest::toEntity)
                 .collect(Collectors.toList());
 
