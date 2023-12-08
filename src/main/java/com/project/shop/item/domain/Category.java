@@ -21,10 +21,12 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "categoryId")
+    @Column(name = "id")
     private long categoryId;     //카테고리 번호
+
     @Column(name = "categoryName", nullable = false)
     private String categoryName;    //카테고리 이름
+
     @Column(name = "brandName", nullable = false)
     private String brandName;    //브랜드 이름
 
@@ -40,6 +42,7 @@ public class Category {
     public Category updateCategory(CategoryUpdateRequest categoryUpdateRequest){
         this.categoryName = categoryUpdateRequest.categoryName();
         this.brandName = categoryUpdateRequest.brandName();
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 

@@ -14,7 +14,7 @@ public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "optionId")
+    @Column(name = "id")
     private long optionId;     //옵션번호
 
     @ManyToOne(fetch = FetchType.LAZY)

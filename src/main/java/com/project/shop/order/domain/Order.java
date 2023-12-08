@@ -25,7 +25,7 @@ import java.util.List;
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderId")
+    @Column(name = "id")
     private long orderId;     //주문번호
 
     @ManyToOne(fetch = FetchType.LAZY)

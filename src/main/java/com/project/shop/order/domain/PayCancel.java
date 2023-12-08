@@ -14,7 +14,7 @@ public class PayCancel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payCancelId")
+    @Column(name = "id")
     private long payCancelId;     //결제취소번호
 
     @ManyToOne(fetch = FetchType.LAZY)

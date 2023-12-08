@@ -18,7 +18,7 @@ public class ItemImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemImgId")
+    @Column(name = "id")
     private long itemImgId;     //상품 이미지 번호
 
     @ManyToOne(fetch = FetchType.LAZY)

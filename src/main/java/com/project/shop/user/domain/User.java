@@ -20,7 +20,7 @@ import java.util.List;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "id")
     private long userId;     //고객번호
     @Column(name = "loginId", nullable = false)
     private String loginId;     //아이디

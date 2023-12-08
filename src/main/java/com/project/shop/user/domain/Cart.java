@@ -18,7 +18,7 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cartId")
+    @Column(name = "id")
     private long cartId;     //장바구니 번호
 
     @ManyToOne(fetch = FetchType.LAZY)

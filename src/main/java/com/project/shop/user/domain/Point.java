@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Point {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pointId")
+    @Column(name = "id")
     private long pointId;    //포인트번호
 
     @ManyToOne(fetch = FetchType.LAZY)

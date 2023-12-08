@@ -19,7 +19,7 @@ public class Pay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payId")
+    @Column(name = "id")
     private long payId;     //결제번호
 
     @ManyToOne(fetch = FetchType.LAZY)

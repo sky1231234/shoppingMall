@@ -22,7 +22,7 @@ import java.util.List;
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemId")
+    @Column(name = "id")
     private long itemId;     //상품번호
 
     @ManyToOne(fetch = FetchType.LAZY)

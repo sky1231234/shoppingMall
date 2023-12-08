@@ -19,7 +19,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderItemId")
+    @Column(name = "id")
     private long orderItemId;     //주문상품번호
 
     @ManyToOne(fetch = FetchType.LAZY)

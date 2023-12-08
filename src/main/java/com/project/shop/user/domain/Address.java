@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Address {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "addrId")
+    @Column(name = "id")
     private long addrId;     //배송지번호
 
     @ManyToOne(fetch = FetchType.LAZY)

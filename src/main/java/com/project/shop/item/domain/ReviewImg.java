@@ -19,7 +19,7 @@ public class ReviewImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reviewImgId")
+    @Column(name = "id")
     private long reviewImgId;     //리뷰 이미지 번호
 
     @ManyToOne(fetch = FetchType.LAZY)
