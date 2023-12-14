@@ -31,8 +31,9 @@ public record OrderCancelRequest(
 
         ) {
 
-    public Order cancelToEntity(Order order, OrderType orderType){
+    public Order cancelToEntity(User user, Order order, OrderType orderType){
         return Order.builder()
+                .users(user)
                 .orderNum(order.getOrderNum())
                 .deliverFee(order.getDeliverFee())
                 .point(order.getPoint())
@@ -44,6 +45,8 @@ public record OrderCancelRequest(
                 .addrDetail(order.getAddrDetail())
                 .phoneNum(order.getPhoneNum())
                 .msg(order.getMsg())
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -56,6 +59,8 @@ public record OrderCancelRequest(
                     .cancelReason(this.cancelReason())
                     .payPrice(this.cancelPayPrice())
                     .payCancelType(payCancelType)
+                    .insertDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
                     .build();
         }
 
@@ -65,6 +70,8 @@ public record OrderCancelRequest(
                     .point(point)
                     .deadlineDate(LocalDateTime.now().plusWeeks(1))
                     .pointType(pointType)
+                    .insertDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
                     .build();
         }
 

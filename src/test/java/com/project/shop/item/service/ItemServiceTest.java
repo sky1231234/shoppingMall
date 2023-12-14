@@ -1,10 +1,18 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.data.CategoryData;
+import com.project.shop.item.data.ItemData;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImgType;
+import com.project.shop.item.domain.Option;
+import com.project.shop.item.dto.request.CategoryRequest;
+import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.repository.CategoryRepository;
+import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
+import com.project.shop.item.repository.OptionRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 public class ItemServiceTest {
@@ -20,38 +29,23 @@ public class ItemServiceTest {
     ItemService itemService;
     @Autowired
     ItemRepository itemRepository;
-
-    Item item1 = null;
-    Item item2 = null;
+    @Autowired
+    OptionRepository optionRepository;
+    @Autowired
+    ItemImgRepository itemImgRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    static Item item1;
+    static Item item2;
 
     @BeforeEach
     public void before(){
-        LocalDateTime now = LocalDateTime.now();
 
-        Category category = Category.builder()
-                .categoryName("운동화")
-                .brandName("나이키")
-                .insertDate(now)
-                .updateDate(now)
-                .build();
+        Category category = CategoryData.createCategory1();
+        categoryRepository.save(category);
 
-        item1 = Item.builder()
-                .category(category)
-                .itemName("조던")
-                .price(1000000)
-                .explain("인기많음")
-                .insertDate(now)
-                .updateDate(now)
-                .build();
-
-        item2 = Item.builder()
-                .category(category)
-                .itemName("덩크")
-                .price(5000000)
-                .explain("인기없음")
-                .insertDate(now)
-                .updateDate(now)
-                .build();
+        item1 = ItemData.createItem1(category);
+        item2 = ItemData.createItem2(category);
 
         itemRepository.save(item1);
         itemRepository.save(item2);
@@ -61,9 +55,7 @@ public class ItemServiceTest {
     @DisplayName("상품 전체 조회")
     void itemFindAll(){
         var result = itemService.itemFindAll();
-
-        System.out.println(result);
-        Assertions.assertThat(result).isNotEmpty();
+        Assertions.assertThat(result.size()).isEqualTo(2);
     }
 
     @Test
@@ -71,6 +63,49 @@ public class ItemServiceTest {
     void itemFindDetail(){
         var result = itemService.itemDetailFind(item1.getItemId());
 
-        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getItemName()).isEqualTo("조던");
+        Assertions.assertThat(result.getItemExplain()).isEqualTo("인기 많음");
+    }
+
+    @Test
+    @DisplayName("상품 등록")
+    void itemCreate(){
+        ItemRequest itemRequest = getItemRequest();
+
+        var result = itemService.create(itemRequest);
+
+        Item item = itemRepository.findById(result)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+        List<Option> findOption = optionRepository.findByItem(item);
+
+        Assertions.assertThat(result).isEqualTo(3);
+        Assertions.assertThat(findOption.size()).isEqualTo(3);
+        Assertions.assertThat(findOption.get(0).getColor()).isEqualTo("검정");
+
+    }
+
+    private ItemRequest getItemRequest() {
+
+        CategoryRequest categoryRequest = CategoryData.createCategoryRequest1();
+
+//        final List<ItemRequest.ImgRequest> itemImg = List.of(
+//                new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1"),
+//                new ItemRequest.ImgRequest(ItemImgType.N,"itemImg2"));
+        List<ItemRequest.ImgRequest> itemImg = List.of(
+                ItemData.createItemImg1(),
+                ItemData.createItemImg2());
+
+        List<ItemRequest.OptionRequest> option = List.of(
+                ItemData.createOption1(),
+                ItemData.createOption2(),
+                ItemData.createOption3());
+
+        return new ItemRequest(
+                categoryRequest,
+                "조던1",
+                5000,
+                "재고 없음",
+                itemImg,
+                option);
     }
 }

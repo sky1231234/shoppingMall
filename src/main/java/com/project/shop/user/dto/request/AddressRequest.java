@@ -22,7 +22,7 @@ public record AddressRequest(
                         .address(this.address())
                         .addrDetail(this.addressDetail())
                         .phoneNum(this.receiverPhoneNum())
-                        .addressType(this.defaultAddr())
+//                        .addressType(this.defaultAddr())
                         .build();
         }
 }

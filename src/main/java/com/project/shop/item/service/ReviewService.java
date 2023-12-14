@@ -3,6 +3,7 @@ package com.project.shop.item.service;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.*;
+import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewImgRepository reviewImgRepository;
     private final ItemRepository itemRepository;
+    private final ItemImgRepository itemImgRepository;
 
     //상품 - 리뷰 조회
     public ItemReviewResponse itemReviewFindAll(long itemId){
@@ -31,6 +34,7 @@ public class ReviewService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUNT_ITEM"));
 
         List<Review> reviewList = reviewRepository.findAllByItem(item);
+        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
 
         var list = reviewList.stream().map(x -> {
             return ItemReviewResponse.ReviewItem.builder()
@@ -47,7 +51,7 @@ public class ReviewService {
                 .categoryName(item.getCategory().getCategoryName())
                 .brandName(item.getCategory().getBrandName())
                 .itemName(item.getItemName())
-                .itemThumbnail(item.getItemImgList().stream()
+                .itemThumbnail(itemImgList.stream()
                         .filter(y -> y.getItemImgType() == ItemImgType.Y)
                         .map(y -> {
                             return ItemReviewResponse.Thumbnail.builder()
@@ -71,11 +75,13 @@ public class ReviewService {
         List<Review> reviewList = reviewRepository.findAllByUsers(user);
 
         var list = reviewList.stream().map(x -> {
+            List<ItemImg> itemImgList = itemImgRepository.findByItem(x.getItem());
+
             return UserReviewResponse.ReviewItem.builder()
                     .itemId(x.getItem().getItemId())
                     .categoryName(x.getItem().getCategory().getCategoryName())
                     .brandName(x.getItem().getCategory().getBrandName())
-                    .itemThumbnail(x.getItem().getItemImgList().stream()
+                    .itemThumbnail(itemImgList.stream()
                             .filter(y -> y.getItemImgType() == ItemImgType.Y)
                             .map(y -> {
                                 return UserReviewResponse.ReviewItem.Thumbnail.builder()
@@ -116,12 +122,14 @@ public class ReviewService {
 
         var item = review.getItem();
 
+        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+
         return ReviewResponse.builder()
                 .itemId(item.getItemId())
                 .categoryName(item.getCategory().getCategoryName())
                 .brandName(item.getCategory().getBrandName())
                 .itemName(item.getItemName())
-                .thumbnail(item.getItemImgList().stream()
+                .thumbnail(itemImgList.stream()
                         .filter(y -> y.getItemImgType() == ItemImgType.Y)
                         .map(y -> {
                             return ReviewResponse.Thumbnail.builder()
@@ -141,21 +149,26 @@ public class ReviewService {
     }
 
     //리뷰 등록
-    public void create(ReviewRequest reviewRequest){
+    public long create(ReviewRequest reviewRequest){
         var review = reviewRequest.toEntity();
-        reviewRepository.save(review);
+        var result = reviewRepository.save(review);
 
         //reviewImg
         List<ReviewImg> reviewImgList = reviewRequest
                 .reviewImgRequestList()
                 .stream()
                 .map(x -> {
-                    var entity = x.toEntity();
-                    return entity.updateReview(review);
+                    return ReviewImg.builder()
+                            .review(review)
+                            .imgUrl(x)
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
                 })
                 .collect(Collectors.toList());
 
         reviewImgRepository.saveAll(reviewImgList);
+        return result.getReviewId();
     }
 
     //리뷰 수정
@@ -173,6 +186,7 @@ public class ReviewService {
         if(reviewImgList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_REVIEW_IMG");
         }
+
         //수정할 이미지 개수가 기존과 다르면?
         reviewImgRepository.deleteAll(reviewImgList);
 
@@ -180,8 +194,12 @@ public class ReviewService {
                 .reviewImgUpdateRequest()
                 .stream()
                 .map(x -> {
-                    var entity = x.toEntity();
-                    return entity.updateReview(review);
+                    return ReviewImg.builder()
+                            .review(review)
+                            .imgUrl(x)
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
                 })
                 .collect(Collectors.toList());
 

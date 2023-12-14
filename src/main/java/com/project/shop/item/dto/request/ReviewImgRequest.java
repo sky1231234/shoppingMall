@@ -9,16 +9,13 @@ import javax.validation.constraints.NotBlank;
 
 @Builder
 public record ReviewImgRequest(
-        @NotBlank Review review,
         @NotBlank String imgUrl
 
         ) {
         public ReviewImg toEntity(){
                 return ReviewImg.builder()
-                        .review(this.review())
                         .imgUrl(this.imgUrl())
                         .build();
         }
-
 
 }

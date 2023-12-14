@@ -20,35 +20,34 @@ public class CategoryService {
 
     //브랜드별 조회 - 메인
     //브랜드별로 카테고리 나열
-    public List<CategoryResponse> categoryFindAll(){
+    public List<Category> categoryFindAll(){
 
-         var category = categoryRepository.findCategoryName()
-                .stream()
-                .map( x -> {
-                    System.out.println("x");
-                    System.out.println(x.getCategoryName());
+         var result = categoryRepository.findAll();
+         return result;
+//                .stream()
+//                .map(
+////                        x -> {
+////                    List<CategoryResponse.BrandList> brandList = categoryRepository.findBrand(x.getCategoryName());
+////
+////                    var brand = brandList.stream()
+////                            .map(y ->
+////                                {
+////                                    return CategoryResponse.BrandList.builder()
+////                                            .categoryId(y.getCategoryId())
+////                                            .brandName(y.getBrandName())
+////                                            .build();
+////                                })
+////                            .toList();
+//
+////
+////                    return CategoryResponse.builder()
+////                            .categoryName(x.getCategoryName())
+//////                            .brand(brand)
+////                            .build();
+////                }
+//                )
+//                .toList();
 
-                    List<CategoryResponse.BrandList> brandList = categoryRepository.findBrand(x.getCategoryName());
-
-                    var brand = brandList.stream()
-                            .map(y ->
-                                {
-                                    return CategoryResponse.BrandList.builder()
-                                            .categoryId(y.getCategoryId())
-                                            .brandName(y.getBrandName())
-                                            .build();
-                                })
-                            .toList();
-
-                    return CategoryResponse.builder()
-                            .categoryName(x.getCategoryName())
-                            .brand(brand)
-                            .build();
-                })
-                .toList();
-
-
-        return category;
     }
 
     //카테고리 등록

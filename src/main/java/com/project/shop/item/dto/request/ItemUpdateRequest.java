@@ -13,7 +13,7 @@ public record ItemUpdateRequest(
         @NotBlank int price,
         @NotBlank String explain,
 
-        @NotBlank List<ItemImgUpdateRequest> itemImgUpdateRequestList,
+        @NotBlank List<String> itemImgUpdateRequestList,
         @NotBlank List<OptionUpdateRequest> optionUpdateRequestList) {
 
     public Item toEntity(){

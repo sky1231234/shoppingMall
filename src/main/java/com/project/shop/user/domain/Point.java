@@ -3,16 +3,21 @@ package com.project.shop.user.domain;
 import com.project.shop.item.domain.Category;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.user.dto.request.PointUpdateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Table(name = "point")
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Point {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

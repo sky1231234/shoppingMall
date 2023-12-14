@@ -52,6 +52,7 @@ public class ItemReviewResponse {
     }
 
     @Builder
+    @Getter
     public static class ReviewItem{
         private long userId;
         private String reviewTitle;

@@ -16,19 +16,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByCategoryNameAndBrandName(String categoryName, String brandName);
 
-    @Query(nativeQuery = true , value =
-            "SELECT "
-                    + "category_name "
-                    + "FROM category "
-                    + "GROUP BY category_name"
-    )
-    List<CategoryResponse> findCategoryName();
 
-    @Query(nativeQuery = true , value =
-            "SELECT "
-                    + "category_id , brand_name "
-                    + "FROM category "
-                    + "WHERE category_name = :categoryName"
-    )
-    List<CategoryResponse.BrandList> findBrand(String categoryName);
+//    @Query(nativeQuery = true , value =
+//            "SELECT "
+//                    + "category_id , brand_name "
+//                    + "FROM category "
+//                    + "WHERE category_name = :categoryName"
+//    )
+//    List<CategoryResponse.BrandList> findBrand(String categoryName);
 }

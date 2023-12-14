@@ -27,21 +27,14 @@ public class ItemImg {
 
     @Column(name = "imgUrl", nullable = false)
     private String imgUrl;     //이미지 경로
-    @Column(name = "imgName", nullable = false)
-    private String imgName;    //이미지명
 
     @Column(name = "mainImg", nullable = false)
     @Enumerated(EnumType.STRING)
-    private  ItemImgType itemImgType;    //대표이미지 여부
+    private  ItemImgType itemImgType;    //대표 이미지 여부
 
     @Column(name = "insertDate", nullable = false)
-    private LocalDateTime insertDate;   //상품이미지 등록일
+    private LocalDateTime insertDate;   //상품 이미지 등록일
     @Column(name = "updateDate", nullable = false)
-    private LocalDateTime updateDate;   //상품이미지수정일
-
-    public ItemImg updateItem(Item item){
-        this.item = item;
-        return this;
-    }
+    private LocalDateTime updateDate;   //상품 이미지 수정일
 
 }

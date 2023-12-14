@@ -20,7 +20,7 @@ public class UserReviewResponse {
 
 //    {
 //        "userId" : 1,
-//            "reviewItemList" : [
+//        "reviewItemList" : [
         //        {
         //            "itemId" : 1,
         //                "itemName" : "상품명",
@@ -30,10 +30,10 @@ public class UserReviewResponse {
         //                      "imgId" : 1,
         //                      "url" : "dd"
         //        },
-        //            "reviewTitle" : "리뷰제목",
-        //                "reviewContent" : "리뷰내용",
+        //            "reviewTitle" : "리뷰 제목",
+        //                "reviewContent" : "리뷰 내용",
         //                "reviewStar" : "별점",
-        //                "insertDate" : "리뷰등록일일"
+        //                "insertDate" : "리뷰등록일"
         //        }
 //      ]
 //    }
@@ -42,6 +42,7 @@ public class UserReviewResponse {
     private List<ReviewItem> reviewItemList;
 
     @Builder
+    @Getter
     public static class ReviewItem{
       private long itemId;
         private String categoryName;

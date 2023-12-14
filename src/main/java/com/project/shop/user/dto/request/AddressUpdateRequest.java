@@ -21,7 +21,7 @@ public record AddressUpdateRequest(
                 .address(this.address())
                 .addrDetail(this.addressDetail())
                 .phoneNum(this.receiverPhoneNum())
-                .addressType(this.defaultAddr())
+//                .addressType(this.defaultAddr())
                 .build();
     }
 }

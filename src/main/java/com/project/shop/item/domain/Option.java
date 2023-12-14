@@ -1,7 +1,9 @@
 package com.project.shop.item.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "option")
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Option {
 
@@ -31,10 +35,6 @@ public class Option {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //옵션 수정일
 
-    public Option updateItem(Item item){
-        this.item = item;
-        return this;
-    }
 
 
 }

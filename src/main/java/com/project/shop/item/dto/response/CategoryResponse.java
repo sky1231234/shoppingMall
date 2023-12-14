@@ -1,9 +1,6 @@
 package com.project.shop.item.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 public class CategoryResponse {
 
 //    {
@@ -24,14 +22,6 @@ public class CategoryResponse {
 //    }
 
     private String categoryName;
-    private List<BrandList> brand;
 
-        @Builder
-        @Getter
-        public static class BrandList{
-            private String brandName;
-            private long categoryId;
-
-    }
 
 }

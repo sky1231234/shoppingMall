@@ -1,16 +1,18 @@
 package com.project.shop.order.service;
 
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
 import com.project.shop.item.domain.Option;
+import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.domain.OrderItem;
+import com.project.shop.order.domain.OrderType;
 import com.project.shop.order.domain.Pay;
 import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
 import com.project.shop.order.dto.response.OrderDetailResponse;
-import com.project.shop.order.dto.response.OrderItemResponse;
 import com.project.shop.order.dto.response.OrderResponse;
 import com.project.shop.order.dto.response.OrderUserResponse;
 import com.project.shop.order.repository.OrderItemRepository;
@@ -31,6 +33,7 @@ public class OrderService {
 
     private final UserRepository userRepository ;
     private final ItemRepository itemRepository ;
+    private final ItemImgRepository itemImgRepository ;
 
     private final OrderRepository orderRepository ;
     private final OrderItemRepository orderItemRepository ;
@@ -41,7 +44,7 @@ public class OrderService {
     public List<OrderResponse> orderFindAll(){
 
         //회원번호 받아오기
-        long userId = 5;
+        long userId = 1;
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
@@ -64,11 +67,12 @@ public class OrderService {
                     var list = orderItemList.stream()
                             .map( y -> {
                                 var item = y.getItem();
+                                List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
 
                                 Option option = optionRepository.findById(y.getItemOptionId())
                                         .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-                                var thumbnail = item.getItemImgList().stream()
+                                var thumbnail = itemImgList.stream()
                                         .filter(z -> z.getItemImgType() == ItemImgType.Y)
                                         .map(z -> {
                                             return OrderResponse.Thumbnail.builder()
@@ -148,10 +152,12 @@ public class OrderService {
                 .map( x -> {
                     var item = x.getItem();
 
+                    List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+
                     Option option = optionRepository.findById(x.getItemOptionId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-                    var thumbnail = item.getItemImgList().stream()
+                    var thumbnail = itemImgList.stream()
                             .filter(z -> z.getItemImgType() == ItemImgType.Y)
                             .map(z -> {
                                 return OrderDetailResponse.Thumbnail.builder()
@@ -198,13 +204,19 @@ public class OrderService {
     }
 
     //주문 등록
-    public void create(OrderRequest orderRequest){
+    public long create(long userId, OrderRequest orderRequest){
 
         //주문상품 있는지 확인
 
         //order
-        var order = orderRequest.orderToEntity();
-        orderRepository.save(order);
+        //회원번호 받아오기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+
+        //주문번호 랜덤 생성
+        String orderNum = "1223124";
+        var order = orderRequest.orderToEntity(user,orderNum, OrderType.완료);
+        var orderResult = orderRepository.save(order);
 
         //orderItem
         var result = orderRequest.orderItemRequestList().stream()
@@ -222,6 +234,7 @@ public class OrderService {
         //pay
         payRepository.save(orderRequest.payToEntity(order));
 
+        return orderResult.getOrderId();
     }
 
     //주문 수정

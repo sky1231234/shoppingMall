@@ -15,7 +15,7 @@ public record ReviewUpdateRequest(
         @NotBlank String title,
         @NotBlank String content,
         @NotBlank int star,
-        @NotBlank List<ReviewImgUpdateRequest> reviewImgUpdateRequest){
+        @NotBlank List<String> reviewImgUpdateRequest){
 
     public Review toEntity(){
         return Review.builder()

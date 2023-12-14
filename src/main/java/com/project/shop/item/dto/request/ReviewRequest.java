@@ -6,6 +6,7 @@ import com.project.shop.user.domain.User;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -15,10 +16,11 @@ public record ReviewRequest(
         @NotBlank String title,
         @NotBlank String content,
         @NotBlank int star,
-        @NotBlank List<ReviewImgRequest> reviewImgRequestList
+        @NotBlank List<String> reviewImgRequestList
         ) {
 
         public Review toEntity(){
+                LocalDateTime now = LocalDateTime.now();
 
                 return Review.builder()
                         .users(this.user())
@@ -26,6 +28,8 @@ public record ReviewRequest(
                         .title(this.title())
                         .content(this.content())
                         .star(this.star())
+                        .insertDate(now)
+                        .updateDate(now)
                         .build();
         }
 }

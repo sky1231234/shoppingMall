@@ -1,18 +1,16 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.data.CategoryData;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
-import com.project.shop.item.dto.response.CategoryResponse;
 import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,31 +25,15 @@ public class CategoryServiceTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    Category cate1 = null;
-    Category cate2 = null;
+    static Category category1;
+    static Category category2;
     @BeforeEach
     public void before(){
+        category1 = CategoryData.createCategory1();
+        category2 = CategoryData.createCategory2();
 
-        LocalDateTime now = LocalDateTime.now();
-
-        cate1 = Category.builder()
-                .categoryName("운동화")
-                .brandName("나이키")
-                .insertDate(now)
-                .updateDate(now)
-                .build();
-
-        cate2 = Category.builder()
-                .categoryName("스니커즈")
-                .brandName("뉴발란스")
-                .insertDate(now)
-                .updateDate(now)
-                .build();
-
-        //when
-        categoryRepository.save(cate1);
-        categoryRepository.save(cate2);
-
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
     }
 
     @Test
@@ -77,7 +59,7 @@ public class CategoryServiceTest {
     void categoryFindAllTest(){
 
         //when
-        List<CategoryResponse> result = categoryService.categoryFindAll();
+        List<Category> result = categoryService.categoryFindAll();
 
         //then
         Assertions.assertThat(result.size()).isEqualTo(2);
@@ -89,15 +71,17 @@ public class CategoryServiceTest {
     void categoryUpdateTest(){
 
         //given
-        var find1 = categoryRepository.findById(cate1.getCategoryId());
-        var find2 = categoryRepository.findById(cate2.getCategoryId());
+        var find1 = categoryRepository.findById(category1.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY1_TEST"));
+        var find2 = categoryRepository.findById(category2.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY2_TEST"));
 
         CategoryUpdateRequest categoryUpdateRequest1 = new CategoryUpdateRequest("auth", "런닝화", "뉴발란스");
         CategoryUpdateRequest categoryUpdateRequest2 = new CategoryUpdateRequest("auth", "샌들", "나이키");
 
         //when
-        var updateId1 = categoryService.update(find1.get().getCategoryId(), categoryUpdateRequest1);
-        var updateId2 = categoryService.update(find2.get().getCategoryId(), categoryUpdateRequest2);
+        var updateId1 = categoryService.update(find1.getCategoryId(), categoryUpdateRequest1);
+        var updateId2 = categoryService.update(find2.getCategoryId(), categoryUpdateRequest2);
 
         //then
         Assertions.assertThat(updateId1).isEqualTo(1);
@@ -108,7 +92,7 @@ public class CategoryServiceTest {
     @DisplayName("카테고리 삭제")
     void categoryDeleteTest(){
 
-        categoryService.delete(cate1.getCategoryId());
+        categoryService.delete(category1.getCategoryId());
 
         Assertions.assertThat(categoryRepository.count()).isEqualTo(1);
 

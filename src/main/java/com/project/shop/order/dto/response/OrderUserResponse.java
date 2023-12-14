@@ -37,6 +37,7 @@ public class OrderUserResponse {
     private List<Order> order;
 
     @Builder
+    @Getter
     public static class Order {
         private long orderId;
         private String orderNum;

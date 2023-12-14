@@ -61,24 +61,4 @@ public class ReviewResponse {
         private String url;
     }
 
-    //review -> ReviewResponse
-//    public static ReviewResponse fromEntity(Review review){
-
-//        var reviewImgList = review.getReviewImgList()
-//                .stream().map(x -> new ReviewImgResponse(x.getImgUrl()))
-//                .collect(Collectors.toList());
-//
-//        return ReviewResponse.builder()
-//                .categoryName(review.getItem().getCategory().getCategoryName())
-//                .brandName(review.getItem().getCategory().getBrandName())
-//                .itemName(review.getItem().getItemName())
-////                .mainItemImg(review.getItem().getItemImgList().)
-//                .userId(review.getUser().getUserId())
-//                .title(review.getTitle())
-//                .content(review.getContent())
-//                .star(review.getStar())
-//                .reviewImgResponses(reviewImgList)
-//                .insertDate(review.getInsertDate())
-//                .build();
-//    }
 }

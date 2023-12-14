@@ -1,5 +1,6 @@
 package com.project.shop.item.controller;
 
+import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import com.project.shop.item.dto.response.CategoryResponse;
@@ -23,7 +24,7 @@ public class CategoryController {
     //조회
     @GetMapping("/category")
     @ResponseStatus(HttpStatus.OK)
-    public List<CategoryResponse> categoryFindAll(){
+    public List<Category> categoryFindAll(){
         return categoryService.categoryFindAll();
     }
 

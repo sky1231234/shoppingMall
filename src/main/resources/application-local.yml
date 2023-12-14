@@ -9,17 +9,18 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+#        naming:
+#          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   h2:
     console:
       path: /h2-console
       enabled: true
+#      hikari:
+#        jdbc-url: jdbc:h2:mem:shop;MODE=MYSQL
   output:
     ansi:
       enabled: always
-
-
-
-
   datasource:
     url: jdbc:h2:mem:shop;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: root

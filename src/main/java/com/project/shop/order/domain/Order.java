@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "order")
+@Table(name = "orders")
 @Entity
 @Getter
 @Builder
@@ -40,10 +40,10 @@ public class Order {
     private int point;     //포인트
     @Column(name = "price", nullable = false)
     private int price;     //가격
-    @Column(name = "state", nullable = false)
+    @Column(name = "orderState", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderType orderType;    //주문상태
-    @Column(name = "receiverName")
+    @Column(name = "receiverName", nullable = false)
     private String receiverName;     //받는분 이름
     @Column(name = "zipcode", nullable = false)
     private String zipcode;    //우편번호
@@ -61,19 +61,6 @@ public class Order {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //주문 수정일
 
-    @Builder.Default
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItemList = new ArrayList<>(); //리뷰 이미지
-
-    @Builder.Default
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Pay> payList = new ArrayList<>(); //리뷰 이미지
-
-    @Builder.Default
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<PayCancel> payCancelList = new ArrayList<>(); //리뷰 이미지
-
-
     public Order updateOrder(OrderUpdateRequest orderUpdateRequest){
         this.price = orderUpdateRequest.orderTotalPrice();
         this.deliverFee = orderUpdateRequest.deliverFee();
@@ -83,6 +70,7 @@ public class Order {
         this.addrDetail = orderUpdateRequest.addressDetail();
         this.phoneNum = orderUpdateRequest.receiverPhoneNum();
         this.msg = orderUpdateRequest.addrMsg();
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 

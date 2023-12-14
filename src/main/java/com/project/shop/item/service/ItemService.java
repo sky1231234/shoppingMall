@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,13 +37,15 @@ public class ItemService {
         return itemRepository.findAll()
                 .stream()
                 .map(x -> {
+                    List<ItemImg> itemImgList = itemImgRepository.findByItem(x);
+
                     return ItemListResponse.builder()
                             .itemId(x.getItemId())
                             .categoryName(x.getCategory().getCategoryName())
                             .brandName(x.getCategory().getBrandName())
                             .itemName(x.getItemName())
                             .itemPrice(x.getPrice())
-                            .thumbnail(x.getItemImgList().stream()
+                            .thumbnail(itemImgList.stream()
                                     .filter(y -> y.getItemImgType() == ItemImgType.Y)
                                     .map(y-> {
                                         return ItemListResponse.Thumbnail.builder()
@@ -63,7 +66,10 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
 
-        var itemImg = item.getItemImgList().stream()
+        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+        List<Option> option = optionRepository.findByItem(item);
+
+        var itemImg = itemImgList.stream()
                 .filter(y -> y.getItemImgType() == ItemImgType.N)
                 .map(y -> {
                     return ItemResponse.ItemImgResponse.builder()
@@ -73,7 +79,7 @@ public class ItemService {
                 })
                 .toList();
 
-        var size = item.getOptionList().stream()
+        var size = option.stream()
                 .map(x -> {
                     return ItemResponse.OptionSize.builder()
                             .optionId(x.getOptionId())
@@ -81,7 +87,7 @@ public class ItemService {
                             .build();
                 }).toList();
 
-        var color = item.getOptionList().stream()
+        var color = option.stream()
                 .map(x -> {
                     return ItemResponse.OptionColor.builder()
                             .optionId(x.getOptionId())
@@ -96,7 +102,7 @@ public class ItemService {
                 .itemName(item.getItemName())
                 .itemExplain(item.getExplain())
                 .itemPrice(item.getPrice())
-                .itemThumbnail(item.getItemImgList().stream()
+                .itemThumbnail(itemImgList.stream()
                         .filter(y -> y.getItemImgType() == ItemImgType.Y)
                         .map(y -> {
                             return ItemResponse.ItemImgResponse.builder()
@@ -113,7 +119,7 @@ public class ItemService {
 
     //상품 등록
     // item + itemImg + option
-    public void create(ItemRequest itemRequest){
+    public long create(ItemRequest itemRequest){
         //category
         Category category = categoryRepository
                 .findByCategoryNameAndBrandName(
@@ -123,17 +129,22 @@ public class ItemService {
 
         //item
         var item = itemRequest.toEntity();
-        itemRepository.save(item.updateCategory(category));
+        var createItem = itemRepository.save(item.updateCategory(category));
 
         //itemImg
         List<ItemImg> itemImgList = itemRequest
                 .itemImgRequestList()
                 .stream()
                 .map(x -> {
-                    var entity = x.toEntity();
-                    return entity.updateItem(item);
+                    return ItemImg.builder()
+                            .item(item)
+                            .itemImgType(x.mainImg())
+                            .imgUrl(x.url())
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         itemImgRepository.saveAll(itemImgList);
 
@@ -142,13 +153,19 @@ public class ItemService {
                 .optionRequestList()
                 .stream()
                 .map( x-> {
-                    var entity = x.toEntity();
-                    return entity.updateItem(item);
+                    return Option.builder()
+                            .item(item)
+                            .size(x.size())
+                            .color(x.color())
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
                 })
                 .collect(Collectors.toList());
 
         optionRepository.saveAll(optionList);
 
+        return createItem.getItemId();
     }
 
     //상품 수정
@@ -181,8 +198,9 @@ public class ItemService {
                 .itemImgUpdateRequestList()
                 .stream()
                 .map(x -> {
-                    var entity = x.toEntity();
-                    return entity.updateItem(item);
+                    return ItemImg.builder()
+                        .imgUrl(x)
+                        .build();
                 })
                 .collect(Collectors.toList());
 

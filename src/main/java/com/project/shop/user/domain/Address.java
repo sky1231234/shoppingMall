@@ -7,7 +7,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name = "users")
+@Table(name = "address")
 @Entity
 @Getter
 @Builder
@@ -31,6 +31,7 @@ public class Address {
     private String addrDetail;      //상세주소
     @Column(name = "phoneNum", nullable = false)
     private String phoneNum;    //받는분 전화번호
+
     @Column(name = "defaultAddr", nullable = false)
     @Enumerated(EnumType.STRING)
     private AddressType addressType;     //기본배송지 여부
@@ -46,7 +47,7 @@ public class Address {
         this.address = addressUpdateRequest.address();
         this.addrDetail = addressUpdateRequest.addressDetail();
         this.phoneNum = addressUpdateRequest.receiverPhoneNum();
-        this.addressType = addressUpdateRequest.defaultAddr();
+//        this.addressType = addressUpdateRequest.defaultAddr();
         return this;
     }
 

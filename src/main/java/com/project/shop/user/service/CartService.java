@@ -1,6 +1,7 @@
 package com.project.shop.user.service;
 
 import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
 import com.project.shop.item.domain.Option;
 import com.project.shop.item.dto.response.ItemReviewResponse;
@@ -30,6 +31,7 @@ public class CartService {
     private final CartRepository cartRepository ;
     private final UserRepository userRepository ;
     private final ItemRepository itemRepository ;
+    private final ItemImgRepository itemImgRepository ;
     private final OptionRepository optionRepository ;
 
     //회원별 장바구니 조회
@@ -46,6 +48,8 @@ public class CartService {
                     Option option = optionRepository.findById(x.getOptionId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
+                    List<ItemImg> itemImg = itemImgRepository.findByItem(item);
+
                     return CartResponse.builder()
                             .itemId(item.getItemId())
                             .categoryName(item.getCategory().getCategoryName())
@@ -54,7 +58,8 @@ public class CartService {
                             .itemSize(option.getSize())
                             .itemColor(option.getSize())
                             .count(x.getCount())
-                            .itemThumbnail(item.getItemImgList().stream()
+                            .itemThumbnail(
+                                    itemImg.stream()
                                     .filter(y -> y.getItemImgType() == ItemImgType.Y)
                                     .map(y -> {
                                         return CartResponse.Thumbnail.builder()

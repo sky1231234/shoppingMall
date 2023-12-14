@@ -38,10 +38,6 @@ public class Review {
     @Column(name = "star", nullable = false)
     private int star;    //별점
 
-    @Builder.Default
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
-    private List<ReviewImg> reviewImgList = new ArrayList<>(); //리뷰 이미지
-
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 등록일
     @Column(name = "updateDate", nullable = false)

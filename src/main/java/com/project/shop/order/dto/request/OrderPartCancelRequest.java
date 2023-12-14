@@ -27,7 +27,7 @@ public record OrderPartCancelRequest(
 //      "usedPoint" : 500
 //}
 
-        @NotNull List<ItemId> item,
+        @NotNull List<Long> item,
         @NotBlank String cancelPayCompany,
         @NotBlank String cancelCardNum,
         @NotNull int cancelPayPrice,
@@ -35,15 +35,11 @@ public record OrderPartCancelRequest(
         @NotBlank String payCancelType,
         @NotNull int usedPoint
 
-
-
 ) {
-    public record ItemId(
-            @NotNull long itemId
-    ) {}
 
-    public Order cancelToEntity(Order order, OrderType orderType){
+    public Order cancelToEntity(User user, Order order, OrderType orderType){
         return Order.builder()
+                .users(user)
                 .orderNum(order.getOrderNum())
                 .deliverFee(order.getDeliverFee())
                 .point(order.getPoint())
@@ -55,6 +51,8 @@ public record OrderPartCancelRequest(
                 .addrDetail(order.getAddrDetail())
                 .phoneNum(order.getPhoneNum())
                 .msg(order.getMsg())
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -67,6 +65,8 @@ public record OrderPartCancelRequest(
                 .cancelReason(this.cancelReason())
                 .payPrice(this.cancelPayPrice())
                 .payCancelType(payCancelType)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -76,6 +76,8 @@ public record OrderPartCancelRequest(
                 .point(point)
                 .deadlineDate(LocalDateTime.now().plusWeeks(1))
                 .pointType(pointType)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 

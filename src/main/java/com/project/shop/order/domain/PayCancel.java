@@ -1,15 +1,19 @@
 package com.project.shop.order.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name = "pay")
+@Table(name = "payCancel")
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PayCancel {
 
     @Id

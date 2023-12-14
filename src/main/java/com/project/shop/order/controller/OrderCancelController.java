@@ -19,14 +19,14 @@ public class OrderCancelController {
     //부분취소 등록
     @PostMapping("/order/partCancel/{orderId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void orderPartCancelCreate(@PathVariable("orderId") int orderId,@RequestBody OrderPartCancelRequest orderPartCancelRequest){
-        orderCancelService.partCancelCreate(orderId, orderPartCancelRequest);
+    public void orderPartCancelCreate(@PathVariable("orderId")long userId, long orderId,@RequestBody OrderPartCancelRequest orderPartCancelRequest){
+        orderCancelService.partCancelCreate(userId, orderId, orderPartCancelRequest);
     }
 
     //취소 등록
     @PostMapping("/order/cancel/{orderId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void orderCancelCreate(@PathVariable("orderId") int orderId, @RequestBody OrderCancelRequest orderCancelRequest){
-        orderCancelService.orderCancelCreate(orderId, orderCancelRequest);
+    public void orderCancelCreate(@PathVariable("orderId") long userId, long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
+        orderCancelService.orderCancelCreate(userId, orderId, orderCancelRequest);
     }
 }

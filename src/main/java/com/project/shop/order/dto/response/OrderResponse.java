@@ -47,6 +47,7 @@ public class OrderResponse {
     private List<OrderItem> orderItem;
 
     @Builder
+    @Getter
     public static class OrderItem {
         private long itemId;
         private String itemName;

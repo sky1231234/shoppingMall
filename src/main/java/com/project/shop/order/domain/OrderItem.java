@@ -1,20 +1,21 @@
 package com.project.shop.order.domain;
 
-import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
-import com.project.shop.order.dto.request.OrderItemRequest;
+import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Table(name = "orderItem")
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItem {
 
     @Id
@@ -40,7 +41,7 @@ public class OrderItem {
     @Column(name = "itemPrice", nullable = false)
     private int itemPrice;     //상품 가격
 
-    public OrderItem updateOrderItem(OrderItemRequest orderItemRequest, int price, long opitonId){
+    public OrderItem updateOrderItem(OrderUpdateRequest.OrderItemRequest orderItemRequest, int price, long opitonId){
         this.totalQuantity = orderItemRequest.itemCount();
         this.totalPrice = orderItemRequest.itemCount() * price;
         this.itemOptionId = opitonId;

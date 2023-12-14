@@ -46,8 +46,8 @@ public class OrderController {
     //주문 등록
     @PostMapping("/order")
     @ResponseStatus(HttpStatus.CREATED)
-    public void orderCreate(@RequestBody OrderRequest orderRequest){
-        orderService.create(orderRequest);
+    public void orderCreate(@RequestBody long userId, OrderRequest orderRequest){
+        orderService.create(userId, orderRequest);
     }
 
     //주문 수정

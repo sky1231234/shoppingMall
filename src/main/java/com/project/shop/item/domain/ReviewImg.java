@@ -1,7 +1,5 @@
 package com.project.shop.item.domain;
 
-import com.project.shop.item.dto.request.ReviewImgUpdateRequest;
-import com.project.shop.item.dto.request.ReviewUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,10 +31,5 @@ public class ReviewImg {
     private LocalDateTime insertDate;   //리뷰이미지 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //리뷰이미지수정일
-
-    public ReviewImg updateReview(Review review){
-        this.review = review;
-        return this;
-    }
 
 }

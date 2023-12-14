@@ -65,6 +65,7 @@ public class OrderDetailResponse {
     private Pay pay;
 
     @Builder
+    @Getter
     public static class OrderItem {
         private long itemId;
         private String itemName;
@@ -76,12 +77,14 @@ public class OrderDetailResponse {
     }
 
     @Builder
+    @Getter
     public static class Thumbnail {
         private long imgId;
         private String url;
     }
 
     @Builder
+    @Getter
     public static class Pay {
         private long payId;
         private int usedPoint;
