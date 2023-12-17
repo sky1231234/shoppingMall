@@ -112,7 +112,7 @@ public class CartService {
     //장바구니 삭제
     public void delete(long cartId){
 
-        if(!cartRepository.findById(cartId).isPresent()){
+        if(cartRepository.findById(cartId).isEmpty()){
             throw new RuntimeException("NOT_FOUND_CART_ID");
         }
 

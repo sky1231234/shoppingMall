@@ -4,8 +4,10 @@ import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Option;
 import com.project.shop.user.dto.request.CartUpdateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cart {
 
     @Id
@@ -43,11 +47,13 @@ public class Cart {
     public Cart updateCart(CartUpdateRequest cartUpdateRequest){
         this.count = cartUpdateRequest.count();
         this.optionId = cartUpdateRequest.optionNum();
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 
     public Cart updateCount(){
         this.count += 1;
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 }

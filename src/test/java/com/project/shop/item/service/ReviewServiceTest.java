@@ -75,13 +75,14 @@ public class ReviewServiceTest {
     @DisplayName("상품-리뷰 조회")
     void categoryCreateTest(){
 
-        //리뷰 등록
+        //given
         var review = createReview1();
         createReview2();
 
-        //상품의 다른 리뷰 조회
+        //when
         ItemReviewResponse itemReviewResponse = reviewService.itemReviewFindAll(review);
 
+        //then
         Assertions.assertThat(itemReviewResponse.getReviewList().size()).isEqualTo(2);
         Assertions.assertThat(itemReviewResponse.getCategoryName()).isEqualTo("운동화");
         Assertions.assertThat(itemReviewResponse.getReviewList().get(0).getReviewContent())
@@ -93,13 +94,15 @@ public class ReviewServiceTest {
     @DisplayName("회원-리뷰 조회")
     void categoryFindAllTest(){
 
-        //리뷰 등록
+        //given
         createReview1();
         createReview2();
         createReview3();
 
-        //회원별 리뷰 조회
+        //when
         UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(user1.getUserId());
+
+        //then
         Assertions.assertThat(userReviewResponse.getReviewItemList().size()).isEqualTo(2);
         Assertions.assertThat(userReviewResponse.getReviewItemList()
                         .get(0).getReviewTitle())

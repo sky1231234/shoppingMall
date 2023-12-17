@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.global.common.BaseTimeEntity;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

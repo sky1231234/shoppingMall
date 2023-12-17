@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -53,10 +52,9 @@ public class PointService {
 
    
     //포인트 등록
-    public void create(PointRequest pointRequest){
+    public void create(long userId, PointRequest pointRequest){
 
         //userId 받아오기
-        long userId = 5;
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 

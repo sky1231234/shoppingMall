@@ -31,8 +31,8 @@ public class PointController {
     //포인트 등록
     @PostMapping("/point")
     @ResponseStatus(HttpStatus.CREATED)
-    public void pointCreate(@RequestBody PointRequest pointRequest){
-        pointService.create(pointRequest);
+    public void pointCreate(long userId, @RequestBody PointRequest pointRequest){
+        pointService.create(userId, pointRequest);
     }
 
     //포인트 수정
@@ -44,7 +44,7 @@ public class PointController {
 
     //포인트 삭제
     @DeleteMapping("/point/{pointId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void pointDelete(@PathVariable("pointId") long pointId){
         pointService.delete(pointId);
     }

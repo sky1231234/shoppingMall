@@ -43,7 +43,7 @@ public class OrderService {
     //주문내역 조회
     public List<OrderResponse> orderFindAll(){
 
-        //회원번호 받아오기
+        //userId 받아오기
         long userId = 1;
 
         User user = userRepository.findById(userId)
@@ -209,7 +209,7 @@ public class OrderService {
         //주문상품 있는지 확인
 
         //order
-        //회원번호 받아오기
+        //userId 받아오기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 

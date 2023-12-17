@@ -1,5 +1,5 @@
 package com.project.shop.user.controller;
 
-public class ItemControllerTest {
+public class UserControllerTest {
 
 }

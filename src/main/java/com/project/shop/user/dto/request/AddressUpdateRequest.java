@@ -4,6 +4,7 @@ import com.project.shop.user.domain.Address;
 import com.project.shop.user.domain.AddressType;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public record AddressUpdateRequest(
         @NotBlank String receiverName,
@@ -21,7 +22,9 @@ public record AddressUpdateRequest(
                 .address(this.address())
                 .addrDetail(this.addressDetail())
                 .phoneNum(this.receiverPhoneNum())
-//                .addressType(this.defaultAddr())
+                .addressType(this.defaultAddr())
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 }

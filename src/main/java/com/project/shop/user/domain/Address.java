@@ -1,8 +1,10 @@
 package com.project.shop.user.domain;
 
 import com.project.shop.user.dto.request.AddressUpdateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +51,8 @@ public class Address {
         this.address = addressUpdateRequest.address();
         this.addrDetail = addressUpdateRequest.addressDetail();
         this.phoneNum = addressUpdateRequest.receiverPhoneNum();
-//        this.addressType = addressUpdateRequest.defaultAddr();
+        this.addressType = addressUpdateRequest.defaultAddr();
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 

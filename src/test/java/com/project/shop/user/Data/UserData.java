@@ -28,8 +28,6 @@ public class UserData {
                 .loginId("boot")
                 .password("password")
                 .name("부트")
-                .address("부산")
-                .addrDetail("광안리")
                 .phoneNum("5555555")
                 .insertDate(now)
                 .updateDate(now)

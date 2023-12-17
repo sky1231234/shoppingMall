@@ -1,4 +1,15 @@
 spring:
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: root
+    password:
+
   jpa:
     database: h2
     properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
@@ -9,23 +20,10 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
-#        naming:
-#          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-#          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
-#      hikari:
-#        jdbc-url: jdbc:h2:mem:shop;MODE=MYSQL
+
   output:
     ansi:
       enabled: always
-  datasource:
-    url: jdbc:h2:mem:shop;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: root
-    password:
-    driver-class-name: org.h2.Driver
 
 logging:
   level:
@@ -34,11 +32,12 @@ logging:
       hibernate:
         type: trace
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  endpoint:
-    health:
-      show-details: always
+  springdoc:
+    packages-to-scan: com.project.shop
+    default-consumes-media-type: application/json;charset=UTF-8
+    default-produces-media-type: application/json;charset=UTF-8
+    swagger-ui:
+      path: /swagger-ui
+      disable-swagger-default-url: true
+      display-request-duration: true
+      operations-sorter: alpha

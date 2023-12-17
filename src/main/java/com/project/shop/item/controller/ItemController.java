@@ -51,7 +51,7 @@ public class ItemController {
 
     //상품 삭제
     @DeleteMapping("/item/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void itemDelete(@PathVariable("itemId") long itemId){
         itemService.delete(itemId);
     }

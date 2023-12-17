@@ -42,7 +42,7 @@ public class CartController {
 
     //장바구니 삭제
     @DeleteMapping("/cart/{cartId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cartDelete(@PathVariable("cartId") long cartId){
         cartService.delete(cartId);
     }

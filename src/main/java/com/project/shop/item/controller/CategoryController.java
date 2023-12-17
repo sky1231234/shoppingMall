@@ -9,6 +9,7 @@ import com.project.shop.item.service.CategoryService;
 import com.project.shop.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,13 @@ public class CategoryController {
         return categoryService.categoryFindAll();
     }
 
+    @GetMapping("/hello")
+    @ResponseStatus(HttpStatus.OK)
+    public String hello(){
+        return "hello";
+    }
+
+
     //등록
     @PostMapping("/category")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,7 +52,7 @@ public class CategoryController {
 
     //삭제
     @DeleteMapping("/category/{categoryId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void categoryDelete(@PathVariable("categoryId") long categoryId){
         categoryService.delete(categoryId);
     }

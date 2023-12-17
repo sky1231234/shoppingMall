@@ -45,6 +45,7 @@ public class Point {
         this.point = pointUpdateRequest.point();
         this.deadlineDate = pointUpdateRequest.deadlineDate();
         this.pointType = pointUpdateRequest.state();
+        this.updateDate = LocalDateTime.now();
         return this;
     }
 

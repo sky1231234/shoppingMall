@@ -5,6 +5,8 @@ import com.project.shop.item.domain.Review;
 import com.project.shop.item.domain.ReviewImg;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.domain.OrderItem;
+import com.project.shop.user.dto.request.PointUpdateRequest;
+import com.project.shop.user.dto.request.UserUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,10 +34,6 @@ public class User {
     private String password;    //비밀번호
     @Column(name = "name", nullable = false)
     private String name;    //이름
-    @Column(name = "address", nullable = false)
-    private String address;     //주소
-    @Column(name = "addrDetail", nullable = false)
-    private String addrDetail;      //상세주소
     @Column(name = "phoneNum", nullable = false)
     private String phoneNum;    //전화번호
 
@@ -45,4 +43,18 @@ public class User {
     private LocalDateTime updateDate;   //수정일
     @Column(name = "deleteDate", nullable = true)
     private LocalDateTime deleteDate;   //탈퇴일
+
+    public User updateUser(UserUpdateRequest userUpdateRequest){
+        this.loginId = userUpdateRequest.loginId();
+        this.password = userUpdateRequest.password();
+        this.name = userUpdateRequest.name();
+        this.phoneNum = userUpdateRequest.phoneNum();
+        this.updateDate = LocalDateTime.now();
+        return this;
+    }
+
+    public User deleteUser(){
+        this.deleteDate = LocalDateTime.now();
+        return this;
+    }
 }

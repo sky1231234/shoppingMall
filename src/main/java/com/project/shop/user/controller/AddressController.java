@@ -48,7 +48,7 @@ public class AddressController {
 
     //삭제
     @DeleteMapping("/address/{addressId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addressDelete(@PathVariable("addressId") long addressId){
         addressService.delete(addressId);
     }
