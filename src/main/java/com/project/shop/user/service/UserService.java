@@ -9,7 +9,7 @@ import com.project.shop.user.dto.response.UserResponse;
 import com.project.shop.user.repository.CartRepository;
 import com.project.shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     //회원가입
     public long signUp(SignUpRequest signUpRequest){
@@ -41,10 +41,10 @@ public class UserService {
         User user = userRepository.findByLoginId(loginRequest.loginId())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
-            throw new RuntimeException("NOT_MATCH_PASSWORD");
-
-        }
+//        if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+//            throw new RuntimeException("NOT_MATCH_PASSWORD");
+//
+//        }
     }
 
     //내 정보 조회

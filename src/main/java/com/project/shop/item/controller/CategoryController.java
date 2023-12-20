@@ -14,44 +14,39 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
 public class CategoryController {
+
     private final CategoryService categoryService;
 
     //조회
-    @GetMapping("/category")
+    @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
-    public List<Category> categoryFindAll(){
+    public List<CategoryResponse> categoryFindAll(){
         return categoryService.categoryFindAll();
     }
 
-    @GetMapping("/hello")
-    @ResponseStatus(HttpStatus.OK)
-    public String hello(){
-        return "hello";
-    }
-
-
     //등록
-    @PostMapping("/category")
+    @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public void categoryCreate(@RequestBody CategoryRequest categoryRequest){
         categoryService.create(categoryRequest);
     }
 
     //수정
-    @PutMapping("/category/{categoryId}")
+    @PutMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public void categoryUpdate(@PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
         categoryService.update(categoryId,categoryUpdateRequest);
     }
 
     //삭제
-    @DeleteMapping("/category/{categoryId}")
+    @DeleteMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void categoryDelete(@PathVariable("categoryId") long categoryId){
         categoryService.delete(categoryId);

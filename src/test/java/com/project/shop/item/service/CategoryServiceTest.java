@@ -1,9 +1,10 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.data.CategoryData;
+import com.project.shop.item.Builder.CategoryBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
+import com.project.shop.item.dto.response.CategoryResponse;
 import com.project.shop.item.repository.CategoryRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 //@Transactional
@@ -27,13 +28,16 @@ public class CategoryServiceTest {
 
     static Category category1;
     static Category category2;
+    static Category category3;
     @BeforeEach
     public void before(){
-        category1 = CategoryData.createCategory1();
-        category2 = CategoryData.createCategory2();
+        category1 = CategoryBuilder.createCategory1();
+        category2 = CategoryBuilder.createCategory2();
+        category3 = CategoryBuilder.createCategory3();
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
+        categoryRepository.save(category3);
     }
 
     @Test
@@ -59,10 +63,12 @@ public class CategoryServiceTest {
     void categoryFindAllTest(){
 
         //when
-        List<Category> result = categoryService.categoryFindAll();
+        List<CategoryResponse> result = categoryService.categoryFindAll();
 
         //then
         Assertions.assertThat(result.size()).isEqualTo(2);
+        Assertions.assertThat(result.get(0).getCategoryName()).isEqualTo("스니커즈");
+        Assertions.assertThat(result.get(1).getBrand().get(0).getBrandName()).isEqualTo("나이키");
 
     }
 

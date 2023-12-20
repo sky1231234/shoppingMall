@@ -22,6 +22,14 @@ public class CategoryResponse {
 //    }
 
     private String categoryName;
+    private List<Brand> brand;
+
+    @Builder
+    @Getter
+    public static class Brand {
+        private long categoryId;
+        private String brandName;
+    }
 
 
 }

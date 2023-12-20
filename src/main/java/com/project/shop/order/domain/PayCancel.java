@@ -36,9 +36,7 @@ public class PayCancel {
     private String cancelReason;     //취소사유
     @Column(name = "payPrice", nullable = false)
     private int payPrice;     //취소 금액
-    @Column(name = "state", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PayCancelType payCancelType;    //취소상태
+
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //결제일

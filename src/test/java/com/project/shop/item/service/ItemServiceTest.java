@@ -1,10 +1,9 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.data.CategoryData;
-import com.project.shop.item.data.ItemData;
+import com.project.shop.item.Builder.CategoryBuilder;
+import com.project.shop.item.Builder.ItemBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImgType;
 import com.project.shop.item.domain.Option;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.ItemRequest;
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -41,11 +39,11 @@ public class ItemServiceTest {
     @BeforeEach
     public void before(){
 
-        Category category = CategoryData.createCategory1();
+        Category category = CategoryBuilder.createCategory1();
         categoryRepository.save(category);
 
-        item1 = ItemData.createItem1(category);
-        item2 = ItemData.createItem2(category);
+        item1 = ItemBuilder.createItem1(category);
+        item2 = ItemBuilder.createItem2(category);
 
         itemRepository.save(item1);
         itemRepository.save(item2);
@@ -86,19 +84,19 @@ public class ItemServiceTest {
 
     private ItemRequest getItemRequest() {
 
-        CategoryRequest categoryRequest = CategoryData.createCategoryRequest1();
+        CategoryRequest categoryRequest = CategoryBuilder.createCategoryRequest1();
 
 //        final List<ItemRequest.ImgRequest> itemImg = List.of(
 //                new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1"),
 //                new ItemRequest.ImgRequest(ItemImgType.N,"itemImg2"));
         List<ItemRequest.ImgRequest> itemImg = List.of(
-                ItemData.createItemImg1(),
-                ItemData.createItemImg2());
+                ItemBuilder.createItemImg1(),
+                ItemBuilder.createItemImg2());
 
         List<ItemRequest.OptionRequest> option = List.of(
-                ItemData.createOption1(),
-                ItemData.createOption2(),
-                ItemData.createOption3());
+                ItemBuilder.createOption1(),
+                ItemBuilder.createOption2(),
+                ItemBuilder.createOption3());
 
         return new ItemRequest(
                 categoryRequest,

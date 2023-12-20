@@ -1,14 +1,12 @@
-package com.project.shop.user.Data;
+package com.project.shop.user.Builder;
 
-import com.project.shop.order.domain.Order;
-import com.project.shop.order.domain.OrderType;
 import com.project.shop.user.domain.Point;
 import com.project.shop.user.domain.PointType;
 import com.project.shop.user.domain.User;
 
 import java.time.LocalDateTime;
 
-public class PointData {
+public class PointBuilder {
 
     public static Point createPoint1(User user){
 

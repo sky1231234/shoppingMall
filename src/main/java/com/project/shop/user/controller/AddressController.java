@@ -19,35 +19,35 @@ public class AddressController {
     private final AddressService addressService;
 
     //배송지 전체 조회
-    @GetMapping("/address/{userId}")
+    @GetMapping("/addresses/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<AddressResponse> addressFindAll(@PathVariable("userId") Long userId){
         return addressService.addressFindAll(userId);
     }
  
-    //배송지 상세조회
-    @GetMapping("/address/{addressId}")
+    //배송지 상세 조회
+    @GetMapping("/addresses/{addressId}")
     @ResponseStatus(HttpStatus.OK)
     public AddressResponse addressDetailFind(@PathVariable("addressId") Long addressId){
         return addressService.addressDetailFind(addressId);
     }
 
     //등록
-    @PostMapping("/address")
+    @PostMapping("/addresses")
     @ResponseStatus(HttpStatus.CREATED)
     public void addressCreate(@RequestBody AddressRequest addressRequest){
         addressService.create(addressRequest);
     }
 
     //수정
-    @PutMapping("/address/{addressId}")
+    @PutMapping("/addresses/{addressId}")
     @ResponseStatus(HttpStatus.OK)
     public void addressUpdate(@PathVariable("addressId") Long addressId, @RequestBody AddressUpdateRequest addressUpdateRequest){
         addressService.update(addressId,addressUpdateRequest);
     }
 
     //삭제
-    @DeleteMapping("/address/{addressId}")
+    @DeleteMapping("/addresses/{addressId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addressDelete(@PathVariable("addressId") long addressId){
         addressService.delete(addressId);

@@ -1,11 +1,10 @@
-package com.project.shop.user.Data;
+package com.project.shop.user.Builder;
 
-import com.project.shop.item.domain.Category;
 import com.project.shop.user.domain.User;
 
 import java.time.LocalDateTime;
 
-public class UserData {
+public class UserBuilder {
     static LocalDateTime now = LocalDateTime.now();
 
     public static User createUser1(){
@@ -14,8 +13,6 @@ public class UserData {
                 .loginId("spring")
                 .password("password")
                 .name("스프링")
-                .address("서울")
-                .addrDetail("강남")
                 .phoneNum("0100000")
                 .insertDate(now)
                 .updateDate(now)

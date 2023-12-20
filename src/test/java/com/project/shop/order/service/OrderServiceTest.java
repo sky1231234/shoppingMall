@@ -1,17 +1,14 @@
 package com.project.shop.order.service;
 
-import com.project.shop.item.data.CategoryData;
-import com.project.shop.item.data.ItemData;
+import com.project.shop.item.Builder.CategoryBuilder;
+import com.project.shop.item.Builder.ItemBuilder;
 import com.project.shop.item.domain.*;
-import com.project.shop.item.dto.request.CategoryRequest;
-import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.order.domain.Order;
-import com.project.shop.order.domain.OrderItem;
-import com.project.shop.order.domain.Pay;
+import com.project.shop.order.domain.*;
+import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.response.OrderDetailResponse;
 import com.project.shop.order.dto.response.OrderResponse;
@@ -20,8 +17,12 @@ import com.project.shop.order.repository.OrderItemRepository;
 import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
-import com.project.shop.user.Data.UserData;
+import com.project.shop.user.Builder.PointBuilder;
+import com.project.shop.user.Builder.UserBuilder;
+import com.project.shop.user.domain.Point;
+import com.project.shop.user.domain.PointType;
 import com.project.shop.user.domain.User;
+import com.project.shop.user.repository.PointRepository;
 import com.project.shop.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -44,7 +45,8 @@ public class OrderServiceTest {
     OrderItemRepository orderItemRepository;
     @Autowired
     PayRepository payRepository;
-
+    @Autowired
+    PointRepository pointRepository;
     //상품 등록
     @Autowired
     CategoryRepository categoryRepository;
@@ -54,6 +56,8 @@ public class OrderServiceTest {
     UserRepository userRepository;
     @Autowired
      OptionRepository optionRepository;
+    @Autowired
+    PayCancelRepository payCancelRepository;
     User user1;
     User user2;
      Item item1;
@@ -65,42 +69,49 @@ public class OrderServiceTest {
      Option option1;
      Option option2;
      Option option3;
+     Point point1; Point point2;
     @Autowired
     ItemRepository itemRepository;
     @BeforeEach
     public void before(){
 
         //user
-        user1 = UserData.createUser1();
-        user2 = UserData.createUser2();
+        user1 = UserBuilder.createUser1();
+        user2 = UserBuilder.createUser2();
         userRepository.save(user1);
         userRepository.save(user2);
 
         //category
-        Category category = CategoryData.createCategory1();
+        Category category = CategoryBuilder.createCategory1();
         categoryRepository.save(category);
 
         //item
-        item1 = ItemData.createItem1(category);
-        item2 = ItemData.createItem2(category);
+        item1 = ItemBuilder.createItem1(category);
+        item2 = ItemBuilder.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
         //itemImg
-        itemImg1 = ItemData.createImg1(item1);
-        itemImg2 = ItemData.createImg2(item1);
-        itemImg3 = ItemData.createImg3(item2);
+        itemImg1 = ItemBuilder.createImg1(item1);
+        itemImg2 = ItemBuilder.createImg2(item1);
+        itemImg3 = ItemBuilder.createImg3(item2);
         itemImgRepository.save(itemImg1);
         itemImgRepository.save(itemImg2);
         itemImgRepository.save(itemImg3);
 
         //option
-        option1 = ItemData.createOption1(item1);
-        option2 = ItemData.createOption2(item1);
-        option3 = ItemData.createOption3(item2);
+        option1 = ItemBuilder.createOption1(item1);
+        option2 = ItemBuilder.createOption2(item1);
+        option3 = ItemBuilder.createOption3(item2);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
+
+        //point
+        point1 = PointBuilder.createPoint1(user1);
+        point2 = PointBuilder.createPoint2(user1);
+        pointRepository.save(point1);
+        pointRepository.save(point2);
     }
 
     @Test
@@ -171,7 +182,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
 
         //when
-        var order = orderService.create(user2.getUserId(), orderRequest);
+        var order = orderService.create(user1.getUserId(), orderRequest);
 
         //then
         Assertions.assertThat(order).isEqualTo(1);
@@ -187,6 +198,71 @@ public class OrderServiceTest {
 
         Pay pay = payRepository.findByOrder(findOrder);
         Assertions.assertThat(pay.getCardNum()).isEqualTo("01010");
+
+        List<Point> point = pointRepository.findAllByUsers(user1);
+        Assertions.assertThat(point.size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("전체 취소 등록")
+    void orderCancelCreate(){
+        var orderId = createOrder();
+        ArrayList<Long> itemList = new ArrayList<>();
+        itemList.add(1L);
+        itemList.add(2L);
+
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
+
+        var orderCancel = orderService.orderCancelCreate(user1.getUserId(), orderId, orderCancelRequest);
+
+        //then
+        Order order = orderRepository.findById(orderCancel)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_TEST"));
+
+        Assertions.assertThat(order.getOrderType()).isEqualTo(OrderType.취소);
+
+        PayCancel payCancel = payCancelRepository.findByOrder(order);
+        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
+
+        List<Point> point = pointRepository.findAllByUsers(user1);
+        Assertions.assertThat(point.size()).isEqualTo(4);
+        Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
+
+    }
+
+    @Test
+    @DisplayName("부분 취소 등록")
+    void orderPartCancelCreate(){
+        var orderId = createOrder();
+        ArrayList<Long> itemList = new ArrayList<>();
+        itemList.add(1L);
+
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
+
+        var orderCancel =  orderService.orderCancelCreate(user1.getUserId(), orderId, orderCancelRequest);
+
+        //then
+        Order order = orderRepository.findById(orderCancel)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_TEST"));
+
+        Item item = itemRepository.findById(item1.getItemId())
+                        .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM_TEST"));
+
+        OrderItem orderItem = orderItemRepository.findByItemAndOrder(item, order)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM_TEST"));
+
+        Assertions.assertThat(orderCancel).isEqualTo(orderId);
+
+        Assertions.assertThat(order.getOrderType()).isEqualTo(OrderType.부분취소);
+        Assertions.assertThat(orderItem.getItemPrice()).isEqualTo(10000);
+        Assertions.assertThat(orderItem.getOrderItemType()).isEqualTo(OrderItemType.취소);
+
+        PayCancel payCancel = payCancelRepository.findByOrder(order);
+        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
+
+        List<Point> point = pointRepository.findAllByUsers(user1);
+        Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
+        Assertions.assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
 
     }
 
@@ -206,11 +282,13 @@ public class OrderServiceTest {
 
         //when
         var orderId = orderService.create(user1.getUserId(), orderRequest);
-        orderService.create(user2.getUserId(),orderRequest1);
-        orderService.create(user1.getUserId(),orderRequest1);
+//        orderService.create(user2.getUserId(),orderRequest1);
+//        orderService.create(user1.getUserId(),orderRequest1);
 
         return orderId;
 
     }
+
+
 
 }

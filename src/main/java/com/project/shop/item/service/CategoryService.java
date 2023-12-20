@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,37 +21,33 @@ public class CategoryService {
     private final CategoryRepository categoryRepository ;
 
     //브랜드별 조회 - 메인
-    //브랜드별로 카테고리 나열
-    public List<Category> categoryFindAll(){
+    //카테고리별로 브랜드 나열
+    public List<CategoryResponse> categoryFindAll(){
 
-         var result = categoryRepository.findAll();
+        Map<String,List<Category>> result = categoryRepository.findAll()
+                 .stream()
+                 .collect(Collectors.groupingBy(Category::getCategoryName));
 
-                result.stream()
-                        .map(
-                                
-                        x -> {
-                    List<CategoryResponse.BrandList> brandList = categoryRepository.findBrand(x.getCategoryName());
 
-                    var brand = brandList.stream()
+        return result.entrySet()
+                .stream()
+                .map(x -> {
+                     var brand = x.getValue().stream()
                             .map(y ->
-                                {
-                                    return CategoryResponse.BrandList.builder()
-                                            .categoryId(y.getCategoryId())
-                                            .brandName(y.getBrandName())
-                                            .build();
-                                })
+                            {
+                                return CategoryResponse.Brand.builder()
+                                        .categoryId(y.getCategoryId())
+                                        .brandName(y.getBrandName())
+                                        .build();
+                            })
                             .toList();
 
-
-                    return CategoryResponse.builder()
-                            .categoryName(x.getCategoryName())
-//                            .brand(brand)
-                            .build();
-                }
-                )
+                     return CategoryResponse.builder()
+                             .categoryName(x.getKey())
+                             .brand(brand)
+                             .build();
+                })
                 .toList();
-
-        return result;
     }
 
     //카테고리 등록

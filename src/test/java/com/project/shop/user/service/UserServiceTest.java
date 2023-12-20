@@ -1,13 +1,8 @@
 package com.project.shop.user.service;
 
-import com.project.shop.item.data.CategoryData;
-import com.project.shop.item.dto.request.CategoryRequest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest

@@ -21,42 +21,42 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //상품 - 리뷰 조회
-    @GetMapping("/review/item")
+    @GetMapping("/items/reviews")
     @ResponseStatus(HttpStatus.OK)
     public ItemReviewResponse itemReviewFindAll(@RequestBody int itemId){
         return reviewService.itemReviewFindAll(itemId);
     }
 
     //회원 - 리뷰 조회
-    @GetMapping("/review/user")
+    @GetMapping("/users/reviews")
     @ResponseStatus(HttpStatus.OK)
     public UserReviewResponse userReviewFindAll(@RequestBody int userId){
         return reviewService.userReviewFindAll(userId);
     }
 
     //리뷰 상세 조회
-    @GetMapping("/review/{reviewId}")
+    @GetMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public ReviewResponse reviewDetailFind(@PathVariable("reviewId") long reviewId){
         return reviewService.reviewDetailFind(reviewId);
     }
 
     //리뷰 등록
-    @PostMapping("/review")
+    @PostMapping("/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     public void reviewCreate(@RequestBody ReviewRequest reviewRequest){
         reviewService.create(reviewRequest);
     }
 
     //리뷰 수정
-    @PutMapping("/review/{reviewId}")
+    @PutMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public void reviewUpdate(@PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
         reviewService.update(reviewId, reviewUpdateRequest);
     }
 
     //리뷰 삭제
-    @DeleteMapping("/review/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public void reviewDelete(@PathVariable("reviewId") long reviewId){
         reviewService.delete(reviewId);

@@ -1,15 +1,12 @@
-package com.project.shop.item.data;
+package com.project.shop.item.Builder;
 
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
-import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
 
-public class CategoryData {
+public class CategoryBuilder {
 
     static LocalDateTime now = LocalDateTime.now();
 
@@ -27,6 +24,16 @@ public class CategoryData {
 
         return Category.builder()
                 .categoryName("스니커즈")
+                .brandName("뉴발란스")
+                .insertDate(now)
+                .updateDate(now)
+                .build();
+    }
+
+    public static Category createCategory3(){
+
+        return Category.builder()
+                .categoryName("운동화")
                 .brandName("뉴발란스")
                 .insertDate(now)
                 .updateDate(now)

@@ -41,6 +41,10 @@ public class OrderItem {
     @Column(name = "itemPrice", nullable = false)
     private int itemPrice;     //상품 가격
 
+    @Column(name = "state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderItemType orderItemType;    //주문상태
+
     public OrderItem updateOrderItem(OrderUpdateRequest.OrderItemRequest orderItemRequest, int price, long opitonId){
         this.totalQuantity = orderItemRequest.itemCount();
         this.totalPrice = orderItemRequest.itemCount() * price;
@@ -48,4 +52,8 @@ public class OrderItem {
         return this;
     }
 
+    public OrderItem cancelOrderItem(OrderItemType orderItemType){
+        this.orderItemType = orderItemType;
+        return this;
+    }
 }

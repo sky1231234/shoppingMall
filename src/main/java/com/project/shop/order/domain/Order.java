@@ -74,4 +74,10 @@ public class Order {
         return this;
     }
 
+    public Order cancelOrder(OrderType orderType){
+        this.orderType =orderType;
+        this.updateDate = LocalDateTime.now();
+        return this;
+    }
+
 }

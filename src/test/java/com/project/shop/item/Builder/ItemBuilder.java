@@ -1,11 +1,11 @@
-package com.project.shop.item.data;
+package com.project.shop.item.Builder;
 
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.ItemRequest;
 
 import java.time.LocalDateTime;
 
-public class ItemData {
+public class ItemBuilder {
 
     static LocalDateTime now = LocalDateTime.now();
 

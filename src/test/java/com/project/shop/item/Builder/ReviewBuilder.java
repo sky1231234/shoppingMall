@@ -1,9 +1,9 @@
-package com.project.shop.item.data;
+package com.project.shop.item.Builder;
 
 import java.util.ArrayList;
 
 
-public class ReviewData {
+public class ReviewBuilder {
 
     public static ArrayList<String> createImgList1(){
 

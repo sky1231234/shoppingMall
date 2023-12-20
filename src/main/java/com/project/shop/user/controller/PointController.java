@@ -21,29 +21,29 @@ public class PointController {
     private final PointService pointService;
 
     //포인트 전체 조회
-    @GetMapping("/point/{userId}")
+    @GetMapping("/points/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public PointResponse pointFindAll(@PathVariable("userId") long userId){
         return pointService.pointFindAll(userId);
     }
-    
+
 
     //포인트 등록
-    @PostMapping("/point")
+    @PostMapping("/points")
     @ResponseStatus(HttpStatus.CREATED)
     public void pointCreate(long userId, @RequestBody PointRequest pointRequest){
         pointService.create(userId, pointRequest);
     }
 
     //포인트 수정
-    @PutMapping("/point/{pointId}")
+    @PutMapping("/points/{pointId}")
     @ResponseStatus(HttpStatus.OK)
     public void pointUpdate(@PathVariable("pointId") long pointId, @RequestBody PointUpdateRequest pointUpdateRequest){
         pointService.update(pointId, pointUpdateRequest);
     }
 
     //포인트 삭제
-    @DeleteMapping("/point/{pointId}")
+    @DeleteMapping("/points/{pointId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void pointDelete(@PathVariable("pointId") long pointId){
         pointService.delete(pointId);

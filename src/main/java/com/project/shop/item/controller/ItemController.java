@@ -22,35 +22,35 @@ public class ItemController {
     private final ItemService itemService;
 
     //상품 전체 조회
-    @GetMapping("/item")
+    @GetMapping("/items")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemListResponse> itemFindAll(){
         return itemService.itemFindAll();
     }
 
     //상품 상세 조회
-    @GetMapping("/item/{itemId}")
+    @GetMapping("/items/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemResponse itemDetailFind(@PathVariable("itemId") long itemId){
         return itemService.itemDetailFind(itemId);
     }
 
     //상품 등록
-    @PostMapping("/item")
+    @PostMapping("/items")
     @ResponseStatus(HttpStatus.CREATED)
     public void itemCreate(@RequestBody ItemRequest itemRequest){
         itemService.create(itemRequest);
     }
 
     //상품 수정
-    @PutMapping("/item/{itemId}")
+    @PutMapping("/items/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public void itemUpdate(@PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
         itemService.update(itemId, itemUpdateRequest);
     }
 
     //상품 삭제
-    @DeleteMapping("/item/{itemId}")
+    @DeleteMapping("/items/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void itemDelete(@PathVariable("itemId") long itemId){
         itemService.delete(itemId);

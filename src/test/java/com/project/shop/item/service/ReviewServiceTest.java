@@ -1,8 +1,8 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.data.CategoryData;
-import com.project.shop.item.data.ItemData;
-import com.project.shop.item.data.ReviewData;
+import com.project.shop.item.Builder.CategoryBuilder;
+import com.project.shop.item.Builder.ItemBuilder;
+import com.project.shop.item.Builder.ReviewBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
@@ -14,7 +14,7 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.user.Data.UserData;
+import com.project.shop.user.Builder.UserBuilder;
 import com.project.shop.user.domain.User;
 import com.project.shop.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -54,18 +54,18 @@ public class ReviewServiceTest {
     public void before(){
 
         //user
-        user1 = UserData.createUser1();
-        user2 = UserData.createUser2();
+        user1 = UserBuilder.createUser1();
+        user2 = UserBuilder.createUser2();
         userRepository.save(user1);
         userRepository.save(user2);
 
         //category
-        Category category = CategoryData.createCategory1();
+        Category category = CategoryBuilder.createCategory1();
         categoryRepository.save(category);
 
         //item
-        item1 = ItemData.createItem1(category);
-        item2 = ItemData.createItem2(category);
+        item1 = ItemBuilder.createItem1(category);
+        item2 = ItemBuilder.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
@@ -138,7 +138,7 @@ public class ReviewServiceTest {
         createReview3();
 
         //when
-        ArrayList<String> imgList = ReviewData.createImgList2();
+        ArrayList<String> imgList = ReviewBuilder.createImgList2();
         ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest(user1, item1, "나이키 비추", "나이키 싫어요", 1,imgList);
         reviewService.update(review,reviewUpdateRequest);
 
@@ -157,7 +157,7 @@ public class ReviewServiceTest {
     private long createReview1(){
 
         //given
-        ArrayList<String> imgList = ReviewData.createImgList1();
+        ArrayList<String> imgList = ReviewBuilder.createImgList1();
         ReviewRequest reviewRequest = new ReviewRequest(user1, item1, "나이키 후기", "나이키 좋아요", 5,imgList);
 
         //when
@@ -167,7 +167,7 @@ public class ReviewServiceTest {
     private void createReview2(){
 
         //given
-        ArrayList<String> imgList = ReviewData.createImgList2();
+        ArrayList<String> imgList = ReviewBuilder.createImgList2();
         ReviewRequest reviewRequest = new ReviewRequest(user2, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
@@ -177,7 +177,7 @@ public class ReviewServiceTest {
     private void createReview3(){
 
         //given
-        ArrayList<String> imgList = ReviewData.createImgList2();
+        ArrayList<String> imgList = ReviewBuilder.createImgList2();
         ReviewRequest reviewRequest = new ReviewRequest(user1, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
