@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import com.project.shop.member.dto.request.LoginRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,16 +29,16 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class TokenProvider implements InitializingBean {
-    private final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
-
-    private static final String AUTHORITIES_KEY = "NeighborAPI";
-
+    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
 
-    public TokenProvider(@Value("${jwt.secret}") String secret,
-                         @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds){
+
+    public TokenProvider(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds){
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
     }
@@ -48,29 +49,30 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**token 생성 algorithm */
-    public String createToken(Authentication authentication){
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+//  token 생성 algorithm
+    public String createToken(final LoginRequest loginRequest){
+
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date accessTokenExpireIn = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
+                .setSubject("authorization")
+                .claim("loginId", loginRequest.loginId())
+                .setExpiration(accessTokenExpireIn)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
                 .compact();
     }
 
-    /**인증 정보 조회 */
+//  인증 정보 조회
     public Authentication getAuthentication(String token) {
+
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
+
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
@@ -79,19 +81,22 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    /**token 유효성 검증 */
+// token 유효성 검증
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }catch(io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
-            LOGGER.info("잘못된 JWT 서명입니다.");
+            logger.info("잘못된 JWT 서명입니다.");
+
         }catch(ExpiredJwtException e){
-            LOGGER.info("만료된 JWT 토큰입니다.");
+            logger.info("만료된 JWT 토큰입니다.");
+
         }catch(UnsupportedJwtException e){
-            LOGGER.info("지원하지 않는 JWT 토큰입니다.");
+            logger.info("지원하지 않는 JWT 토큰입니다.");
+
         }catch(IllegalArgumentException e){
-            LOGGER.info("JWT 토큰이 잘못되었습니다.");
+            logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
     }

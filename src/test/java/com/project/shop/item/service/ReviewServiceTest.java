@@ -14,9 +14,9 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.user.Builder.UserBuilder;
-import com.project.shop.user.domain.User;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.domain.Member;
+import com.project.shop.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,22 +42,22 @@ public class ReviewServiceTest {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     static Item item1;
     static Item item2;
-    static User user1;
-    static User user2;
+    static Member member1;
+    static Member member2;
 
 
     @BeforeEach
     public void before(){
 
         //user
-        user1 = UserBuilder.createUser1();
-        user2 = UserBuilder.createUser2();
-        userRepository.save(user1);
-        userRepository.save(user2);
+        member1 = MemberBuilder.createUser1();
+        member2 = MemberBuilder.createUser2();
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
         //category
         Category category = CategoryBuilder.createCategory1();
@@ -100,7 +100,7 @@ public class ReviewServiceTest {
         createReview3();
 
         //when
-        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(user1.getUserId());
+        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(member1.getUserId());
 
         //then
         Assertions.assertThat(userReviewResponse.getReviewItemList().size()).isEqualTo(2);
@@ -139,7 +139,7 @@ public class ReviewServiceTest {
 
         //when
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest(user1, item1, "나이키 비추", "나이키 싫어요", 1,imgList);
+        ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest(member1, item1, "나이키 비추", "나이키 싫어요", 1,imgList);
         reviewService.update(review,reviewUpdateRequest);
 
         //then
@@ -158,7 +158,7 @@ public class ReviewServiceTest {
 
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList1();
-        ReviewRequest reviewRequest = new ReviewRequest(user1, item1, "나이키 후기", "나이키 좋아요", 5,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(member1, item1, "나이키 후기", "나이키 좋아요", 5,imgList);
 
         //when
         return reviewService.create(reviewRequest);
@@ -168,7 +168,7 @@ public class ReviewServiceTest {
 
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        ReviewRequest reviewRequest = new ReviewRequest(user2, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(member2, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
         reviewService.create(reviewRequest);
@@ -178,7 +178,7 @@ public class ReviewServiceTest {
 
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        ReviewRequest reviewRequest = new ReviewRequest(user1, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(member1, item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
         reviewService.create(reviewRequest);

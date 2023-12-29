@@ -2,7 +2,7 @@ package com.project.shop.item.dto.request;
 
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
-import com.project.shop.user.domain.User;
+import com.project.shop.member.domain.Member;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Builder
 public record ReviewRequest(
-        @NotBlank User user,
+        @NotBlank Member member,
         @NotBlank Item item,
         @NotBlank String title,
         @NotBlank String content,
@@ -23,7 +23,7 @@ public record ReviewRequest(
                 LocalDateTime now = LocalDateTime.now();
 
                 return Review.builder()
-                        .users(this.user())
+                        .users(this.member())
                         .item(this.item())
                         .title(this.title())
                         .content(this.content())

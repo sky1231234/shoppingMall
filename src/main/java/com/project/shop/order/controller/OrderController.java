@@ -58,7 +58,7 @@ public class OrderController {
     }
 
     //부분취소, 취소 등록
-    @PostMapping("/orders/cancels/{orderId}")
+    @PostMapping("/orders/{orderId}/cancels")
     @ResponseStatus(HttpStatus.CREATED)
     public void orderCancelCreate(long userId, @PathVariable("orderId") long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
         orderService.orderCancelCreate(userId, orderId, orderCancelRequest);

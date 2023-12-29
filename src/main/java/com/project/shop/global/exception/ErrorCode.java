@@ -1,4 +1,4 @@
-//package com.project.shop.global.exception;
+package com.project.shop.global.exception;
 //
 //import lombok.AllArgsConstructor;
 //import lombok.Getter;
@@ -16,7 +16,11 @@
 //    private String msg;
 //
 //}
-//
-//
-//
-//
+
+import org.springframework.http.HttpStatus;
+
+public interface ErrorCode {
+    String name();
+    HttpStatus getResultCode();
+    String getResultMsg();
+}

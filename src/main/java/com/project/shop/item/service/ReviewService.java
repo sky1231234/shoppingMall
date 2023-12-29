@@ -7,8 +7,8 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.user.domain.User;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.member.domain.Member;
+import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewImgRepository reviewImgRepository;
     private final ItemRepository itemRepository;
@@ -69,10 +69,10 @@ public class ReviewService {
     //회원 - 리뷰 조회
     public UserReviewResponse userReviewFindAll(long userId){
 
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        List<Review> reviewList = reviewRepository.findAllByUsers(user);
+        List<Review> reviewList = reviewRepository.findAllByUsers(member);
 
         var list = reviewList.stream().map(x -> {
             List<ItemImg> itemImgList = itemImgRepository.findByItem(x.getItem());

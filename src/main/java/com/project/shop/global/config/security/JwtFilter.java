@@ -20,28 +20,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final TokenProvider tokenProvider;
 
+    //필터링 로직
+    //토큰의 인증 정보를 SecurityContext에 저장하는 역할
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
+
         if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            LOGGER.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
         }else{
-            LOGGER.info("유효한 JWT 토큰이 없습니다., uri: {}", requestURI);
+            logger.info("유효한 JWT 토큰이 없습니다., uri: {}", requestURI);
         }
-        chain.doFilter(httpServletRequest, response);
+
+        filterChain.doFilter(httpServletRequest, response);
     }
 
-    /**토큰 정보 추출 */
+    // Request Header에서 토큰 정보 추출
     private String resolveToken(HttpServletRequest request){
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){

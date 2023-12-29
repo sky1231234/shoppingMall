@@ -21,9 +21,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //상품 - 리뷰 조회
-    @GetMapping("/items/reviews")
+    @GetMapping("/items/{itemId}/reviews")
     @ResponseStatus(HttpStatus.OK)
-    public ItemReviewResponse itemReviewFindAll(@RequestBody int itemId){
+    public ItemReviewResponse itemReviewFindAll(@PathVariable("itemId") int itemId){
         return reviewService.itemReviewFindAll(itemId);
     }
 

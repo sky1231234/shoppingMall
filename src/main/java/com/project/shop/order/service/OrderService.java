@@ -18,10 +18,10 @@ import com.project.shop.order.repository.OrderItemRepository;
 import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
-import com.project.shop.user.domain.PointType;
-import com.project.shop.user.domain.User;
-import com.project.shop.user.repository.PointRepository;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.member.domain.PointType;
+import com.project.shop.member.domain.Member;
+import com.project.shop.member.repository.PointRepository;
+import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final UserRepository userRepository ;
+    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository ;
     private final ItemImgRepository itemImgRepository ;
 
@@ -52,10 +52,10 @@ public class OrderService {
         //userId 받아오기
         long userId = 1;
 
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        List<Order> orderList = orderRepository.findByUsers(user);
+        List<Order> orderList = orderRepository.findByUsers(member);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -115,10 +115,10 @@ public class OrderService {
     //주문내역 회원별 조회
     public OrderUserResponse orderFindByUser(long userId){
 
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
-        List<Order> orderList = orderRepository.findByUsers(user);
+        List<Order> orderList = orderRepository.findByUsers(member);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -137,7 +137,7 @@ public class OrderService {
 
         return OrderUserResponse.builder()
                 .userId(userId)
-                .id(user.getLoginId())
+                .id(member.getLoginId())
                 .order(list)
                 .build();
 
@@ -220,12 +220,12 @@ public class OrderService {
 
         //order
         //userId 받아오기
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
         //주문번호 랜덤 생성
         String orderNum = "1223124";
-        var order = orderRequest.orderToEntity(user,orderNum, OrderType.완료);
+        var order = orderRequest.orderToEntity(member,orderNum, OrderType.완료);
         var orderResult = orderRepository.save(order);
 
         //orderItem
@@ -246,7 +246,7 @@ public class OrderService {
 
         //point
         if(orderRequest.usedPoint() != 0){
-            var point = orderRequest.pointToEntity(user);
+            var point = orderRequest.pointToEntity(member);
             pointRepository.save(point);
 
         }
@@ -292,7 +292,7 @@ public class OrderService {
     public long orderCancelCreate(long userId, long orderId, OrderCancelRequest orderCancelRequest){
 
         //userId 받아오기
-        User user = userRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
         OrderType orderType;
@@ -336,7 +336,7 @@ public class OrderService {
         payCancelRepository.save(payCancelEntity);
 
         //사용 취소 포인트 등록
-        var point = orderCancelRequest.pointToEntity(user,order.getPoint(),pointType);
+        var point = orderCancelRequest.pointToEntity(member,order.getPoint(),pointType);
         pointRepository.save(point);
 
         return orderCancel.getOrderId();

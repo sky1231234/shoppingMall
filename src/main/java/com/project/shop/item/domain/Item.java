@@ -1,8 +1,6 @@
 package com.project.shop.item.domain;
 
 import com.project.shop.item.dto.request.ItemUpdateRequest;
-import com.project.shop.order.domain.OrderItem;
-import com.project.shop.user.domain.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "item")
 @Entity

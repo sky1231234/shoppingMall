@@ -17,13 +17,13 @@ import com.project.shop.order.repository.OrderItemRepository;
 import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
-import com.project.shop.user.Builder.PointBuilder;
-import com.project.shop.user.Builder.UserBuilder;
-import com.project.shop.user.domain.Point;
-import com.project.shop.user.domain.PointType;
-import com.project.shop.user.domain.User;
-import com.project.shop.user.repository.PointRepository;
-import com.project.shop.user.repository.UserRepository;
+import com.project.shop.member.Builder.PointBuilder;
+import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.domain.Point;
+import com.project.shop.member.domain.PointType;
+import com.project.shop.member.domain.Member;
+import com.project.shop.member.repository.PointRepository;
+import com.project.shop.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,13 +53,13 @@ public class OrderServiceTest {
     @Autowired
     ItemImgRepository itemImgRepository;
     @Autowired
-    UserRepository userRepository;
+    MemberRepository memberRepository;
     @Autowired
      OptionRepository optionRepository;
     @Autowired
     PayCancelRepository payCancelRepository;
-    User user1;
-    User user2;
+    Member member1;
+    Member member2;
      Item item1;
      Item item2;
      ItemImg itemImg1;
@@ -76,10 +76,10 @@ public class OrderServiceTest {
     public void before(){
 
         //user
-        user1 = UserBuilder.createUser1();
-        user2 = UserBuilder.createUser2();
-        userRepository.save(user1);
-        userRepository.save(user2);
+        member1 = MemberBuilder.createUser1();
+        member2 = MemberBuilder.createUser2();
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
         //category
         Category category = CategoryBuilder.createCategory1();
@@ -108,8 +108,8 @@ public class OrderServiceTest {
         optionRepository.save(option3);
 
         //point
-        point1 = PointBuilder.createPoint1(user1);
-        point2 = PointBuilder.createPoint2(user1);
+        point1 = PointBuilder.createPoint1(member1);
+        point2 = PointBuilder.createPoint2(member1);
         pointRepository.save(point1);
         pointRepository.save(point2);
     }
@@ -140,7 +140,7 @@ public class OrderServiceTest {
         createOrder();
 
         //when
-        OrderUserResponse orderUserResponse = orderService.orderFindByUser(user1.getUserId());
+        OrderUserResponse orderUserResponse = orderService.orderFindByUser(member1.getUserId());
 
         //then
         Assertions.assertThat(orderUserResponse.getOrder()
@@ -182,7 +182,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
 
         //when
-        var order = orderService.create(user1.getUserId(), orderRequest);
+        var order = orderService.create(member1.getUserId(), orderRequest);
 
         //then
         Assertions.assertThat(order).isEqualTo(1);
@@ -199,7 +199,7 @@ public class OrderServiceTest {
         Pay pay = payRepository.findByOrder(findOrder);
         Assertions.assertThat(pay.getCardNum()).isEqualTo("01010");
 
-        List<Point> point = pointRepository.findAllByUsers(user1);
+        List<Point> point = pointRepository.findAllByUsers(member1);
         Assertions.assertThat(point.size()).isEqualTo(3);
     }
 
@@ -213,7 +213,7 @@ public class OrderServiceTest {
 
         OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
 
-        var orderCancel = orderService.orderCancelCreate(user1.getUserId(), orderId, orderCancelRequest);
+        var orderCancel = orderService.orderCancelCreate(member1.getUserId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -224,7 +224,7 @@ public class OrderServiceTest {
         PayCancel payCancel = payCancelRepository.findByOrder(order);
         Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
-        List<Point> point = pointRepository.findAllByUsers(user1);
+        List<Point> point = pointRepository.findAllByUsers(member1);
         Assertions.assertThat(point.size()).isEqualTo(4);
         Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
 
@@ -239,7 +239,7 @@ public class OrderServiceTest {
 
         OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
 
-        var orderCancel =  orderService.orderCancelCreate(user1.getUserId(), orderId, orderCancelRequest);
+        var orderCancel =  orderService.orderCancelCreate(member1.getUserId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -260,7 +260,7 @@ public class OrderServiceTest {
         PayCancel payCancel = payCancelRepository.findByOrder(order);
         Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
-        List<Point> point = pointRepository.findAllByUsers(user1);
+        List<Point> point = pointRepository.findAllByUsers(member1);
         Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
         Assertions.assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
 
@@ -281,7 +281,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest1 = new OrderRequest(33000,5000,"스프링1","22","주소1","상세주소1","받는사람전화번호1","배송메시지1",5000,"카드사1","01010",30000, orderItemList1);
 
         //when
-        var orderId = orderService.create(user1.getUserId(), orderRequest);
+        var orderId = orderService.create(member1.getUserId(), orderRequest);
 //        orderService.create(user2.getUserId(),orderRequest1);
 //        orderService.create(user1.getUserId(),orderRequest1);
 

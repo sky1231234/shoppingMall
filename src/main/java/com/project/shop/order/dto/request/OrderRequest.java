@@ -3,9 +3,9 @@ package com.project.shop.order.dto.request;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Option;
 import com.project.shop.order.domain.*;
-import com.project.shop.user.domain.Point;
-import com.project.shop.user.domain.PointType;
-import com.project.shop.user.domain.User;
+import com.project.shop.member.domain.Point;
+import com.project.shop.member.domain.PointType;
+import com.project.shop.member.domain.Member;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -58,9 +58,9 @@ public record OrderRequest(
 
         ) {
 
-        public Order orderToEntity(User user,String orderNum, OrderType orderType){
+        public Order orderToEntity(Member member, String orderNum, OrderType orderType){
             return Order.builder()
-                    .users(user)
+                    .users(member)
                     .orderNum(orderNum)
                     .deliverFee(this.deliverFee())
                     .point(this.usedPoint())
@@ -88,9 +88,9 @@ public record OrderRequest(
                     .build();
         }
 
-    public Point pointToEntity(User user){
+    public Point pointToEntity(Member member){
         return Point.builder()
-                .users(user)
+                .users(member)
                 .point(this.usedPoint())
                 .deadlineDate(LocalDateTime.now())
                 .pointType(PointType.사용)

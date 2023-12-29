@@ -1,11 +1,7 @@
 package com.project.shop.order.domain;
 
-import com.project.shop.item.domain.Category;
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ReviewImg;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
-import com.project.shop.user.domain.User;
+import com.project.shop.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "orders")
 @Entity
@@ -30,7 +24,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User users;     //고객 번호
+    private Member users;     //고객 번호
 
     @Column(name = "orderNum", nullable = false)
     private String orderNum;     //주문비즈니스키

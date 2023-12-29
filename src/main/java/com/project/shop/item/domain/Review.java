@@ -1,13 +1,11 @@
 package com.project.shop.item.domain;
 
 import com.project.shop.item.dto.request.ReviewUpdateRequest;
-import com.project.shop.user.domain.User;
+import com.project.shop.member.domain.Member;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "review")
 @Entity
@@ -29,7 +27,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private User users;  //고객
+    private Member users;  //고객
 
     @Column(name = "title", nullable = false)
     private String title;    //제목
