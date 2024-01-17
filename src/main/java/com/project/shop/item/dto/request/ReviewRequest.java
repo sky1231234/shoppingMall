@@ -11,7 +11,6 @@ import java.util.List;
 
 @Builder
 public record ReviewRequest(
-        @NotBlank Member member,
         @NotBlank Item item,
         @NotBlank String title,
         @NotBlank String content,
@@ -19,17 +18,15 @@ public record ReviewRequest(
         @NotBlank List<String> reviewImgRequestList
         ) {
 
-        public Review toEntity(){
-                LocalDateTime now = LocalDateTime.now();
-
+        public Review toEntity(Member member){
                 return Review.builder()
-                        .users(this.member())
+                        .member(member)
                         .item(this.item())
                         .title(this.title())
                         .content(this.content())
                         .star(this.star())
-                        .insertDate(now)
-                        .updateDate(now)
+                        .insertDate(LocalDateTime.now())
+                        .updateDate(LocalDateTime.now())
                         .build();
         }
 }

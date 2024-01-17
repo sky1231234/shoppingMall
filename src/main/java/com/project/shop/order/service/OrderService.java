@@ -1,5 +1,6 @@
 package com.project.shop.order.service;
 
+import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
@@ -7,6 +8,7 @@ import com.project.shop.item.domain.Option;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.member.domain.Address;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
@@ -47,15 +49,11 @@ public class OrderService {
     private final PointRepository pointRepository ;
 
     //주문내역 조회
-    public List<OrderResponse> orderFindAll(){
+    public List<OrderResponse> orderFindAll(String loginId){
 
-        //userId 받아오기
-        long userId = 1;
+        Member member = findLoginMember(loginId);
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
-
-        List<Order> orderList = orderRepository.findByUsers(member);
+        List<Order> orderList = orderRepository.findAllByMember(member);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -112,13 +110,12 @@ public class OrderService {
 
     }
 
-    //주문내역 회원별 조회
-    public OrderUserResponse orderFindByUser(long userId){
+    //회원별 주문내역 조회
+    public OrderUserResponse orderFindByUser(String loginId){
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+        Member member = findLoginMember(loginId);
 
-        List<Order> orderList = orderRepository.findByUsers(member);
+        List<Order> orderList = orderRepository.findAllByMember(member);
 
         if(orderList.isEmpty()){
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -136,7 +133,7 @@ public class OrderService {
                     }).toList();
 
         return OrderUserResponse.builder()
-                .userId(userId)
+                .userId(member.getUserId())
                 .id(member.getLoginId())
                 .order(list)
                 .build();
@@ -144,10 +141,11 @@ public class OrderService {
     }
 
     //주문내역 상세 조회
-    public OrderDetailResponse orderDetailFind(long orderId){
+    public OrderDetailResponse orderDetailFind(String loginId, long orderId){
 
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
+        Member member = findLoginMember(loginId);
+        Order order = orderFindById(orderId);
+        equalLoginMemberCheck(member,order);
 
         List<OrderItem> orderItem = orderItemRepository.findByOrder(order);
 
@@ -210,7 +208,9 @@ public class OrderService {
     }
 
     //주문 등록
-    public long create(long userId, OrderRequest orderRequest){
+    public long create(String loginId, OrderRequest orderRequest){
+
+        Member member = findLoginMember(loginId);
 
         //주문 상품 있는지 확인
         orderRequest.orderItemRequestList().stream().map(x -> {
@@ -219,9 +219,6 @@ public class OrderService {
         });
 
         //order
-        //userId 받아오기
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
 
         //주문번호 랜덤 생성
         String orderNum = "1223124";
@@ -254,11 +251,13 @@ public class OrderService {
     }
 
     //주문 수정
-    public void update(Long orderId, OrderUpdateRequest orderUpdateRequest){
+    public void update(String loginId, long orderId, OrderUpdateRequest orderUpdateRequest){
+
+        Member member = findLoginMember(loginId);
 
         //order
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
+        Order order = orderFindById(orderId);
+        equalLoginMemberCheck(member,order);
 
         orderRepository.save(order.updateOrder(orderUpdateRequest));
 
@@ -289,18 +288,15 @@ public class OrderService {
     }
 
     //부분취소, 취소 등록
-    public long orderCancelCreate(long userId, long orderId, OrderCancelRequest orderCancelRequest){
-
-        //userId 받아오기
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+    public long orderCancelCreate(String loginId, long orderId, OrderCancelRequest orderCancelRequest){
 
         OrderType orderType;
         OrderItemType orderItemType = OrderItemType.취소;
         PointType pointType = PointType.사용취소;
 
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
+        Member member = findLoginMember(loginId);
+        Order order = orderFindById(orderId);
+        equalLoginMemberCheck(member,order);
 
         List<OrderItem> orderItemList = orderItemRepository.findByOrder(order);
 
@@ -340,5 +336,25 @@ public class OrderService {
         pointRepository.save(point);
 
         return orderCancel.getOrderId();
+    }
+
+    //로그인 member 확인
+    private Member findLoginMember(String loginId){
+
+        return memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+    }
+
+    //order 확인
+    private Order orderFindById(long orderId){
+
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER"));
+    }
+
+    //로그인 member와 order member 비교
+    private void equalLoginMemberCheck(Member member, Order order){
+        if( ! member.equals(order.getMember()) )
+            throw new RuntimeException("NOT_EQUAL_ORDER_MEMBER");
     }
 }

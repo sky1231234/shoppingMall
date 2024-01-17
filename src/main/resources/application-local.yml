@@ -5,16 +5,20 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:8080/shopping?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
-    password:
+    password: root
 
   jpa:
     database: h2
+#    database: mysql
     properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
+#      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -44,4 +48,3 @@ logging:
 jwt:
   header: Authorization
   secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
-  token-validity-in-seconds: 86400

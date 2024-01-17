@@ -13,6 +13,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByItem(Item item);
 
-    List<Review> findAllByUsers(Member member);
+    List<Review> findAllByMember(Member member);
 
 }

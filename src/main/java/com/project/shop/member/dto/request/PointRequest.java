@@ -18,7 +18,7 @@ public record PointRequest(
 
         public Point toEntity(Member member){
                 return Point.builder()
-                        .users(member)
+                        .member(member)
                         .point(this.point())
                         .deadlineDate(this.deadlineDate())
                         .pointType(this.state())

@@ -1,5 +1,6 @@
 package com.project.shop.member.service;
 
+import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.AddressRequest;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
 @Transactional
@@ -25,12 +25,11 @@ public class AddressService {
     private final MemberRepository memberRepository;
 
     //주소 전체 조회
-    public List<AddressResponse> addressFindAll(long userId){
+    public List<AddressResponse> addressFindAll(UserDto userDto){
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+        Member member = findLoginMember(userDto);
 
-        return addressRepository.findAllByUsers(member)
+        return addressRepository.findAllByMember(member)
                 .stream()
                 .map(AddressResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -38,32 +37,63 @@ public class AddressService {
     }
 
     //주소 상세 조회
-    public AddressResponse addressDetailFind(long addressId){
+    public AddressResponse addressDetailFind(UserDto userDto, long addressId){
 
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(()->new RuntimeException("NOT_FOUND_ADDRESS"));
+        Member member = findLoginMember(userDto);
+        Address address = orderFindById(addressId);
+        equalLoginMemberCheck(member,address);
 
         return AddressResponse.fromEntity(address);
     }
 
     //주소 등록
-    public void create(AddressRequest addressRequest){
+    public long create(UserDto userDto, AddressRequest addressRequest){
 
-        addressRepository.save(addressRequest.toEntity());
+        Member member = findLoginMember(userDto);
 
+        var address = addressRepository.save(addressRequest.toEntity(member));
+
+        return address.getAddrId();
     }
 
     //주소 수정
-    public void update(Long addressId, AddressUpdateRequest addressUpdateRequest){
+    public void update(UserDto userDto, Long addressId, AddressUpdateRequest addressUpdateRequest){
 
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ADDRESS"));
+        Member member = findLoginMember(userDto);
+        Address address = orderFindById(addressId);
+        equalLoginMemberCheck(member,address);
 
         addressRepository.save(address.editAddress(addressUpdateRequest));
     }
 
     //주소 삭제
-    public void delete(long addressId){
+    public void delete(UserDto userDto, long addressId){
+
+        Member member = findLoginMember(userDto);
+        Address address = orderFindById(addressId);
+        equalLoginMemberCheck(member,address);
+
         addressRepository.deleteById(addressId);
     }
+
+    //로그인 member 확인
+    private Member findLoginMember(UserDto userDto){
+
+        return memberRepository.findByLoginId(userDto.getLoginId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+    }
+
+    //로그인 member와 address member 비교
+    private void equalLoginMemberCheck(Member member, Address address){
+        if( ! member.equals(address.getMember()) )
+            throw new RuntimeException("NOT_EQUAL_ADDRESS_MEMBER");
+    }
+
+    //address 확인
+    private Address orderFindById(long addressId){
+
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ADDRESS"));
+    }
+
 }

@@ -29,7 +29,7 @@ public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private Member users;
+    private Member member;
 
     @Column(name = "optionId", nullable = false)
     private long optionId;    //옵션번호

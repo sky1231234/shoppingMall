@@ -1,6 +1,5 @@
 package com.project.shop.member.domain;
 
-import com.project.shop.global.config.security.Authority;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -39,9 +39,8 @@ public class Member {
     @Column(name = "deleteDate", nullable = true)
     private LocalDateTime deleteDate;   //탈퇴일
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authName")
-    private Set<Authority> authorities;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private Set<Authority> authorities  = new HashSet<>();
 
     public Member updateUser(MemberUpdateRequest memberUpdateRequest){
         this.loginId = memberUpdateRequest.loginId();

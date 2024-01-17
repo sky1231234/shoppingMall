@@ -1,5 +1,6 @@
 package com.project.shop.order.service;
 
+import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.Builder.CategoryBuilder;
 import com.project.shop.item.Builder.ItemBuilder;
 import com.project.shop.item.domain.*;
@@ -7,6 +8,8 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.member.service.AuthService;
+import com.project.shop.mock.WithCustomMockUser;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
@@ -28,17 +31,29 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 public class OrderServiceTest {
 
     @Autowired
     OrderService orderService;
+    @Autowired
+    AuthService authService;
     @Autowired
     OrderRepository orderRepository;
     @Autowired
@@ -72,9 +87,9 @@ public class OrderServiceTest {
      Point point1; Point point2;
     @Autowired
     ItemRepository itemRepository;
+
     @BeforeEach
     public void before(){
-
         //user
         member1 = MemberBuilder.createUser1();
         member2 = MemberBuilder.createUser2();
@@ -112,17 +127,24 @@ public class OrderServiceTest {
         point2 = PointBuilder.createPoint2(member1);
         pointRepository.save(point1);
         pointRepository.save(point2);
+
+
     }
 
     @Test
+    @WithCustomMockUser(loginId = "loginId")
     @DisplayName("주문 내역 전체 조회")
     void orderFindAll(){
 
+//        SecurityContext context = SecurityContextHolder.getContext();
+//         authentication =  context.getAuthentication();
+        Authentication context = SecurityContextHolder.getContext().getAuthentication();
+        UserDto userDto = new UserDto(context.getPrincipal().toString(),context.getName(),context.getCredentials().toString(),context.getAuthorities());
         //given
         createOrder();
 
         //when
-        List<OrderResponse> orderResponses= orderService.orderFindAll();
+        List<OrderResponse> orderResponses= orderService.orderFindAll("loginId");
 
         //then
         Assertions.assertThat(orderResponses.size()).isEqualTo(2);
@@ -140,7 +162,7 @@ public class OrderServiceTest {
         createOrder();
 
         //when
-        OrderUserResponse orderUserResponse = orderService.orderFindByUser(member1.getUserId());
+        OrderUserResponse orderUserResponse = orderService.orderFindByUser(any());
 
         //then
         Assertions.assertThat(orderUserResponse.getOrder()
@@ -159,7 +181,7 @@ public class OrderServiceTest {
         var orderId = createOrder();
 
         //when
-        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(orderId);
+        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(any(),orderId);
 
         //then
         Assertions.assertThat(orderDetailResponse.getAddressDetail()).isEqualTo("상세주소");
@@ -182,7 +204,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
 
         //when
-        var order = orderService.create(member1.getUserId(), orderRequest);
+        var order = orderService.create(any(), orderRequest);
 
         //then
         Assertions.assertThat(order).isEqualTo(1);
@@ -199,7 +221,7 @@ public class OrderServiceTest {
         Pay pay = payRepository.findByOrder(findOrder);
         Assertions.assertThat(pay.getCardNum()).isEqualTo("01010");
 
-        List<Point> point = pointRepository.findAllByUsers(member1);
+        List<Point> point = pointRepository.findAllByMember(member1);
         Assertions.assertThat(point.size()).isEqualTo(3);
     }
 
@@ -213,7 +235,7 @@ public class OrderServiceTest {
 
         OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
 
-        var orderCancel = orderService.orderCancelCreate(member1.getUserId(), orderId, orderCancelRequest);
+        var orderCancel = orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -224,7 +246,7 @@ public class OrderServiceTest {
         PayCancel payCancel = payCancelRepository.findByOrder(order);
         Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
-        List<Point> point = pointRepository.findAllByUsers(member1);
+        List<Point> point = pointRepository.findAllByMember(member1);
         Assertions.assertThat(point.size()).isEqualTo(4);
         Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
 
@@ -239,7 +261,7 @@ public class OrderServiceTest {
 
         OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
 
-        var orderCancel =  orderService.orderCancelCreate(member1.getUserId(), orderId, orderCancelRequest);
+        var orderCancel =  orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -260,7 +282,7 @@ public class OrderServiceTest {
         PayCancel payCancel = payCancelRepository.findByOrder(order);
         Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
-        List<Point> point = pointRepository.findAllByUsers(member1);
+        List<Point> point = pointRepository.findAllByMember(member1);
         Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
         Assertions.assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
 
@@ -281,7 +303,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest1 = new OrderRequest(33000,5000,"스프링1","22","주소1","상세주소1","받는사람전화번호1","배송메시지1",5000,"카드사1","01010",30000, orderItemList1);
 
         //when
-        var orderId = orderService.create(member1.getUserId(), orderRequest);
+        var orderId = orderService.create(any(), orderRequest);
 //        orderService.create(user2.getUserId(),orderRequest1);
 //        orderService.create(user1.getUserId(),orderRequest1);
 

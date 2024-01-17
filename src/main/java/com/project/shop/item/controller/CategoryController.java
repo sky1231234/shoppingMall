@@ -32,6 +32,7 @@ public class CategoryController {
     }
 
     //등록
+    //admin 권한
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public void categoryCreate(@RequestBody CategoryRequest categoryRequest){
@@ -39,6 +40,7 @@ public class CategoryController {
     }
 
     //수정
+    //admin 권한
     @PutMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public void categoryUpdate(@PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
@@ -46,6 +48,7 @@ public class CategoryController {
     }
 
     //삭제
+    //admin 권한
     @DeleteMapping("/categories/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void categoryDelete(@PathVariable("categoryId") long categoryId){

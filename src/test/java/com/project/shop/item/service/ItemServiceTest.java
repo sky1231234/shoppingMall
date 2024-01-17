@@ -8,7 +8,6 @@ import com.project.shop.item.domain.Option;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import org.assertj.core.api.Assertions;
@@ -29,8 +28,6 @@ public class ItemServiceTest {
     ItemRepository itemRepository;
     @Autowired
     OptionRepository optionRepository;
-    @Autowired
-    ItemImgRepository itemImgRepository;
     @Autowired
     CategoryRepository categoryRepository;
     static Item item1;

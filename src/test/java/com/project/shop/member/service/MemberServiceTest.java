@@ -14,16 +14,6 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입")
-    void userCreateTest(){
-
-    }
-    @Test
-    @DisplayName("로그인")
-    void userLoginTest(){
-
-    }
-    @Test
     @DisplayName("내 정보 조회")
     void userFindDetailTest(){
 

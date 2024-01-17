@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface PointRepository extends JpaRepository<Point, Long> {
 
-    List<Point> findAllByUsers(Member member);
+    List<Point> findAllByMember(Member member);
 
     //사용가능한 포인트
     @Query(nativeQuery = true , value =

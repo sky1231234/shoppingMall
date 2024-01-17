@@ -1,4 +1,4 @@
-package com.project.shop.global.config.security;
+package com.project.shop.global.config.security.handler;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

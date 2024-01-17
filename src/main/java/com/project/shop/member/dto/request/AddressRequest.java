@@ -2,6 +2,7 @@ package com.project.shop.member.dto.request;
 
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.AddressType;
+import com.project.shop.member.domain.Member;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -16,8 +17,9 @@ public record AddressRequest(
 
         ) {
 
-        public Address toEntity(){
+        public Address toEntity(Member member){
                 return Address.builder()
+                        .member(member)
                         .name(this.receiverName())
                         .zipcode(this.zipcode())
                         .address(this.address())

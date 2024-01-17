@@ -23,7 +23,7 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private Member users;
+    private Member member;
 
     @Column(name = "point", nullable = false)
     private int point;   //포인트

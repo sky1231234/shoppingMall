@@ -51,7 +51,7 @@ public record OrderCancelRequest(
 
     public Point pointToEntity(Member member, int point, PointType pointType){
         return Point.builder()
-                .users(member)
+                .member(member)
                 .point(point)
                 .deadlineDate(LocalDateTime.now().plusWeeks(1))
                 .pointType(pointType)

@@ -24,7 +24,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private Member users;     //고객 번호
+    private Member member;     //고객 번호
 
     @Column(name = "orderNum", nullable = false)
     private String orderNum;     //주문비즈니스키

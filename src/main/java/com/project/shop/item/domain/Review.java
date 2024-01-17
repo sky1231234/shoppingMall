@@ -27,7 +27,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private Member users;  //고객
+    private Member member;  //고객
 
     @Column(name = "title", nullable = false)
     private String title;    //제목

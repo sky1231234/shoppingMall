@@ -23,7 +23,7 @@ public class Address {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private Member users;      //고객번호
+    private Member member;      //고객번호
 
     @Column(name = "name", nullable = false)
     private String name;    //받는분 이름

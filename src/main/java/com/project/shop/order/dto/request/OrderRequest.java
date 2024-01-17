@@ -60,7 +60,7 @@ public record OrderRequest(
 
         public Order orderToEntity(Member member, String orderNum, OrderType orderType){
             return Order.builder()
-                    .users(member)
+                    .member(member)
                     .orderNum(orderNum)
                     .deliverFee(this.deliverFee())
                     .point(this.usedPoint())
@@ -90,7 +90,7 @@ public record OrderRequest(
 
     public Point pointToEntity(Member member){
         return Point.builder()
-                .users(member)
+                .member(member)
                 .point(this.usedPoint())
                 .deadlineDate(LocalDateTime.now())
                 .pointType(PointType.사용)

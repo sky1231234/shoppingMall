@@ -1,5 +1,7 @@
 package com.project.shop.member.service;
 
+import com.project.shop.global.config.security.domain.UserDto;
+import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.PointRequest;
@@ -22,15 +24,13 @@ public class PointService {
     private final MemberRepository memberRepository;
 
     //포인트 전체 조회
-    public PointResponse pointFindAll(long userId){
+    public PointResponse pointFindAll(UserDto userDto){
+        Member member = findLoginMember(userDto);
 
-        var sumPoint = pointRepository.findSumPoint(userId);
-        var disappearPoint = pointRepository.findDisappearPoint(userId);
+        var sumPoint = pointRepository.findSumPoint(member.getUserId());
+        var disappearPoint = pointRepository.findDisappearPoint(member.getUserId());
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
-
-        List<Point> pointList = pointRepository.findAllByUsers(member);
+        List<Point> pointList = pointRepository.findAllByMember(member);
 
         var list =  pointList.stream().map( x -> {
             return PointResponse.PointList.builder()
@@ -52,21 +52,30 @@ public class PointService {
 
    
     //포인트 등록
-    public void create(long userId, PointRequest pointRequest){
+    public void create(UserDto userDto, PointRequest pointRequest){
 
-        //userId 받아오기
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+        Member member = findLoginMember(userDto);
+
+        pointRepository.save(pointRequest.toEntity(member));
+
+    }
+
+    //포인트 사용
+    //수정하기
+    public void use(UserDto userDto, PointRequest pointRequest){
+
+        Member member = findLoginMember(userDto);
 
         pointRepository.save(pointRequest.toEntity(member));
 
     }
 
     //포인트 수정
-    public void update(Long pointId, PointUpdateRequest pointUpdateRequest){
+    public void update(UserDto userDto, long pointId, PointUpdateRequest pointUpdateRequest){
 
-        Point point = pointRepository.findById(pointId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_POINT"));
+        Member member = findLoginMember(userDto);
+        Point point = pointFindById(pointId);
+        equalLoginMemberCheck(member, point);
 
         Point update = point.editPoint(pointUpdateRequest);
         pointRepository.save(update);
@@ -74,7 +83,30 @@ public class PointService {
     }
 
     //포인트 삭제
-    public void delete(long pointId){
+    public void delete(UserDto userDto, long pointId){
+        Member member = findLoginMember(userDto);
+        Point point = pointFindById(pointId);
+        equalLoginMemberCheck(member, point);
         pointRepository.deleteById(pointId);
+    }
+
+    //로그인 member 확인
+    private Member findLoginMember(UserDto userDto){
+
+        return memberRepository.findByLoginId(userDto.getLoginId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+    }
+
+    //point 확인
+    private Point pointFindById(long pointId){
+
+        return pointRepository.findById(pointId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_POINT"));
+    }
+
+    //로그인 member와 point member 비교
+    private void equalLoginMemberCheck(Member member, Point point){
+        if( ! member.equals(point.getMember()) )
+            throw new RuntimeException("NOT_EQUAL_POINT_MEMBER");
     }
 }

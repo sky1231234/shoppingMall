@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.*;
@@ -7,9 +8,13 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
+import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +43,7 @@ public class ReviewService {
 
         var list = reviewList.stream().map(x -> {
             return ItemReviewResponse.ReviewItem.builder()
-                    .userId(x.getUsers().getUserId())
+                    .userId(x.getMember().getUserId())
                     .reviewTitle(x.getTitle())
                     .reviewContent(x.getContent())
                     .reviewStar(x.getStar())
@@ -67,12 +72,11 @@ public class ReviewService {
     }
 
     //회원 - 리뷰 조회
-    public UserReviewResponse userReviewFindAll(long userId){
+    public UserReviewResponse userReviewFindAll(UserDto userDto){
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_USER"));
+        Member member = findLoginMember(userDto);
 
-        List<Review> reviewList = reviewRepository.findAllByUsers(member);
+        List<Review> reviewList = reviewRepository.findAllByMember(member);
 
         var list = reviewList.stream().map(x -> {
             List<ItemImg> itemImgList = itemImgRepository.findByItem(x.getItem());
@@ -98,7 +102,7 @@ public class ReviewService {
         }).toList();
 
         return UserReviewResponse.builder()
-                        .userId(userId)
+                        .userId(member.getUserId())
                         .reviewItemList(list)
                         .build();
     }
@@ -106,8 +110,7 @@ public class ReviewService {
     //리뷰 상세 조회
     public ReviewResponse reviewDetailFind(long reviewId){
 
-        var review = reviewRepository.findById(reviewId)
-                .orElseThrow(()->new RuntimeException("NOT_FOUND_REVIEW"));
+        Review review = reviewFindById(reviewId);
 
         List<ReviewImg> img = reviewImgRepository.findByReview(review);
 
@@ -139,7 +142,7 @@ public class ReviewService {
                         })
                         .findFirst().orElse(null)
                 )
-                .userId(review.getUsers().getUserId())
+                .userId(review.getMember().getUserId())
                 .reviewTitle(review.getTitle())
                 .reviewContent(review.getContent())
                 .reviewStar(review.getStar())
@@ -149,8 +152,10 @@ public class ReviewService {
     }
 
     //리뷰 등록
-    public long create(ReviewRequest reviewRequest){
-        var review = reviewRequest.toEntity();
+    public long create(UserDto userDto, ReviewRequest reviewRequest){
+
+        Member member = findLoginMember(userDto);
+        var review = reviewRequest.toEntity(member);
         var result = reviewRepository.save(review);
 
         //reviewImg
@@ -172,11 +177,13 @@ public class ReviewService {
     }
 
     //리뷰 수정
-    public void update(long reviewId, ReviewUpdateRequest reviewUpdateRequest){
+    public void update(UserDto userDto, long reviewId, ReviewUpdateRequest reviewUpdateRequest){
+
+        Member member = findLoginMember(userDto);
 
         //review
-        Review review = reviewRepository.findById(reviewId)
-                        .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW"));
+        Review review = reviewFindById(reviewId);
+        equalLoginMemberCheck(member,review);
 
         reviewRepository.save(review.editReview(reviewUpdateRequest));
 
@@ -207,7 +214,31 @@ public class ReviewService {
     }
 
     //리뷰 삭제
-    public void delete(long reviewId){
+    public void delete(UserDto userDto, long reviewId){
+        Member member = findLoginMember(userDto);
+        Review review = reviewFindById(reviewId);
+        equalLoginMemberCheck(member,review);
+
         reviewRepository.deleteById(reviewId);
+    }
+
+    //로그인 member 확인
+    private Member findLoginMember(UserDto userDto){
+
+        return memberRepository.findByLoginId(userDto.getLoginId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+    }
+
+    //review 확인
+    private Review reviewFindById(long reviewId){
+
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW"));
+    }
+
+    //로그인 member와 review member 비교
+    private void equalLoginMemberCheck(Member member, Review review){
+        if( ! member.equals(review.getMember()) )
+            throw new RuntimeException("NOT_EQUAL_review_MEMBER");
     }
 }

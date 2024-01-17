@@ -1,10 +1,11 @@
-package com.project.shop.global.config.security;
+package com.project.shop.global.config.security.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,21 +30,21 @@ public class CustomUserDetailsService implements UserDetailsService{
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
 
         return memberRepository.findOneWithAuthoritiesByLoginId(loginId)
-                .map(member -> createUser(loginId, member))
+                .map(this::createUser)
                 .orElseThrow(() -> new UsernameNotFoundException(loginId + " : NOT_FOUND_LOGIN_ID"));
     }
 
 
     /** security.core.userdetails.User 정보를 생성한다. */
-    private User createUser(String loginId, Member member) {
-//        if(!member.isAc)
+    private UserDetails createUser(Member member) {
 
         List<GrantedAuthority> grantedAuthorities = member.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthName()))
                 .collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(
+        return new UserDto(
                 member.getLoginId(),
+                member.getName(),
                 member.getPassword(),
                 grantedAuthorities);
     }

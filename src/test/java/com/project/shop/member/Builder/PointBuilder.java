@@ -11,7 +11,7 @@ public class PointBuilder {
     public static Point createPoint1(Member member){
 
         return Point.builder()
-                .users(member)
+                .member(member)
                 .point(1000)
                 .deadlineDate(LocalDateTime.now())
                 .pointType(PointType.적립)
@@ -23,7 +23,7 @@ public class PointBuilder {
     public static Point createPoint2(Member member){
 
         return Point.builder()
-                .users(member)
+                .member(member)
                 .point(5500)
                 .deadlineDate(LocalDateTime.now())
                 .pointType(PointType.적립)

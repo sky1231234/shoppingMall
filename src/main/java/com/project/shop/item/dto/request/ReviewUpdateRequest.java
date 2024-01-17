@@ -19,7 +19,7 @@ public record ReviewUpdateRequest(
 
     public Review toEntity(){
         return Review.builder()
-                .users(this.member())
+                .member(this.member())
                 .item(this.item())
                 .title(this.title())
                 .content(this.content())
