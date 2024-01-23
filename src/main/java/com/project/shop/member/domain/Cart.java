@@ -49,8 +49,8 @@ public class Cart {
         return this;
     }
 
-    public Cart updateCount(){
-        this.count += 1;
+    public Cart updateCount(int count){
+        this.count += count;
         this.updateDate = LocalDateTime.now();
         return this;
     }

@@ -33,6 +33,9 @@ public class PointResponse {
     private int disappearPoint; //소멸 예정 포인트
     private List<PointList> pointList;
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class PointList{
         private long pointId; //포인트id

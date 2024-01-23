@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -46,6 +45,7 @@ public class ItemReviewResponse {
     private List<ReviewItem> reviewList; //리뷰 리스트
 
     @Builder
+    @Getter
     public static class Thumbnail{
         private long imgId;
         private String url;

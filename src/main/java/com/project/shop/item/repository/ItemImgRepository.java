@@ -15,5 +15,6 @@ public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
 
     List<ItemImg> findByItem(Item item);
 
+    void deleteByItem(Item item);
 }
 

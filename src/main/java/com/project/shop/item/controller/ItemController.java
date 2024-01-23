@@ -35,28 +35,4 @@ public class ItemController {
         return itemService.itemDetailFind(itemId);
     }
 
-    //상품 등록
-    //admin 권한
-    @PostMapping("/items")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void itemCreate(@RequestBody ItemRequest itemRequest){
-        itemService.create(itemRequest);
-    }
-
-    //상품 수정
-    //admin 권한
-    @PutMapping("/items/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void itemUpdate(@PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
-        itemService.update(itemId, itemUpdateRequest);
-    }
-
-    //상품 삭제
-    //admin 권한
-    @DeleteMapping("/items/{itemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void itemDelete(@PathVariable("itemId") long itemId){
-        itemService.delete(itemId);
-    }
-
 }

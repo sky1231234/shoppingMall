@@ -11,7 +11,6 @@ import com.project.shop.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,7 @@ public class ReviewController {
     @GetMapping("/users/reviews")
     @ResponseStatus(HttpStatus.OK)
     public UserReviewResponse userReviewFindAll(@AuthenticationPrincipal UserDto userDto){
-        return reviewService.userReviewFindAll(userDto);
+        return reviewService.userReviewFindAll(userDto.getLoginId());
     }
 
     //리뷰 상세 조회
@@ -48,21 +47,21 @@ public class ReviewController {
     @PostMapping("/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     public void reviewCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
-        reviewService.create(userDto, reviewRequest);
+        reviewService.create(userDto.getLoginId(), reviewRequest);
     }
 
     //리뷰 수정
     @PutMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public void reviewUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
-        reviewService.update(userDto, reviewId, reviewUpdateRequest);
+        reviewService.update(userDto.getLoginId(), reviewId, reviewUpdateRequest);
     }
 
     //리뷰 삭제
     @DeleteMapping("/reviews/{reviewId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reviewDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId){
-        reviewService.delete(userDto, reviewId);
+        reviewService.delete(userDto.getLoginId(), reviewId);
     }
 
 }

@@ -1,13 +1,14 @@
 package com.project.shop.order.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.Builder.CategoryBuilder;
 import com.project.shop.item.Builder.ItemBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Option;
+import com.project.shop.item.dto.request.CategoryRequest;
+import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
@@ -17,11 +18,15 @@ import com.project.shop.member.Builder.PointBuilder;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.Point;
+import com.project.shop.member.domain.PointType;
 import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.member.repository.MemberRepository;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.service.AuthService;
 import com.project.shop.mock.WithCustomMockUser;
+import com.project.shop.order.Builder.OrderBuilder;
+import com.project.shop.order.domain.*;
+import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
 import com.project.shop.order.repository.OrderItemRepository;
@@ -29,6 +34,7 @@ import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
 import com.project.shop.order.service.OrderService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,15 +42,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,9 +57,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrderControllerTest {
-
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    AuthorityRepository authorityRepository;
     @Autowired
     OrderService orderService;
     @Autowired
@@ -74,38 +84,33 @@ public class OrderControllerTest {
     @Autowired
     ItemImgRepository itemImgRepository;
     @Autowired
-    MemberRepository memberRepository;
-    @Autowired
     OptionRepository optionRepository;
     @Autowired
     PayCancelRepository payCancelRepository;
-    Member member1;
-    Member member2;
-    Item item1;
-    Item item2;
-    ItemImg itemImg1;
-    ItemImg itemImg2;
-    ItemImg itemImg3;
-
-    Option option1;
-    Option option2;
-    Option option3;
-    Point point1; Point point2;
     @Autowired
     ItemRepository itemRepository;
-    @Autowired
-    AuthorityRepository authorityRepository;
+    Member member1; Member member2;
+    Item item1; Item item2;
+    ItemImg itemImg1; ItemImg itemImg2; ItemImg itemImg3;
+    Option option1; Option option2; Option option3;
+    Point point1; Point point2;
+    Order order; Order order2;
+
     @BeforeEach
     public void before(){
-        //user
-        member1 = MemberBuilder.createUser1();
-        var mem = memberRepository.save(member1);
-        Authority auth = Authority.builder()
-                .authName("user").member(mem).build();
-        authorityRepository.save(auth);
-//        member2 = MemberBuilder.createUser2();
 
-//        memberRepository.save(member2);
+        //user
+        MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
+        member1 = memberBuilder.signUpMember();
+        var memberSave = memberRepository.save(member1);
+        member2 = MemberBuilder.createUser2();
+        member2 = memberBuilder.signUpAdminMember();
+        var memberAdminSave = memberRepository.save(member2);
+
+        Authority auth = memberBuilder.auth(memberSave);
+        Authority authAdmin = memberBuilder.authAdmin(memberAdminSave);
+        authorityRepository.save(auth);
+        authorityRepository.save(authAdmin);
 
         //category
         Category category = CategoryBuilder.createCategory1();
@@ -128,7 +133,7 @@ public class OrderControllerTest {
         //option
         option1 = ItemBuilder.createOption1(item1);
         option2 = ItemBuilder.createOption2(item1);
-        option3 = ItemBuilder.createOption3(item2);
+        option3 = ItemBuilder.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
@@ -138,42 +143,83 @@ public class OrderControllerTest {
         point2 = PointBuilder.createPoint2(member1);
         pointRepository.save(point1);
         pointRepository.save(point2);
+
+        order = OrderBuilder.createOrder(member1);
+        order2 = OrderBuilder.createOrder(member2);
+        OrderItem orderItem1 = OrderBuilder.createOrderItem1(item1, order);
+        OrderItem orderItem2 = OrderBuilder.createOrderItem2(item1, order2);
+        Pay pay = OrderBuilder.createPay(order);
+
+        orderRepository.save(order);
+        orderRepository.save(order2);
+        orderItemRepository.save(orderItem1);
+        orderItemRepository.save(orderItem2);
+        payRepository.save(pay);
+
     }
 
     @Test
-    @WithCustomMockUser()
-    @DisplayName("상품 전체 조회 테스트")
-    void itemFindAll() throws Exception {
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("주문내역 조회")
+    void orderFindAll() throws Exception {
+
         //given
+
         //when
-
-        //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/items"))
-                .andExpect(status().isOk()); //200 상태
-
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$[0].orderState").value("완료"))
+                .andExpect(jsonPath("$[0].orderItem[1].itemSize").value("240"));
 
     }
 
     @Test
-    @WithCustomMockUser()
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("주문내역 회원별 조회")
+    void orderFindByUser() throws Exception {
+        //given
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/orders"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.order.*",hasSize(1)));
+
+    }
+
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("주문내역 상세 조회")
+    void orderDetailFind() throws Exception {
+        //given
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{orderId}",1))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.orderItem[0].itemName").value("조던"))
+                .andExpect(jsonPath("$.receiverPhoneNum").value("01011111111"));
+
+    }
+
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("주문 등록")
-    void create() throws Exception {
+    void orderCreate() throws Exception {
         //given
-        List<OrderRequest.OrderItemRequest> orderItemList = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 2,10000,"220","검정"),
-                new OrderRequest.OrderItemRequest(item2.getItemId(), 5,15000,"240","빨강"));
-
-        OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
+        OrderRequest orderRequest = OrderBuilder.createOrderRequest(item1);
 
         //when
-        ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderRequest)))
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders")
+                        .content(objectMapper.writeValueAsString(orderRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         //then
-
+        Assertions.assertThat(orderRepository.findById(1L).get().getDeliverFee()).isEqualTo(0);
+        Assertions.assertThat(payRepository.findById(1L).get().getCardNum()).isEqualTo("00000001");
+        Assertions.assertThat(orderItemRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
@@ -181,49 +227,38 @@ public class OrderControllerTest {
     @DisplayName("주문 수정")
     void orderUpdate() throws Exception {
         //given
-        var orderId = createOrder();
-        var orderItemList = orderItem(orderId);
-        OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest(100000,2500,"받는분","01010","주소는","상세주소는",
-                "01000000000","오기전에 문자주세요",500,"국민","20202020",50000,orderItemList);
+        OrderUpdateRequest orderUpdateRequest = OrderBuilder.createOrderUpdateRequest(order, item1);
 
         //when
-        ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/orders/{id}",1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderUpdateRequest)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.receiverName", is("받는분")))
-                .andExpect(jsonPath("$.usedPoint", is(500)))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/orders/{orderId}",1)
+                        .content(objectMapper.writeValueAsString(orderUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(print());
 
         //then
+        Assertions.assertThat(orderRepository.findById(1L).get().getDeliverFee()).isEqualTo(2500);
+        Assertions.assertThat(payRepository.findById(1L).get().getCardNum()).isEqualTo("10000001");
+        Assertions.assertThat(orderItemRepository.findAll().size()).isEqualTo(2);
+        Assertions.assertThat(pointRepository.findAll().size()).isEqualTo(2);
     }
 
-    //주문
-    private long createOrder() {
-
-        List<OrderRequest.OrderItemRequest> orderItemList = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 2,10000,"220","검정"),
-                new OrderRequest.OrderItemRequest(item2.getItemId(), 5,15000,"240","빨강"));
-
-        OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
-
-        List<OrderRequest.OrderItemRequest> orderItemList1 = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 10,10000,"220","검정"));
-
-        OrderRequest orderRequest1 = new OrderRequest(33000,5000,"스프링1","22","주소1","상세주소1","받는사람전화번호1","배송메시지1",5000,"카드사1","01010",30000, orderItemList1);
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("부분취소, 취소 등록")
+    void orderCancelCreate() throws Exception {
+        //given
+        OrderCancelRequest orderCancelRequest = OrderBuilder.createOrderCancelRequest();
 
         //when
-        orderService.create("loginId", orderRequest);
-        return orderService.create("loginId", orderRequest1);
-    }
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders/{orderId}/cancels",1)
+                        .content(objectMapper.writeValueAsString(orderCancelRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
 
-    //주문 아이템
-    private List<OrderUpdateRequest.OrderItemRequest> orderItem(long orderId){
-        OrderUpdateRequest.OrderItemRequest orderItemRequest
-                = new OrderUpdateRequest.OrderItemRequest(orderId, item1.getItemId(),2,30000,"240","black");
-
-        return List.of(orderItemRequest);
+        //then
+        Assertions.assertThat(payCancelRepository.findAll().size()).isEqualTo(1);
+        Assertions.assertThat(orderItemRepository.findById(1L).get().getOrderItemType()).isEqualTo(OrderItemType.취소);
 
     }
 

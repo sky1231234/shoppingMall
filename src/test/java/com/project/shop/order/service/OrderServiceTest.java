@@ -132,14 +132,10 @@ public class OrderServiceTest {
     }
 
     @Test
-    @WithCustomMockUser(loginId = "loginId")
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("주문 내역 전체 조회")
     void orderFindAll(){
 
-//        SecurityContext context = SecurityContextHolder.getContext();
-//         authentication =  context.getAuthentication();
-        Authentication context = SecurityContextHolder.getContext().getAuthentication();
-        UserDto userDto = new UserDto(context.getPrincipal().toString(),context.getName(),context.getCredentials().toString(),context.getAuthorities());
         //given
         createOrder();
 
@@ -233,7 +229,7 @@ public class OrderServiceTest {
         itemList.add(1L);
         itemList.add(2L);
 
-        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다");
 
         var orderCancel = orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
 
@@ -259,7 +255,7 @@ public class OrderServiceTest {
         ArrayList<Long> itemList = new ArrayList<>();
         itemList.add(1L);
 
-        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다", "취소");
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다");
 
         var orderCancel =  orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
 
@@ -303,11 +299,7 @@ public class OrderServiceTest {
         OrderRequest orderRequest1 = new OrderRequest(33000,5000,"스프링1","22","주소1","상세주소1","받는사람전화번호1","배송메시지1",5000,"카드사1","01010",30000, orderItemList1);
 
         //when
-        var orderId = orderService.create(any(), orderRequest);
-//        orderService.create(user2.getUserId(),orderRequest1);
-//        orderService.create(user1.getUserId(),orderRequest1);
-
-        return orderId;
+        return orderService.create(any(), orderRequest);
 
     }
 

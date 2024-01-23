@@ -1,5 +1,6 @@
 package com.project.shop.member.dto.request;
 
+import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
 
@@ -13,11 +14,4 @@ public record PointUpdateRequest(
         @NotBlank PointType state
     ){
 
-    public Point toEntity(){
-        return Point.builder()
-                .point(this.point())
-                .deadlineDate(this.deadlineDate())
-                .pointType(this.state())
-                .build();
-    }
 }

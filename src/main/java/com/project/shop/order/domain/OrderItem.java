@@ -45,13 +45,6 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private OrderItemType orderItemType;    //주문상태
 
-    public OrderItem updateOrderItem(OrderUpdateRequest.OrderItemRequest orderItemRequest, int price, long opitonId){
-        this.totalQuantity = orderItemRequest.itemCount();
-        this.totalPrice = orderItemRequest.itemCount() * price;
-        this.itemOptionId = opitonId;
-        return this;
-    }
-
     public OrderItem cancelOrderItem(OrderItemType orderItemType){
         this.orderItemType = orderItemType;
         return this;

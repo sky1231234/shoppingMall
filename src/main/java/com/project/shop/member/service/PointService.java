@@ -1,11 +1,11 @@
 package com.project.shop.member.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
-import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.Member;
+import com.project.shop.member.domain.PointType;
 import com.project.shop.member.dto.request.PointRequest;
 import com.project.shop.member.dto.request.PointUpdateRequest;
+import com.project.shop.member.dto.request.PointUseRequest;
 import com.project.shop.member.dto.response.PointResponse;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.repository.MemberRepository;
@@ -24,8 +24,8 @@ public class PointService {
     private final MemberRepository memberRepository;
 
     //포인트 전체 조회
-    public PointResponse pointFindAll(UserDto userDto){
-        Member member = findLoginMember(userDto);
+    public PointResponse pointFindAll(String loginId){
+        Member member = findLoginMember(loginId);
 
         var sumPoint = pointRepository.findSumPoint(member.getUserId());
         var disappearPoint = pointRepository.findDisappearPoint(member.getUserId());
@@ -50,32 +50,35 @@ public class PointService {
                 .build();
     }
 
-   
+
     //포인트 등록
-    public void create(UserDto userDto, PointRequest pointRequest){
+    public void create(PointRequest pointRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = memberRepository.findById(pointRequest.id())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
 
-        pointRepository.save(pointRequest.toEntity(member));
+        pointRepository.save(pointRequest.toEntity(member, PointType.적립));
 
     }
 
     //포인트 사용
-    //수정하기
-    public void use(UserDto userDto, PointRequest pointRequest){
+    public void use(PointUseRequest pointUseRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = memberRepository.findById(pointUseRequest.id())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
 
-        pointRepository.save(pointRequest.toEntity(member));
+        var sumPoint = pointRepository.findSumPoint(member.getUserId());
+        if ( sumPoint > pointUseRequest.point())
+            pointRepository.save(pointUseRequest.toEntity(member,PointType.사용));
+        else
+            throw new RuntimeException("NOT_USE_ENOUGH_POINT");
 
     }
 
     //포인트 수정
-    public void update(UserDto userDto, long pointId, PointUpdateRequest pointUpdateRequest){
+    public void update(long pointId, PointUpdateRequest pointUpdateRequest){
 
-        Member member = findLoginMember(userDto);
         Point point = pointFindById(pointId);
-        equalLoginMemberCheck(member, point);
 
         Point update = point.editPoint(pointUpdateRequest);
         pointRepository.save(update);
@@ -83,17 +86,16 @@ public class PointService {
     }
 
     //포인트 삭제
-    public void delete(UserDto userDto, long pointId){
-        Member member = findLoginMember(userDto);
+    public void delete(long pointId){
+
         Point point = pointFindById(pointId);
-        equalLoginMemberCheck(member, point);
         pointRepository.deleteById(pointId);
     }
 
     //로그인 member 확인
-    private Member findLoginMember(UserDto userDto){
+    private Member findLoginMember(String loginId){
 
-        return memberRepository.findByLoginId(userDto.getLoginId())
+        return memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 

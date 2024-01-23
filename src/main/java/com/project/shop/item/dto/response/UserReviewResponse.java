@@ -49,6 +49,7 @@ public class UserReviewResponse {
         private LocalDateTime insertDate;
 
         @Builder
+        @Getter
         public static class Thumbnail{
             private long imgId;
             private String url;

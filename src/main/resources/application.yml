@@ -3,4 +3,5 @@ spring:
     active: local
 
 server:
+  address: localhost
   port: 8080

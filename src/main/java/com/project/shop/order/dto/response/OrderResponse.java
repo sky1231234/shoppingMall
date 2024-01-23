@@ -59,6 +59,7 @@ public class OrderResponse {
     }
 
     @Builder
+    @Getter
     public static class Thumbnail {
         private long imgId;
         private String url;

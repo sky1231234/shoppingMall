@@ -7,18 +7,14 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:8080/shopping?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: root
 
   jpa:
     database: h2
-#    database: mysql
     properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
-#      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -36,15 +32,15 @@ logging:
       hibernate:
         type: trace
 
-  springdoc:
-    packages-to-scan: com.project.shop
-    default-consumes-media-type: application/json;charset=UTF-8
-    default-produces-media-type: application/json;charset=UTF-8
-    swagger-ui:
-      path: /swagger-ui
-      disable-swagger-default-url: true
-      display-request-duration: true
-      operations-sorter: alpha
+spring-doc:
+  packages-to-scan: com.project.shop
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+
 jwt:
-  header: Authorization
   secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp

@@ -1,158 +1,198 @@
 package com.project.shop.item.controller;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.project.shop.item.Builder.CategoryBuilder;
 import com.project.shop.item.Builder.ItemBuilder;
 import com.project.shop.item.Builder.ReviewBuilder;
-import com.project.shop.item.domain.Category;
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.Review;
+import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.ReviewRequest;
-import com.project.shop.item.dto.response.ItemReviewResponse;
-import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemRepository;
-import com.project.shop.item.repository.ReviewImgRepository;
-import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.item.service.ReviewService;
+import com.project.shop.item.dto.request.ReviewUpdateRequest;
+import com.project.shop.item.repository.*;
 import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
-import com.project.shop.member.repository.MemberRepository;
+import com.project.shop.mock.WithCustomMockUser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ReviewControllerTest {
+public class ReviewControllerTest extends ControllerCommon{
 
-    @Autowired
-    MockMvc mvc;
-
-    @Autowired
-    ReviewService reviewService;
     @Autowired
     ItemRepository itemRepository;
     @Autowired
     ReviewRepository reviewRepository;
     @Autowired
-    ReviewImgRepository reviewImgRepository;
-    @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    MemberRepository memberRepository;
+    ReviewImgRepository reviewImgRepository;
+    @Autowired
+    ItemImgRepository itemImgRepository;
+    @Autowired
+    OptionRepository optionRepository;
 
     static Item item1;
     static Item item2;
-    static Member member1;
-    static Member member2;
 
-    @Mock
-    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void before(){
 
         //user
-        member1 = MemberBuilder.createUser1();
-        member2 = MemberBuilder.createUser2();
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
+        Member member1 = memberBuilder.signUpMember();
+        var memberSave = memberRepository.save(member1);
+
+        Authority auth = memberBuilder.auth(memberSave);
+        authorityRepository.save(auth);
 
         //category
-        Category category = CategoryBuilder.createCategory1();
-        categoryRepository.save(category);
+        Category category1 = CategoryBuilder.createCategory1();
+        Category category2 = CategoryBuilder.createCategory2();
+        Category category3 = CategoryBuilder.createCategory3();
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        categoryRepository.save(category3);
 
         //item
-        item1 = ItemBuilder.createItem1(category);
-        item2 = ItemBuilder.createItem2(category);
+        item1 = ItemBuilder.createItem1(category1);
+        item2 = ItemBuilder.createItem2(category2);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
+        ItemImg itemImg1 = ItemBuilder.createImg1(item1);
+        itemImgRepository.save(itemImg1);
+
+        Option option1 = ItemBuilder.createOption1(item1);
+        Option option2 = ItemBuilder.createOption2(item1);
+        Option option3 = ItemBuilder.createOption3(item1);
+        optionRepository.save(option1);
+        optionRepository.save(option2);
+        optionRepository.save(option3);
+
+        Review review = ReviewBuilder.createReview(member1,item1);
+        reviewRepository.save(review);
+
+        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        reviewImgRepository.save(reviewImg);
     }
 
     @Test
     @DisplayName("상품-리뷰 조회")
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
     void itemReviewFindAll() throws Exception {
 
         //given
-        var review = createReview1();
-        createReview2();
+        Review review = ReviewBuilder.createReview2(member1,item1);
+        reviewRepository.save(review);
 
+        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        reviewImgRepository.save(reviewImg);
         //when
-//        ItemReviewResponse itemReviewResponse = reviewService.itemReviewFindAll(review);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/items/{itemId}/reviews",1))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.reviewList.*",hasSize(2)))
+                .andExpect(jsonPath("$.reviewList[1].reviewStar").value(5));
 
-        mvc.perform(MockMvcRequestBuilders.get("/items/"+review+"/reviews"))
-                .andExpect(status().isOk()); //200 상태
-
-        //then
-//        Assertions.assertThat(itemReviewResponse.getReviewList().size()).isEqualTo(2);
-//        Assertions.assertThat(itemReviewResponse.getCategoryName()).isEqualTo("운동화");
-//        Assertions.assertThat(itemReviewResponse.getReviewList().get(0).getReviewContent())
-//                .isEqualTo("나이키 좋아요");
 
     }
     @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원-리뷰 조회")
     void userReviewFindAll() throws Exception {
+        //given
+        Review review = ReviewBuilder.createReview2(member2,item1);
+        reviewRepository.save(review);
+        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        reviewImgRepository.save(reviewImg);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/reviews"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.reviewItemList.*",hasSize(1)))
+                .andExpect(jsonPath("$.reviewItemList[0].reviewTitle").value("리뷰 제목"));
+
+    }
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("리뷰 상세 조회")
+    void reviewDetailFind() throws Exception {
+        //given
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/reviews/{reviewId}",1))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.thumbnail.url").value("itemImg1"))
+                .andExpect(jsonPath("$.reviewImgResponses[0].url").value("urlurl"));
 
     }
 
     @Test
     @DisplayName("리뷰 등록")
-    void create() throws Exception {
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    void reviewCreate() throws Exception {
         //given
-        var review = createReview1();
-        createReview2();
+        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item1);
 
         //when
-//        List<Review> list = reviewRepository.findAll();
-        var result = mvc.perform(MockMvcRequestBuilders.get("/reviews"))
-                .andExpect(status().isOk())
-                .andReturn(); //200 상태
-
-        var result1 = result.getResponse().getContentAsString();
-        if(result1 != null)
-            System.out.println(result1);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews")
+                        .content(objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(reviewRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
 
         //then
-//        Assertions.assertThat(list.size()).isEqualTo(2);
-//        Assertions.assertThat(review).isEqualTo(1);
-    }
-    private long createReview1(){
-
-        //given
-        ArrayList<String> imgList = ReviewBuilder.createImgList1();
-//        member1
-        ReviewRequest reviewRequest = new ReviewRequest(item1, "나이키 후기", "나이키 좋아요", 5,imgList);
-
-        //when
-        return reviewService.create(any(),reviewRequest);
+        Assertions.assertThat(reviewRepository.findById(1L).get().getStar()).isEqualTo(4);
     }
 
-    private void createReview2(){
-
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("리뷰 수정")
+    void reviewUpdate() throws Exception {
         //given
-        ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        //member2
-        ReviewRequest reviewRequest = new ReviewRequest(item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
+        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest(member1,item1);
 
         //when
-        reviewService.create(any(),reviewRequest);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/reviews/{reviewId}",1)
+                        .content(objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(reviewUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        //then
+        Assertions.assertThat(reviewRepository.findById(1L).get().getContent()).isEqualTo("상품 수정 좋아요");
+     }
+
+    @Test
+    @WithCustomMockUser(loginId = "loginId",authority = "user")
+    @DisplayName("리뷰 삭제")
+    void reviewDelete() throws Exception {
+        //given
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/reviews/{reviewId}",1))
+                .andExpect(status().isNoContent());
+
+        //then
+        Assertions.assertThat(reviewRepository.findAll().size()).isEqualTo(0);
+
     }
 
 }

@@ -1,11 +1,8 @@
 package com.project.shop.mock;
 
-import com.project.shop.member.service.AuthService;
+import com.project.shop.global.config.security.domain.UserDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +18,10 @@ public class WithCustomMockUserSecurityContextFactory implements
         String loginId = annotation.loginId();
         String authority = annotation.authority();
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(loginId, "",
-                AuthorityUtils.createAuthorityList(authority));
+        UserDto user = new UserDto(loginId,"auth","",List.of(new SimpleGrantedAuthority(authority)));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(user, "",
+                List.of(new SimpleGrantedAuthority(authority)));
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(auth);

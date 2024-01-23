@@ -9,19 +9,20 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record PointRequest(
-        @NotNull long userId,
+        @NotNull long id,
         @NotNull int point,
-        @NotBlank LocalDateTime deadlineDate,
-        @NotBlank PointType state
+        @NotBlank LocalDateTime deadlineDate
 
         ) {
 
-        public Point toEntity(Member member){
+        public Point toEntity(Member member,PointType pointType){
                 return Point.builder()
                         .member(member)
                         .point(this.point())
                         .deadlineDate(this.deadlineDate())
-                        .pointType(this.state())
+                        .pointType(pointType)
+                        .insertDate(LocalDateTime.now())
+                        .updateDate(LocalDateTime.now())
                         .build();
         }
 }

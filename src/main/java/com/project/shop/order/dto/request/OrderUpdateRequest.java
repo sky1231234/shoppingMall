@@ -4,6 +4,7 @@ import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Option;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.domain.OrderItem;
+import com.project.shop.order.domain.OrderItemType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -79,9 +80,11 @@ public record OrderUpdateRequest(
                         return OrderItem.builder()
                                 .item(item)
                                 .order(order)
-                                .totalQuantity(this.itemCount())
-                                .itemPrice(this.itemPrice())
                                 .itemOptionId(option.getOptionId())
+                                .totalQuantity(this.itemCount())
+                                .totalPrice(this.itemCount() * this.itemPrice())
+                                .itemPrice(this.itemPrice())
+                                .orderItemType(OrderItemType.완료)
                                 .build();
                 }
 

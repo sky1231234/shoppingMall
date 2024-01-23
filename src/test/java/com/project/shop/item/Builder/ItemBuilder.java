@@ -1,9 +1,14 @@
 package com.project.shop.item.Builder;
 
 import com.project.shop.item.domain.*;
+import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.request.ItemUpdateRequest;
+
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 public class ItemBuilder {
 
@@ -100,6 +105,32 @@ public class ItemBuilder {
     }
 
 
+    public static ItemRequest createItemRequest(){
+
+        return new ItemRequest(
+                CategoryBuilder.createCategoryRequest2(),
+                "삼바",
+                109000,
+                "품절이 잦습니다.",
+                List.of(createItemImg1()),
+                List.of(createOption1())
+                );
+    }
+
+    public static ItemUpdateRequest createItemUpdateRequest(){
+
+        return new ItemUpdateRequest(
+                CategoryBuilder.createCategoryUpdateRequest(),
+                "뮬",
+                230000,
+                "신상품",
+                List.of(),
+                List.of(createOptionUpdateRequest())
+        );
+    }
+
+
+
     public static ItemRequest.ImgRequest createItemImg1(){
 
         return new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1");
@@ -124,4 +155,13 @@ public class ItemBuilder {
 
         return new ItemRequest.OptionRequest("240","빨강");
     }
+
+    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest(){
+
+        return new ItemUpdateRequest.OptionUpdateRequest(
+                "240","빨강");
+    }
+
+
+
 }

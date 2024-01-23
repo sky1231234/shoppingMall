@@ -64,17 +64,19 @@ public class ReviewService {
                                     .url(y.getImgUrl())
                                     .build();
                         })
-                        .findFirst().orElse(null)
+//                        .findFirst().orElse(null)
+                                .findAny().orElse(null)
                 )
+
                 .reviewList(list)
                 .build();
 
     }
 
     //회원 - 리뷰 조회
-    public UserReviewResponse userReviewFindAll(UserDto userDto){
+    public UserReviewResponse userReviewFindAll(String loginId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         List<Review> reviewList = reviewRepository.findAllByMember(member);
 
@@ -84,6 +86,7 @@ public class ReviewService {
             return UserReviewResponse.ReviewItem.builder()
                     .itemId(x.getItem().getItemId())
                     .categoryName(x.getItem().getCategory().getCategoryName())
+                    .itemName(x.getItem().getItemName())
                     .brandName(x.getItem().getCategory().getBrandName())
                     .itemThumbnail(itemImgList.stream()
                             .filter(y -> y.getItemImgType() == ItemImgType.Y)
@@ -152,9 +155,9 @@ public class ReviewService {
     }
 
     //리뷰 등록
-    public long create(UserDto userDto, ReviewRequest reviewRequest){
+    public long create(String loginId, ReviewRequest reviewRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         var review = reviewRequest.toEntity(member);
         var result = reviewRepository.save(review);
 
@@ -177,9 +180,9 @@ public class ReviewService {
     }
 
     //리뷰 수정
-    public void update(UserDto userDto, long reviewId, ReviewUpdateRequest reviewUpdateRequest){
+    public void update(String loginId, long reviewId, ReviewUpdateRequest reviewUpdateRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         //review
         Review review = reviewFindById(reviewId);
@@ -214,18 +217,19 @@ public class ReviewService {
     }
 
     //리뷰 삭제
-    public void delete(UserDto userDto, long reviewId){
-        Member member = findLoginMember(userDto);
+    public void delete(String loginId, long reviewId){
+        Member member = findLoginMember(loginId);
         Review review = reviewFindById(reviewId);
         equalLoginMemberCheck(member,review);
 
         reviewRepository.deleteById(reviewId);
+        reviewImgRepository.deleteByReview(review);
     }
 
     //로그인 member 확인
-    private Member findLoginMember(UserDto userDto){
+    private Member findLoginMember(String loginId){
 
-        return memberRepository.findByLoginId(userDto.getLoginId())
+        return memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 

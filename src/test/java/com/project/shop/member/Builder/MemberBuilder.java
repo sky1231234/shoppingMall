@@ -4,6 +4,7 @@ import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.LoginRequest;
+import com.project.shop.member.dto.request.MemberUpdateRequest;
 import com.project.shop.member.dto.request.SignUpRequest;
 import org.apache.juli.logging.Log;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,12 +54,24 @@ public class MemberBuilder {
                 .build();
     }
 
+    public Member signUpAdminMember(){
+
+        return Member.builder()
+                .loginId("adminLogin")
+                .password(passwordEncoder.encode("password"))
+                .name("admin")
+                .phoneNum("0100000")
+                .insertDate(now)
+                .updateDate(now)
+                .build();
+    }
+
     public SignUpRequest signUpUser(){
 
         return new SignUpRequest(
-                "loginId",
+                "loginIdSignup",
                 "password",
-                "name",
+                "nameSignup",
                 "0101010");
     }
 
@@ -71,6 +84,21 @@ public class MemberBuilder {
     }
 
     public Authority auth(Member member){
-        return new Authority(0,"user",member);
+        return Authority.builder()
+                .authName("user").member(member).build();
+    }
+
+    public Authority authAdmin(Member member){
+        return Authority.builder()
+                .authName("admin").member(member).build();
+    }
+    public MemberUpdateRequest memberUpdate(){
+
+        return new MemberUpdateRequest(
+                "loginUpdateId",
+                passwordEncoder.encode("updatePassword"),
+                "updateName",
+                "0000000"
+        );
     }
 }

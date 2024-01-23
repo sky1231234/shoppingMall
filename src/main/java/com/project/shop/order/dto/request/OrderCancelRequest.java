@@ -31,8 +31,8 @@ public record OrderCancelRequest(
         @NotBlank String cancelPayCompany,
         @NotBlank String cancelCardNum,
         @NotNull int cancelPayPrice,
-        @NotBlank String cancelReason,
-        @NotBlank String payCancelType
+        @NotBlank String cancelReason
+//        @NotBlank String payCancelType
 
 ) {
 

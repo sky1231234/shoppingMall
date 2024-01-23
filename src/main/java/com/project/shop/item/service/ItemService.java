@@ -199,28 +199,42 @@ public class ItemService {
                 .stream()
                 .map(x -> {
                     return ItemImg.builder()
-                        .imgUrl(x)
-                        .build();
+                            .item(item)
+                            .itemImgType(x.mainImg())
+                            .imgUrl(x.url())
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
                 })
                 .collect(Collectors.toList());
 
         itemImgRepository.saveAll(itemImgUpdateList);
 
-    //option
-
-        List<Option> optionUpdateList = itemUpdateRequest
-                .optionUpdateRequestList()
-                .stream()
-                .filter(x -> optionRepository.findByItemAndColorAndSize(item,x.color(), x.size()).isEmpty())
-                .map(OptionUpdateRequest::toEntity)
-                .collect(Collectors.toList());
-
-        optionRepository.saveAll(optionUpdateList);
+//    //option
+//        List<Option> optionUpdateList = itemUpdateRequest
+//                .optionUpdateRequestList()
+//                .stream()
+//                .filter(x -> optionRepository.findByItemAndColorAndSize(item,x.color(), x.size()).isEmpty())
+//                .map(x -> {
+//                    return Option.builder()
+//                            .color(x.color())
+//                            .size(x.size())
+//                            .
+//                            .build();
+//                })
+//                .collect(Collectors.toList());
+//
+//        optionRepository.saveAll(optionUpdateList);
 
     }
 
     //상품 삭제
     public void delete(long itemId){
+        Item item = itemRepository.findById(itemId)
+                        .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+
         itemRepository.deleteById(itemId);
+        itemImgRepository.deleteByItem(item);
+        optionRepository.deleteByItem(item);
     }
 }

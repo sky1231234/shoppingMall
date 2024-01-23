@@ -25,28 +25,28 @@ public class CartController {
     @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
     public List<CartResponse> cartFindByUser(@AuthenticationPrincipal UserDto userDto){
-        return cartService.cartFindByUser(userDto);
+        return cartService.cartFindByUser(userDto.getLoginId());
     }
 
     //장바구니 등록
     @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void cartCreate(@AuthenticationPrincipal UserDto userDto, CartRequest cartRequest){
-        cartService.create(userDto, cartRequest);
+    public void cartCreate(@AuthenticationPrincipal UserDto userDto,@RequestBody CartRequest cartRequest){
+        cartService.create(userDto.getLoginId(), cartRequest);
     }
 
     //장바구니 수정
     @PutMapping("/carts/{cartId}")
     @ResponseStatus(HttpStatus.OK)
     public void cartUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
-        cartService.update(userDto, cartId, cartUpdateRequest);
+        cartService.update(userDto.getLoginId(), cartId, cartUpdateRequest);
     }
 
     //장바구니 삭제
     @DeleteMapping("/carts/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cartDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId){
-        cartService.delete(userDto, cartId);
+        cartService.delete(userDto.getLoginId(), cartId);
     }
 
 }

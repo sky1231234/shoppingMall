@@ -1,6 +1,5 @@
 package com.project.shop.member.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.AddressRequest;
@@ -25,9 +24,9 @@ public class AddressService {
     private final MemberRepository memberRepository;
 
     //주소 전체 조회
-    public List<AddressResponse> addressFindAll(UserDto userDto){
+    public List<AddressResponse> addressFindAll(String loginId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         return addressRepository.findAllByMember(member)
                 .stream()
@@ -37,9 +36,9 @@ public class AddressService {
     }
 
     //주소 상세 조회
-    public AddressResponse addressDetailFind(UserDto userDto, long addressId){
+    public AddressResponse addressDetailFind(String loginId, long addressId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         Address address = orderFindById(addressId);
         equalLoginMemberCheck(member,address);
 
@@ -47,9 +46,9 @@ public class AddressService {
     }
 
     //주소 등록
-    public long create(UserDto userDto, AddressRequest addressRequest){
+    public long create(String loginId, AddressRequest addressRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         var address = addressRepository.save(addressRequest.toEntity(member));
 
@@ -57,9 +56,9 @@ public class AddressService {
     }
 
     //주소 수정
-    public void update(UserDto userDto, Long addressId, AddressUpdateRequest addressUpdateRequest){
+    public void update(String loginId, Long addressId, AddressUpdateRequest addressUpdateRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         Address address = orderFindById(addressId);
         equalLoginMemberCheck(member,address);
 
@@ -67,9 +66,9 @@ public class AddressService {
     }
 
     //주소 삭제
-    public void delete(UserDto userDto, long addressId){
+    public void delete(String loginId, long addressId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         Address address = orderFindById(addressId);
         equalLoginMemberCheck(member,address);
 
@@ -77,9 +76,9 @@ public class AddressService {
     }
 
     //로그인 member 확인
-    private Member findLoginMember(UserDto userDto){
+    private Member findLoginMember(String loginId){
 
-        return memberRepository.findByLoginId(userDto.getLoginId())
+        return memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 

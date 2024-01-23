@@ -23,21 +23,21 @@ public class MemberController {
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public MemberResponse userDetailFind(@AuthenticationPrincipal UserDto userDto){
-        return memberService.userDetailFind(userDto);
+        return memberService.userDetailFind(userDto.getLoginId());
     }
 
     //회원정보 수정
     @PutMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public void userUpdate(@AuthenticationPrincipal UserDto userDto, @RequestBody MemberUpdateRequest memberUpdateRequest){
-        memberService.update(userDto, memberUpdateRequest);
+        memberService.update(userDto.getLoginId(), memberUpdateRequest);
     }
 
     //회원정보 탈퇴
     @DeleteMapping("/users")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void userDelete(@AuthenticationPrincipal UserDto userDto){
-        memberService.delete(userDto);
+        memberService.delete(userDto.getLoginId());
     }
 
 

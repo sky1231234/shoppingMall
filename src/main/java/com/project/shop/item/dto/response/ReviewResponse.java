@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//setter test해보기 오류나면 setter 필요한것
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -51,11 +49,13 @@ public class ReviewResponse {
     private LocalDateTime insertDate;   //리뷰 등록일
 
     @Builder
+    @Getter
     public static class Thumbnail{
         private long imgId;
         private String url;
     }
     @Builder
+    @Getter
     public static class ReviewImg{
         private long imgId;
         private String url;

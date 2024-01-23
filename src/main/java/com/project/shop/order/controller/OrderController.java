@@ -25,6 +25,7 @@ public class OrderController {
     private final OrderService orderService;
 
     //주문내역 조회
+    //admin
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderResponse> orderFindAll(@AuthenticationPrincipal UserDto userDto){
@@ -48,7 +49,7 @@ public class OrderController {
     //주문 등록
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public void orderCreate(@AuthenticationPrincipal UserDto userDto, OrderRequest orderRequest){
+    public void orderCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody OrderRequest orderRequest){
         orderService.create(userDto.getLoginId(), orderRequest);
     }
 

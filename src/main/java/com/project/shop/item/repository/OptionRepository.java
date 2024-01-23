@@ -15,4 +15,6 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
     Optional<Option> findByItemAndColorAndSize(Item item, String color, String size);
 
     List<Option> findByItem(Item item);
+
+    void deleteByItem(Item item);
 }

@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 
 import com.project.shop.global.config.security.domain.TokenResponse;
 import com.project.shop.global.config.security.domain.UserDto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,23 +30,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 
-@Component
-public class TokenProvider implements InitializingBean {
+@Slf4j
+@Configuration
+public class TokenProvider {
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
-    private static final String AUTHORITIES_KEY = "auth";
+    long tokenValidityInMilliseconds = 1000L * 60 * 60 * 24 * 8;
 
-    private final String secret;
     private Key key;
 
-
     public TokenProvider(
-            @Value("${jwt.secret}") String secret
+            @Value(value = "${jwt.secret}") String secret
     ){
-        this.secret = secret;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -58,21 +54,20 @@ public class TokenProvider implements InitializingBean {
                 .collect(Collectors.joining(","));
 
         var now = new Date();
-        long tokenValidityInMilliseconds = 1000 * 60 * 30L;
         var accessTokenExpireIn = new Date(now.getTime() + tokenValidityInMilliseconds);
         var principal = (UserDto) authentication.getPrincipal();
         var member = principal.getLoginId();
-
+//        authentication.getName()
         String token = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY,authorities)
+                .setSubject("authorization")
                 .claim("loginId", member)
+                .claim("auth",authorities)
                 .setIssuedAt(now)
                 .setExpiration(accessTokenExpireIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        return new TokenResponse("Bearer ", token);
+        return new TokenResponse("Bearer", token);
     }
 
 //  인증 정보 조회
@@ -84,7 +79,7 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-        var auth = claims.get(AUTHORITIES_KEY, String.class);
+        var auth = claims.get("auth", String.class);
         var memberId = claims.get("loginId", String.class);
 
         var authorities = Arrays.stream(auth.split(","))
@@ -92,7 +87,7 @@ public class TokenProvider implements InitializingBean {
                         .map(authority -> (GrantedAuthority) authority)
                         .collect(Collectors.toList());
 
-        User principal =new UserDto(memberId, claims.getSubject(), "", authorities);
+        User principal = new UserDto(memberId, claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

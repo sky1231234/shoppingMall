@@ -53,9 +53,6 @@ public class ReviewServiceTest {
     static Member member1;
     static Member member2;
 
-    @Mock
-    PasswordEncoder passwordEncoder;
-
     @BeforeEach
     public void before(){
         //user

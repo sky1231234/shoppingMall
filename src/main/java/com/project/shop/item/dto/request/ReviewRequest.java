@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 public record ReviewRequest(
         @NotBlank Item item,
         @NotBlank String title,

@@ -213,10 +213,13 @@ public class OrderService {
         Member member = findLoginMember(loginId);
 
         //주문 상품 있는지 확인
-        orderRequest.orderItemRequestList().stream().map(x -> {
-            return itemRepository.findById(x.itemId())
-                    .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
-        });
+        orderRequest.orderItemRequestList()
+                .stream()
+                .map(x -> {
+                    return itemRepository.findById(x.itemId())
+                        .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
+                }
+            );
 
         //order
 
@@ -262,21 +265,19 @@ public class OrderService {
         orderRepository.save(order.updateOrder(orderUpdateRequest));
 
         //orderItem
+        orderItemRepository.deleteAllByOrder(order);
+
         var result = orderUpdateRequest.orderItemRequestList()
                 .stream()
                 .map(x -> {
 
-                    var orderItem = orderItemRepository.findById(x.orderItemId())
-                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
-
-                        var item = itemRepository.findById(x.itemId())
+                    var item = itemRepository.findById(x.itemId())
                                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
                         var option = optionRepository.findByItemAndColorAndSize(item,x.itemColor(),x.itemSize())
                                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-                        return orderItem.updateOrderItem(x, item.getPrice(), option.getOptionId());
-
+                    return x.toEntity(item,order,option);
         }).toList();
 
         orderItemRepository.saveAll(result);

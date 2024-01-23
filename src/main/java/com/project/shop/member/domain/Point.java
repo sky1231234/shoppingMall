@@ -27,7 +27,7 @@ public class Point {
 
     @Column(name = "point", nullable = false)
     private int point;   //포인트
-    @Column(name = "deadlineDate", nullable = false)
+    @Column(name = "deadlineDate", nullable = true)
     private LocalDateTime deadlineDate;    //유효기간
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -13,13 +13,12 @@ public record CategoryRequest(
         ) {
 
         public Category toEntity(){
-                LocalDateTime now = LocalDateTime.now();
 
                 return Category.builder()
                         .categoryName(this.categoryName())
                         .brandName(this.brandName())
-                        .insertDate(now)
-                        .updateDate(now)
+                        .insertDate(LocalDateTime.now())
+                        .updateDate(LocalDateTime.now())
                         .build();
         }
 

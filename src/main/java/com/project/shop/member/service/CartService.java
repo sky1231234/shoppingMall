@@ -1,6 +1,5 @@
 package com.project.shop.member.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
@@ -8,7 +7,6 @@ import com.project.shop.item.domain.Option;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Cart;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.CartRequest;
@@ -17,7 +15,6 @@ import com.project.shop.member.dto.response.CartResponse;
 import com.project.shop.member.repository.CartRepository;
 import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +33,9 @@ public class CartService {
     private final OptionRepository optionRepository ;
 
     //회원별 장바구니 조회
-    public List<CartResponse> cartFindByUser(UserDto userDto){
+    public List<CartResponse> cartFindByUser(String loginId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         List<Cart> cart = cartRepository.findAllByMember(member);
 
@@ -56,7 +53,7 @@ public class CartService {
                             .brandName(item.getCategory().getBrandName())
                             .itemName(item.getItemName())
                             .itemSize(option.getSize())
-                            .itemColor(option.getSize())
+                            .itemColor(option.getColor())
                             .count(x.getCount())
                             .itemThumbnail(
                                     itemImg.stream()
@@ -76,32 +73,30 @@ public class CartService {
     }
 
     //장바구니 등록
-    public void create(UserDto userDto, CartRequest cartRequest){
+    public void create(String loginId, CartRequest cartRequest){
 
         //해당 회원이 장바구니 등록해놓은게 있는지 확인
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
 
         Item item = itemRepository.findById(cartRequest.itemId())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
         Optional<Cart> cart = cartRepository.findByMemberAndAndItemAndOptionId(member,item,cartRequest.optionNum());
 
-//              등록한게 있으면 수량 +1
+//              등록한게 있으면 수량+
                 if(cart.isPresent()){
-                        Cart count = cart.get().updateCount();
+                        Cart count = cart.get().updateCount(cartRequest.count());
                         cartRepository.save(count);
                 }else{
                     //등록된 장바구니 없으면 새로 등록
-                    Item newCart = itemRepository.findById(cart.get().getItem().getItemId())
-                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
-                    cartRepository.save(cartRequest.toEntity(newCart));
+                    cartRepository.save(cartRequest.toEntity(item,member));
                 }
     }
 
     //장바구니 수정
-    public void update(UserDto userDto, long cartId, CartUpdateRequest cartUpdateRequest){
+    public void update(String loginId, long cartId, CartUpdateRequest cartUpdateRequest){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         Cart cart = cartFindById(cartId);
         equalLoginMemberCheck(member, cart);
 
@@ -110,9 +105,9 @@ public class CartService {
     }
 
     //장바구니 삭제
-    public void delete(UserDto userDto, long cartId){
+    public void delete(String loginId, long cartId){
 
-        Member member = findLoginMember(userDto);
+        Member member = findLoginMember(loginId);
         Cart cart = cartFindById(cartId);
         equalLoginMemberCheck(member, cart);
 
@@ -120,9 +115,9 @@ public class CartService {
     }
 
     //로그인 member 확인
-    private Member findLoginMember(UserDto userDto){
+    private Member findLoginMember(String loginId){
 
-        return memberRepository.findByLoginId(userDto.getLoginId())
+        return memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 

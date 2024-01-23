@@ -1,8 +1,5 @@
 package com.project.shop.mock;
 
-
-import com.project.shop.member.domain.Authority;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
