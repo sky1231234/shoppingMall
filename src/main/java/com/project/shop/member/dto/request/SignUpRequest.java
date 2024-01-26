@@ -12,7 +12,8 @@ import java.util.HashSet;
 public record SignUpRequest(@NotBlank String loginId,
                             @NotBlank String password,
                             @NotBlank String name,
-                            @NotBlank String phoneNum) {
+                            @NotBlank String phoneNum,
+                            @NotBlank String auth) {
 
     public Member toEntity(PasswordEncoder passwordEncoder){
 

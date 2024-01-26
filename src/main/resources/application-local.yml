@@ -38,7 +38,10 @@ spring-doc:
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     path: /swagger-ui
-    operationsSorter: alpha
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    try-it-out-enabled: false
     disable-swagger-default-url: true
     display-request-duration: true
 

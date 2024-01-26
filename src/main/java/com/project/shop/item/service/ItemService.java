@@ -4,8 +4,6 @@ import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemListResponse;
 import com.project.shop.item.dto.response.ItemResponse;
-import com.project.shop.item.dto.response.ItemReviewResponse;
-import com.project.shop.item.exception.ItemException;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
@@ -16,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-//import static com.project.shop.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
 @Service
 @Transactional
@@ -69,16 +64,20 @@ public class ItemService {
         List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
         List<Option> option = optionRepository.findByItem(item);
 
-        var itemImg = itemImgList.stream()
-                .filter(y -> y.getItemImgType() == ItemImgType.N)
-                .map(y -> {
-                    return ItemResponse.ItemImgResponse.builder()
-                            .imgId(y.getItemImgId())
-                            .url(y.getImgUrl())
-                            .build();
-                })
-                .toList();
-
+        List<ItemResponse.ItemImgResponse> itemImg = null;
+                
+        if(!itemImgList.isEmpty()){
+            itemImg = itemImgList.stream()
+                    .filter(y -> y.getItemImgType() == ItemImgType.N)
+                    .map(y -> {
+                        return ItemResponse.ItemImgResponse.builder()
+                                .imgId(y.getItemImgId())
+                                .url(y.getImgUrl())
+                                .build();
+                    })
+                    .toList();
+        }
+        
         var size = option.stream()
                 .map(x -> {
                     return ItemResponse.OptionSize.builder()
@@ -186,7 +185,7 @@ public class ItemService {
         itemRepository.save(item.editItem(category,itemUpdateRequest));
 
         //itemImg
-        //기존 이미지 삭제하고 다시 등록
+        //기존 이미지 삭제 후 등록
         List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
 
         if(itemImgList.isEmpty()){
@@ -210,21 +209,31 @@ public class ItemService {
 
         itemImgRepository.saveAll(itemImgUpdateList);
 
-//    //option
-//        List<Option> optionUpdateList = itemUpdateRequest
-//                .optionUpdateRequestList()
-//                .stream()
-//                .filter(x -> optionRepository.findByItemAndColorAndSize(item,x.color(), x.size()).isEmpty())
-//                .map(x -> {
-//                    return Option.builder()
-//                            .color(x.color())
-//                            .size(x.size())
-//                            .
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        optionRepository.saveAll(optionUpdateList);
+        //option
+        //기존 옵션 삭제 후 등록
+        List<Option> optionList = optionRepository.findByItem(item);
+
+        if(optionList.isEmpty())
+            throw new RuntimeException("NOT_FOUND_ITEM_OPTION");
+
+        optionRepository.deleteAll(optionList);
+
+        List<Option> optionUpdateList = itemUpdateRequest
+                .optionUpdateRequestList()
+                .stream()
+                .filter(x -> optionRepository.findByItemAndColorAndSize(item,x.color(), x.size()).isEmpty())
+                .map(x -> {
+                    return Option.builder()
+                            .item(item)
+                            .color(x.color())
+                            .size(x.size())
+                            .insertDate(LocalDateTime.now())
+                            .updateDate(LocalDateTime.now())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        optionRepository.saveAll(optionUpdateList);
 
     }
 

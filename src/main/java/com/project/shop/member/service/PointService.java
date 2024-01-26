@@ -75,23 +75,6 @@ public class PointService {
 
     }
 
-    //포인트 수정
-    public void update(long pointId, PointUpdateRequest pointUpdateRequest){
-
-        Point point = pointFindById(pointId);
-
-        Point update = point.editPoint(pointUpdateRequest);
-        pointRepository.save(update);
-
-    }
-
-    //포인트 삭제
-    public void delete(long pointId){
-
-        Point point = pointFindById(pointId);
-        pointRepository.deleteById(pointId);
-    }
-
     //로그인 member 확인
     private Member findLoginMember(String loginId){
 

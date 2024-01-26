@@ -25,15 +25,5 @@ public class PointServiceTest {
 
     }
 
-    @Test
-    @DisplayName("포인트 수정")
-    void pointUpdateTest(){
 
-    }
-
-    @Test
-    @DisplayName("포인트 삭제")
-    void pointDeleteTest(){
-
-    }
 }

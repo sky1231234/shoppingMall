@@ -21,7 +21,7 @@ public record OrderRequest(
 //              "zipcode" :"우편번호",
 //              "address" : "주소",
 //              "addressDetail" : "상세주소",
-//              "receiverPhoneNum" : "받는사람전화번호",
+//              "receiverPhoneNum" : "받는사람 전화번호",
 //              "addrMsg" : "배송메시지"
 //
 //              "usedPoint" : "사용포인트",

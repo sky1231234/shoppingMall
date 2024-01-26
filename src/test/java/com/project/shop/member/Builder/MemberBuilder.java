@@ -72,7 +72,8 @@ public class MemberBuilder {
                 "loginIdSignup",
                 "password",
                 "nameSignup",
-                "0101010");
+                "0101010",
+                "user");
     }
 
     public LoginRequest loginUser(){
@@ -95,10 +96,10 @@ public class MemberBuilder {
     public MemberUpdateRequest memberUpdate(){
 
         return new MemberUpdateRequest(
-                "loginUpdateId",
                 passwordEncoder.encode("updatePassword"),
                 "updateName",
-                "0000000"
+                "0000000",
+                "user"
         );
     }
 }

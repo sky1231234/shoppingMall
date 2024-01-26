@@ -34,10 +34,14 @@ public class AuthService {
         //loginId 중복 확인
         if(memberRepository.findByLoginId(signUpRequest.loginId()).isPresent())
             throw new RuntimeException("ALREADY_EXIST_LOGIN_ID");
-        var user = signUpRequest.toEntity(passwordEncoder);
-        var you = memberRepository.save(user);
 
-        Authority authority = new Authority(0,"user",you);
+        var user = signUpRequest.toEntity(passwordEncoder);
+        var saveUser = memberRepository.save(user);
+
+        Authority authority = Authority.builder()
+                .authName(signUpRequest.auth())
+                .member(saveUser)
+                .build();
 
         authorityRepository.save(authority);
 

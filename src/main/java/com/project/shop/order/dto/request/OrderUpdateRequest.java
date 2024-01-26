@@ -52,11 +52,11 @@ public record OrderUpdateRequest(
         @NotBlank String cardNum,
         @NotNull int payPrice,
 
-        @NotNull List<OrderItemRequest> orderItemRequestList
+        @NotNull List<OrderItemUpdateRequest> orderItemRequestList
 
         ) {
 
-        public record OrderItemRequest(
+        public record OrderItemUpdateRequest(
 
 //{
 //              "orderItemId" : "주문상품 id",

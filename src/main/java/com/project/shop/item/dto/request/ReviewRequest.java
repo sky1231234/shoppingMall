@@ -10,17 +10,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ReviewRequest(
-        @NotBlank Item item,
+        @NotBlank long itemId,
+        @NotBlank long orderId,
         @NotBlank String title,
         @NotBlank String content,
         @NotBlank int star,
         @NotBlank List<String> reviewImgRequestList
         ) {
 
-        public Review toEntity(Member member){
+        public Review toEntity(Member member,Item item){
                 return Review.builder()
                         .member(member)
-                        .item(this.item())
+                        .item(item)
                         .title(this.title())
                         .content(this.content())
                         .star(this.star())

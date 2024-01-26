@@ -167,7 +167,7 @@ public class ReviewControllerTest extends ControllerCommon{
     @DisplayName("리뷰 수정")
     void reviewUpdate() throws Exception {
         //given
-        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest(member1,item1);
+        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/reviews/{reviewId}",1)

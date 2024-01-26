@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class ItemResponse {
+
 //    {
 //        "itemId": 1,
 //        "categoryName": "카테고리명",
@@ -51,25 +52,28 @@ public class ItemResponse {
     private String itemName;
     private int itemPrice;
     private String itemExplain;
-    private ItemImgResponse itemThumbnail;   //상품 대표이미지
+    private ItemImgResponse itemThumbnail;   //상품 대표 이미지
 
     private List<ItemImgResponse> itemImgResponseList;
     private List<OptionSize> optionSizeList;
     private List<OptionColor> optionColorList;
 
     @Builder
+    @Getter
     public static class ItemImgResponse{
         private long imgId;
         private String url;
     }
 
     @Builder
+    @Getter
     public static class OptionSize{
         private long optionId;
         private String size;
     }
 
     @Builder
+    @Getter
     public static class OptionColor{
         private long optionId;
         private String color;

@@ -17,6 +17,9 @@ import com.project.shop.item.repository.ReviewRepository;
 import com.project.shop.member.Builder.MemberBuilder;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.MemberRepository;
+import com.project.shop.order.Builder.OrderBuilder;
+import com.project.shop.order.domain.Order;
+import com.project.shop.order.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,12 +50,12 @@ public class ReviewServiceTest {
     CategoryRepository categoryRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    OrderRepository orderRepository;
 
-    static Item item1;
-    static Item item2;
-    static Member member1;
-    static Member member2;
-
+    Item item1; Item item2;
+    Member member1; Member member2;
+    Order order1;
     @BeforeEach
     public void before(){
         //user
@@ -70,6 +73,10 @@ public class ReviewServiceTest {
         item2 = ItemBuilder.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
+
+        //order
+        order1 = OrderBuilder.createOrder(member1);
+        orderRepository.save(order1);
 
     }
 
@@ -141,7 +148,7 @@ public class ReviewServiceTest {
 
         //when
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest(member1, item1, "나이키 비추", "나이키 싫어요", 1,imgList);
+        ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest("나이키 비추", "나이키 싫어요", 1,imgList);
         reviewService.update(any(),review,reviewUpdateRequest);
 
         //then
@@ -161,7 +168,7 @@ public class ReviewServiceTest {
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList1();
         //member1
-        ReviewRequest reviewRequest = new ReviewRequest(item1, "나이키 후기", "나이키 좋아요", 5,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "나이키 후기", "나이키 좋아요", 5,imgList);
 
         //when
         return reviewService.create(any(),reviewRequest);
@@ -172,7 +179,7 @@ public class ReviewServiceTest {
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
         //member2
-        ReviewRequest reviewRequest = new ReviewRequest(item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
         reviewService.create(any(),reviewRequest);
@@ -183,7 +190,7 @@ public class ReviewServiceTest {
         //given
         ArrayList<String> imgList = ReviewBuilder.createImgList2();
         //member1
-        ReviewRequest reviewRequest = new ReviewRequest(item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
+        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "뉴발란스 후기", "뉴발란스", 1,imgList);
 
         //when
         reviewService.create(any(),reviewRequest);

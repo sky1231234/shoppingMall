@@ -67,6 +67,11 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY_ID"));
 
+        //동일한 브랜드명, 카테고리명 조회
+        if(categoryRepository.findByCategoryNameAndBrandName(categoryUpdateRequest.categoryName(),categoryUpdateRequest.brandName()).isPresent()){
+            throw new RuntimeException("ALREADY_CATEGORY");
+        }
+
         var result = categoryRepository.save(category.updateCategory(categoryUpdateRequest));
         return result.getCategoryId();
     }

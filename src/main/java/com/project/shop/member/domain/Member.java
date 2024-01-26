@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@SQLDelete(sql = "UPDATE member SET delete_date = now() WHERE id = ?")
+@Where(clause = "delete_date is null")
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,16 +47,10 @@ public class Member {
     private Set<Authority> authorities  = new HashSet<>();
 
     public Member updateUser(MemberUpdateRequest memberUpdateRequest){
-        this.loginId = memberUpdateRequest.loginId();
         this.password = memberUpdateRequest.password();
         this.name = memberUpdateRequest.name();
         this.phoneNum = memberUpdateRequest.phoneNum();
         this.updateDate = LocalDateTime.now();
-        return this;
-    }
-
-    public Member deleteUser(){
-        this.deleteDate = LocalDateTime.now();
         return this;
     }
 

@@ -10,7 +10,12 @@ import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
+import com.project.shop.member.domain.Point;
+import com.project.shop.member.domain.PointType;
 import com.project.shop.member.repository.MemberRepository;
+import com.project.shop.member.repository.PointRepository;
+import com.project.shop.order.domain.Order;
+import com.project.shop.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +37,8 @@ public class ReviewService {
     private final ReviewImgRepository reviewImgRepository;
     private final ItemRepository itemRepository;
     private final ItemImgRepository itemImgRepository;
+    private final OrderRepository orderImgRepository;
+    private final PointRepository pointRepository;
 
     //상품 - 리뷰 조회
     public ItemReviewResponse itemReviewFindAll(long itemId){
@@ -158,7 +165,16 @@ public class ReviewService {
     public long create(String loginId, ReviewRequest reviewRequest){
 
         Member member = findLoginMember(loginId);
-        var review = reviewRequest.toEntity(member);
+        Item item = itemRepository.findById(reviewRequest.itemId())
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+
+        Order order = orderImgRepository.findById(reviewRequest.orderId())
+                .orElseThrow(() -> new RuntimeException("NOT_EXIST_ORDER"));
+
+        if( ! member.equals(order.getMember()) )
+            throw new RuntimeException("NOT_EQUAL_ORDER_MEMBER");
+
+        var review = reviewRequest.toEntity(member,item);
         var result = reviewRepository.save(review);
 
         //reviewImg
@@ -176,6 +192,19 @@ public class ReviewService {
                 .collect(Collectors.toList());
 
         reviewImgRepository.saveAll(reviewImgList);
+
+        //point
+        int savePoint = (int) (order.getPrice() * 0.05);
+        Point point = Point.builder()
+                .member(member)
+                .point(savePoint)
+                .deadlineDate(LocalDateTime.now().plusYears(1))
+                .pointType(PointType.적립)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+        pointRepository.save(point);
+
         return result.getReviewId();
     }
 
@@ -197,7 +226,6 @@ public class ReviewService {
             throw new RuntimeException("NOT_FOUND_REVIEW_IMG");
         }
 
-        //수정할 이미지 개수가 기존과 다르면?
         reviewImgRepository.deleteAll(reviewImgList);
 
         List<ReviewImg> reviewImgUpdateList = reviewUpdateRequest
@@ -243,6 +271,6 @@ public class ReviewService {
     //로그인 member와 review member 비교
     private void equalLoginMemberCheck(Member member, Review review){
         if( ! member.equals(review.getMember()) )
-            throw new RuntimeException("NOT_EQUAL_review_MEMBER");
+            throw new RuntimeException("NOT_EQUAL_REVIEW_MEMBER");
     }
 }

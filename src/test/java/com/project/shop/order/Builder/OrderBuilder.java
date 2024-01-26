@@ -129,9 +129,9 @@ public class OrderBuilder {
         );
     }
 
-    public static List<OrderUpdateRequest.OrderItemRequest> createOrderUpdateItemRequest(Order order, Item item) {
+    public static List<OrderUpdateRequest.OrderItemUpdateRequest> createOrderUpdateItemRequest(Order order, Item item) {
 
-        return List.of(new OrderUpdateRequest.OrderItemRequest(
+        return List.of(new OrderUpdateRequest.OrderItemUpdateRequest(
                         order.getOrderId(),
                         item.getItemId(),
                         3,
@@ -139,7 +139,7 @@ public class OrderBuilder {
                         "240",
                         "빨강"
                 ),
-                new OrderUpdateRequest.OrderItemRequest(
+                new OrderUpdateRequest.OrderItemUpdateRequest(
                         order.getOrderId(),
                         item.getItemId(),
                         2,

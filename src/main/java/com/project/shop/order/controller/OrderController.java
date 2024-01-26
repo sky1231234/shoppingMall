@@ -25,7 +25,6 @@ public class OrderController {
     private final OrderService orderService;
 
     //주문내역 조회
-    //admin
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderResponse> orderFindAll(@AuthenticationPrincipal UserDto userDto){

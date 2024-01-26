@@ -34,7 +34,4 @@ public class Option {
     private LocalDateTime insertDate;   //옵션 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //옵션 수정일
-
-
-
 }

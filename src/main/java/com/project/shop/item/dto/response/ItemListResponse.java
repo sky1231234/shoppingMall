@@ -35,6 +35,7 @@ public class ItemListResponse {
     private Thumbnail thumbnail;
 
     @Builder
+    @Getter
     public static class Thumbnail{
         private long imgId;
         private String url;

@@ -6,6 +6,7 @@ import com.project.shop.item.domain.ReviewImg;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.request.ReviewUpdateRequest;
 import com.project.shop.member.domain.Member;
+import com.project.shop.order.domain.Order;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -70,10 +71,11 @@ public class ReviewBuilder {
                 .build();
     }
 
-    public static ReviewRequest createReviewRequest(Item item){
+    public static ReviewRequest createReviewRequest(Item item, Order order){
 
         return new ReviewRequest(
-                item,
+                item.getItemId(),
+                order.getOrderId(),
                 "리뷰1",
                 "상품 좋아요",
                 4,
@@ -81,11 +83,9 @@ public class ReviewBuilder {
         );
     }
 
-    public static ReviewUpdateRequest createReviewUpdateRequest(Member member, Item item){
+    public static ReviewUpdateRequest createReviewUpdateRequest(){
 
         return new ReviewUpdateRequest(
-                member,
-                item,
                 "리뷰 수정",
                 "상품 수정 좋아요",
                 5,

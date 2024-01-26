@@ -166,7 +166,7 @@ public class OrderControllerTest {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$[0].orderState").value("완료"))

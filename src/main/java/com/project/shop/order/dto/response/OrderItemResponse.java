@@ -45,13 +45,6 @@ public class OrderItemResponse {
 
     private List<OrderItem> orderItem;
 
-
-    @Builder
-    public static class Thumbnail {
-        private long imgId;
-        private String url;
-    }
-
     @Builder
     public static class OrderItem {
         private long itemId;
@@ -61,6 +54,12 @@ public class OrderItemResponse {
         private String itemSize;
         private String itemColor;
         private int itemPrice;
+    }
+
+    @Builder
+    public static class Thumbnail {
+        private long imgId;
+        private String url;
     }
 
 }
