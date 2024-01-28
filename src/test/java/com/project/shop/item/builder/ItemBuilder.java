@@ -129,11 +129,11 @@ public class ItemBuilder {
 
         return new ItemUpdateRequest(
                 CategoryBuilder.createCategoryUpdateRequest(),
-                "뮬",
+                "물",
                 230000,
                 "신상품",
                 List.of(),
-                List.of(createOptionUpdateRequest())
+                List.of(createOptionUpdateRequest1(),createOptionUpdateRequest2())
         );
     }
 
@@ -164,10 +164,16 @@ public class ItemBuilder {
         return new ItemRequest.OptionRequest("240","빨강");
     }
 
-    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest(){
+    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest1(){
 
         return new ItemUpdateRequest.OptionUpdateRequest(
                 "240","빨강");
+    }
+
+    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest2(){
+
+        return new ItemUpdateRequest.OptionUpdateRequest(
+                "220","검정");
     }
 
 

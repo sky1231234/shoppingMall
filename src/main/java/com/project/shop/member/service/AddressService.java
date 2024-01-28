@@ -56,7 +56,7 @@ public class AddressService {
     }
 
     //주소 수정
-    public void update(String loginId, Long addressId, AddressUpdateRequest addressUpdateRequest){
+    public void update(String loginId, long addressId, AddressUpdateRequest addressUpdateRequest){
 
         Member member = findLoginMember(loginId);
         Address address = orderFindById(addressId);

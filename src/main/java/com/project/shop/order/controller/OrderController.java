@@ -24,13 +24,6 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    //주문내역 조회
-    @GetMapping("/orders")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> orderFindAll(@AuthenticationPrincipal UserDto userDto){
-        return orderService.orderFindAll(userDto.getLoginId());
-    }
-
     //주문내역 회원별 조회
     @GetMapping("/users/orders")
     @ResponseStatus(HttpStatus.OK)

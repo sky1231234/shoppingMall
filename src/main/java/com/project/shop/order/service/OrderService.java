@@ -58,9 +58,7 @@ public class OrderService {
 
         authCheck(loginId);
 
-        Member member = findLoginMember(loginId);
-
-        List<Order> orderList = orderRepository.findAllByMember(member);
+        List<Order> orderList = orderRepository.findAll();
 
         if(orderList.isEmpty())
             throw new RuntimeException("NOT_FOUND_ORDER");
@@ -342,7 +340,7 @@ public class OrderService {
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
                     OrderItem orderItem = orderItemRepository.findByItemAndOrder(item,order)
-                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
+                                    .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDERITEM"));
 
                     return orderItem.cancelOrderItem(orderItemType);
                 }

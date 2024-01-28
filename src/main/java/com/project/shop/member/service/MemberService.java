@@ -2,6 +2,7 @@ package com.project.shop.member.service;
 
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Cart;
+import com.project.shop.member.domain.DeleteType;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import com.project.shop.member.dto.response.MemberResponse;
@@ -32,7 +33,8 @@ public class MemberService {
                 .stream()
                 .map(x -> {
                     Authority auth = authorityRepository.findByMember(x)
-                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));
+
                     return MemberResponse.fromEntity(x,auth);
                 })
                 .toList();

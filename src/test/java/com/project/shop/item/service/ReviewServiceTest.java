@@ -7,6 +7,7 @@ import com.project.shop.item.builder.ReviewBuilder;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemReviewResponse;
+import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
 import com.project.shop.item.repository.*;
 import com.project.shop.member.builder.MemberBuilder;
@@ -135,8 +136,25 @@ public class ReviewServiceTest extends ServiceCommon {
     }
 
     @Test
+    @DisplayName("리뷰 상세 조회")
+    void reviewDetailFind(){
+
+        //given
+        long reviewId = 1;
+
+        //when
+        ReviewResponse reviewResponse = reviewService.reviewDetailFind(reviewId);
+
+        //then
+        Assertions.assertThat(reviewResponse.getReviewTitle()).isEqualTo("리뷰 제목");
+        Assertions.assertThat(reviewResponse.getReviewImgResponses().get(0).getUrl())
+                .isEqualTo("urlurl");
+
+    }
+
+    @Test
     @DisplayName("리뷰 등록")
-    void reviewCreateTest(){
+    void reviewCreate(){
 
         //given
         ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item2,order1);
@@ -156,7 +174,7 @@ public class ReviewServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("리뷰 수정")
-    void categoryUpdateTest(){
+    void categoryUpdate(){
 
         //given
         ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
@@ -175,5 +193,20 @@ public class ReviewServiceTest extends ServiceCommon {
 
     }
 
-    //리뷰 상세 조회, 리뷰 삭제
+    @Test
+    @DisplayName("리뷰 삭제")
+    void categoryDelete(){
+
+        //given
+        long reviewId = 1;
+
+        //when
+        reviewService.delete(loginId,reviewId);
+
+        //then
+        Assertions.assertThat(reviewRepository.findAll().size()).isEqualTo(2);
+        Assertions.assertThat(reviewImgRepository.findAll().size()).isEqualTo(0);
+
+    }
+
 }

@@ -55,7 +55,7 @@ public class MemberBuilder {
     public Member signUpAdminMember(){
 
         return Member.builder()
-                .loginId("adminLogin")
+                .loginId("admin")
                 .password(passwordEncoder.encode("password"))
                 .name("admin")
                 .phoneNum("0100000")
@@ -96,7 +96,7 @@ public class MemberBuilder {
         return new MemberUpdateRequest(
                 passwordEncoder.encode("updatePassword"),
                 "updateName",
-                "0000000",
+                "9999999",
                 "user"
         );
     }

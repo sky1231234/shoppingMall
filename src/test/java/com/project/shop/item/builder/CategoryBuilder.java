@@ -9,15 +9,13 @@ import java.time.LocalDateTime;
 
 public class CategoryBuilder {
 
-    static LocalDateTime now = LocalDateTime.now();
-
     public static Category createCategory1(){
 
         return Category.builder()
                 .categoryName("운동화")
                 .brandName("나이키")
-                .insertDate(now)
-                .updateDate(now)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -26,8 +24,8 @@ public class CategoryBuilder {
         return Category.builder()
                 .categoryName("스니커즈")
                 .brandName("뉴발란스")
-                .insertDate(now)
-                .updateDate(now)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -36,8 +34,8 @@ public class CategoryBuilder {
         return Category.builder()
                 .categoryName("운동화")
                 .brandName("뉴발란스")
-                .insertDate(now)
-                .updateDate(now)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -46,8 +44,8 @@ public class CategoryBuilder {
         return Category.builder()
                 .categoryName("슬리퍼")
                 .brandName("아디다스")
-                .insertDate(now)
-                .updateDate(now)
+                .insertDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 
@@ -73,8 +71,8 @@ public class CategoryBuilder {
 
         return new CategoryUpdateRequest(
                 "admin",
-                "런닝화",
-                "뉴발란스"
+                "슬리퍼",
+                "아디다스"
         );
     }
 }

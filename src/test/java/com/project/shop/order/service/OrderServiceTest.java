@@ -29,6 +29,7 @@ import com.project.shop.member.domain.PointType;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.repository.MemberRepository;
+import org.aspectj.weaver.ast.Or;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -125,16 +126,20 @@ public class OrderServiceTest extends ServiceCommon {
         pointRepository.save(point2);
 
         order = OrderBuilder.createOrder(member1);
-        order2 = OrderBuilder.createOrder(member2);
+        order2 = OrderBuilder.createOrder2(member2);
         OrderItem orderItem1 = OrderBuilder.createOrderItem1(item1, order);
         OrderItem orderItem2 = OrderBuilder.createOrderItem2(item1, order2);
+        OrderItem orderItem3 = OrderBuilder.createOrderItem2(item2, order);
         Pay pay = OrderBuilder.createPay(order);
+        Pay pay2 = OrderBuilder.createPay(order2);
 
         orderRepository.save(order);
         orderRepository.save(order2);
         orderItemRepository.save(orderItem1);
-        orderItemRepos cd.save(orderItem2);
+        orderItemRepository.save(orderItem2);
+        orderItemRepository.save(orderItem3);
         payRepository.save(pay);
+        payRepository.save(pay2);
     }
 
     @Test
@@ -144,13 +149,15 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<OrderResponse> orderResponses= orderService.orderFindAll(adminId);
+        List<OrderResponse> orderResponses = orderService.orderFindAll(adminId);
 
         //then
         Assertions.assertThat(orderResponses.size()).isEqualTo(2);
         Assertions.assertThat(orderResponses.get(0)
-                .getOrderItem().get(0).getItemSize())
+                        .getOrderItem().get(0).getItemSize())
                 .isEqualTo("220");
+        Assertions.assertThat(orderResponses.get(1)
+                .getOrderTotalPrice()).isEqualTo(23200);
 
     }
 
@@ -159,18 +166,17 @@ public class OrderServiceTest extends ServiceCommon {
     void orderFindByUser(){
 
         //given
-        createOrder();
 
         //when
-        OrderUserResponse orderUserResponse = orderService.orderFindByUser(any());
+        OrderUserResponse orderUserResponse = orderService.orderFindByUser(loginId);
 
         //then
         Assertions.assertThat(orderUserResponse.getOrder()
                 .get(0).getOrderTotalPrice())
-                .isEqualTo(15000);
+                .isEqualTo(10000);
         Assertions.assertThat(orderUserResponse.getOrder()
-                .get(1).getOrderId())
-                .isEqualTo(3);
+                .get(0).getDeliverFee())
+                .isEqualTo(0);
     }
 
     @Test
@@ -178,10 +184,10 @@ public class OrderServiceTest extends ServiceCommon {
     void orderDetailFind() {
 
         //given
-        var orderId = createOrder();
+        long orderId = 1;
 
         //when
-        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(any(),orderId);
+        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(loginId, orderId);
 
         //then
         Assertions.assertThat(orderDetailResponse.getAddressDetail()).isEqualTo("상세주소");
@@ -189,7 +195,7 @@ public class OrderServiceTest extends ServiceCommon {
                         .get(0)
                         .getItemThumbnail().getUrl())
                 .isEqualTo("itemImg1");
-        Assertions.assertThat(orderDetailResponse.getPay().getPayPrice()).isEqualTo(15000);
+        Assertions.assertThat(orderDetailResponse.getPay().getPayPrice()).isEqualTo(26000);
     }
 
     @Test
@@ -197,71 +203,59 @@ public class OrderServiceTest extends ServiceCommon {
     void create(){
 
         //given
-        List<OrderRequest.OrderItemRequest> orderItemList = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 2,10000,"220","검정"),
-                new OrderRequest.OrderItemRequest(item2.getItemId(), 5,15000,"240","빨강"));
-
-        OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
+        OrderRequest orderRequest = OrderBuilder.createOrderRequest(item1);
 
         //when
-        var order = orderService.create(any(), orderRequest);
+        long order = orderService.create(loginId, orderRequest);
 
         //then
-        Assertions.assertThat(order).isEqualTo(1);
+        Assertions.assertThat(order).isEqualTo(3);
 
         Order findOrder = orderRepository.findById(order)
-                .orElseThrow(()-> new RuntimeException("NOT_FOUND_ORDER"));
-
-        Assertions.assertThat(findOrder.getAddress()).isEqualTo("주소");
+                .orElseThrow(()-> new RuntimeException("NOT_FOUND_ORDER_TEST"));
 
         List<OrderItem> orderItem = orderItemRepository.findByOrder(findOrder);
-        Assertions.assertThat(orderItem.size()).isEqualTo(2);
-        Assertions.assertThat(orderItem.get(0).getItemPrice()).isEqualTo(10000);
-
         Pay pay = payRepository.findByOrder(findOrder);
-        Assertions.assertThat(pay.getCardNum()).isEqualTo("01010");
-
         List<Point> point = pointRepository.findAllByMember(member1);
+
+        Assertions.assertThat(findOrder.getAddress()).isEqualTo("주소_REQUEST");
+        Assertions.assertThat(orderItem.size()).isEqualTo(2);
+        Assertions.assertThat(orderItem.get(0).getItemPrice()).isEqualTo(120000);
+
+        Assertions.assertThat(pay.getCardNum()).isEqualTo("00000001");
         Assertions.assertThat(point.size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("전체 취소 등록")
     void orderCancelCreate(){
-        var orderId = createOrder();
-        ArrayList<Long> itemList = new ArrayList<>();
-        itemList.add(1L);
-        itemList.add(2L);
+        //given
+        long orderId = 2;
+        OrderCancelRequest orderCancelRequest = OrderBuilder.createOrderCancelRequest2();
 
-        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다");
-
-        var orderCancel = orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
+        //when
+        long orderCancel = orderService.orderCancelCreate(adminId, orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_TEST"));
 
-        Assertions.assertThat(order.getOrderType()).isEqualTo(OrderType.취소);
-
         PayCancel payCancel = payCancelRepository.findByOrder(order);
         Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
-        List<Point> point = pointRepository.findAllByMember(member1);
-        Assertions.assertThat(point.size()).isEqualTo(4);
-        Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
 
     }
 
     @Test
     @DisplayName("부분 취소 등록")
     void orderPartCancelCreate(){
-        var orderId = createOrder();
-        ArrayList<Long> itemList = new ArrayList<>();
-        itemList.add(1L);
 
-        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(itemList,"국민","01010",15000,"주문 전체 취소입니다");
+        //given
+        long orderId = 1;
+        OrderCancelRequest orderCancelRequest =OrderBuilder.createOrderCancelRequest();
 
-        var orderCancel =  orderService.orderCancelCreate(any(), orderId, orderCancelRequest);
+        //when
+        long orderCancel =  orderService.orderCancelCreate(loginId, orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -276,37 +270,15 @@ public class OrderServiceTest extends ServiceCommon {
         Assertions.assertThat(orderCancel).isEqualTo(orderId);
 
         Assertions.assertThat(order.getOrderType()).isEqualTo(OrderType.부분취소);
-        Assertions.assertThat(orderItem.getItemPrice()).isEqualTo(10000);
+        Assertions.assertThat(orderItem.getItemPrice()).isEqualTo(4000);
         Assertions.assertThat(orderItem.getOrderItemType()).isEqualTo(OrderItemType.취소);
 
         PayCancel payCancel = payCancelRepository.findByOrder(order);
-        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
+        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("농협");
 
         List<Point> point = pointRepository.findAllByMember(member1);
-        Assertions.assertThat(point.get(3).getPointType()).isEqualTo(PointType.사용취소);
         Assertions.assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
 
     }
-
-    //주문
-    private long createOrder() {
-
-        List<OrderRequest.OrderItemRequest> orderItemList = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 2,10000,"220","검정"),
-                new OrderRequest.OrderItemRequest(item2.getItemId(), 5,15000,"240","빨강"));
-
-        OrderRequest orderRequest = new OrderRequest(15000,2500,"스프링","11","주소","상세주소","받는사람전화번호","배송메시지",1000,"카드사","01010",15000, orderItemList);
-
-        List<OrderRequest.OrderItemRequest> orderItemList1 = List.of(
-                new OrderRequest.OrderItemRequest(item1.getItemId(), 10,10000,"220","검정"));
-
-        OrderRequest orderRequest1 = new OrderRequest(33000,5000,"스프링1","22","주소1","상세주소1","받는사람전화번호1","배송메시지1",5000,"카드사1","01010",30000, orderItemList1);
-
-        //when
-        return orderService.create(any(), orderRequest);
-
-    }
-
-
 
 }

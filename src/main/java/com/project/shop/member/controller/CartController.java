@@ -21,8 +21,8 @@ public class CartController {
 
     private final CartService cartService;
 
-    //장바구니 조회
-    @GetMapping("/carts")
+    //회원별 장바구니 조회
+    @GetMapping("/users/carts")
     @ResponseStatus(HttpStatus.OK)
     public List<CartResponse> cartFindByUser(@AuthenticationPrincipal UserDto userDto){
         return cartService.cartFindByUser(userDto.getLoginId());

@@ -83,14 +83,14 @@ public class CartService {
 
         Optional<Cart> cart = cartRepository.findByMemberAndAndItemAndOptionId(member,item,cartRequest.optionNum());
 
-//              등록한게 있으면 수량+
-                if(cart.isPresent()){
-                        Cart count = cart.get().updateCount(cartRequest.count());
-                        cartRepository.save(count);
-                }else{
-                    //등록된 장바구니 없으면 새로 등록
-                    cartRepository.save(cartRequest.toEntity(item,member));
-                }
+            //등록한게 있으면 수량+
+            if(cart.isPresent()){
+                    Cart count = cart.get().updateCount(cartRequest.count());
+                    cartRepository.save(count);
+            }else{
+                //등록된 장바구니 없으면 새로 등록
+                cartRepository.save(cartRequest.toEntity(item,member));
+            }
     }
 
     //장바구니 수정
