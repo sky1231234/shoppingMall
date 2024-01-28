@@ -1,47 +1,42 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
-import com.project.shop.item.Builder.ReviewBuilder;
-import com.project.shop.item.domain.Category;
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.Review;
-import com.project.shop.item.domain.ReviewImg;
+import com.project.shop.common.service.ServiceCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.ReviewBuilder;
+import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
-import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemRepository;
-import com.project.shop.item.repository.ReviewImgRepository;
-import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.member.Builder.MemberBuilder;
-import com.project.shop.member.domain.Member;
-import com.project.shop.member.repository.MemberRepository;
-import com.project.shop.order.Builder.OrderBuilder;
+import com.project.shop.item.repository.*;
+import com.project.shop.member.builder.MemberBuilder;
+import com.project.shop.member.domain.Authority;
+import com.project.shop.order.builder.OrderBuilder;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 //@Transactional
-public class ReviewServiceTest {
+public class ReviewServiceTest extends ServiceCommon {
 
     @Autowired
     ReviewService reviewService;
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    ItemImgRepository itemImgRepository;
+    @Autowired
+    OptionRepository optionRepository;
     @Autowired
     ReviewRepository reviewRepository;
     @Autowired
@@ -49,20 +44,24 @@ public class ReviewServiceTest {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    MemberRepository memberRepository;
-    @Autowired
     OrderRepository orderRepository;
 
     Item item1; Item item2;
-    Member member1; Member member2;
     Order order1;
     @BeforeEach
     public void before(){
         //user
-        member1 = MemberBuilder.createUser1();
-        member2 = MemberBuilder.createUser2();
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
+        member1 = memberBuilder.signUpMember();
+        member2 = memberBuilder.signUpAdminMember();
+        var memberSave = memberRepository.save(member1);
+        var adminSave = memberRepository.save(member2);
+
+        //auth
+        Authority auth = memberBuilder.auth(memberSave);
+        Authority authAdmin = memberBuilder.authAdmin(adminSave);
+        authorityRepository.save(auth);
+        authorityRepository.save(authAdmin);
 
         //category
         Category category = CategoryBuilder.createCategory1();
@@ -74,9 +73,31 @@ public class ReviewServiceTest {
         itemRepository.save(item1);
         itemRepository.save(item2);
 
+        ItemImg itemImg1 = ItemBuilder.createImg1(item1);
+        itemImgRepository.save(itemImg1);
+
+        Option option1 = ItemBuilder.createOption1(item1);
+        Option option2 = ItemBuilder.createOption2(item1);
+        Option option3 = ItemBuilder.createOption3(item1);
+        optionRepository.save(option1);
+        optionRepository.save(option2);
+        optionRepository.save(option3);
+
         //order
         order1 = OrderBuilder.createOrder(member1);
         orderRepository.save(order1);
+
+        //review
+        Review review1 = ReviewBuilder.createReview(member1,item1);
+        Review review2= ReviewBuilder.createReview2(member1,item2);
+        Review review3= ReviewBuilder.createReview2(member2,item1);
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
+        reviewRepository.save(review3);
+
+        //reviewImg
+        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review1);
+        reviewImgRepository.save(reviewImg);
 
     }
 
@@ -85,17 +106,14 @@ public class ReviewServiceTest {
     void categoryCreateTest(){
 
         //given
-        var review = createReview1();
-        createReview2();
 
         //when
-        ItemReviewResponse itemReviewResponse = reviewService.itemReviewFindAll(review);
+        ItemReviewResponse itemReviewResponse = reviewService.itemReviewFindAll(item1.getItemId());
 
         //then
         Assertions.assertThat(itemReviewResponse.getReviewList().size()).isEqualTo(2);
-        Assertions.assertThat(itemReviewResponse.getCategoryName()).isEqualTo("운동화");
-        Assertions.assertThat(itemReviewResponse.getReviewList().get(0).getReviewContent())
-                .isEqualTo("나이키 좋아요");
+        Assertions.assertThat(itemReviewResponse.getReviewList().get(1).getReviewContent())
+                .isEqualTo("사이즈가 잘 맞아요1");
 
     }
 
@@ -104,18 +122,15 @@ public class ReviewServiceTest {
     void categoryFindAllTest(){
 
         //given
-        createReview1();
-        createReview2();
-        createReview3();
 
         //when
-        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(any());
+        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(loginId);
 
         //then
         Assertions.assertThat(userReviewResponse.getReviewItemList().size()).isEqualTo(2);
         Assertions.assertThat(userReviewResponse.getReviewItemList()
-                        .get(0).getReviewTitle())
-                .isEqualTo("나이키 후기");
+                        .get(1).getReviewTitle())
+                .isEqualTo("후기1");
 
     }
 
@@ -124,16 +139,18 @@ public class ReviewServiceTest {
     void reviewCreateTest(){
 
         //given
-        var review = createReview1();
-        createReview2();
-        createReview3();
+        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item2,order1);
 
         //when
-        List<Review> list = reviewRepository.findAll();
+        var reviewId = reviewService.create(loginId, reviewRequest);
+
 
         //then
-        Assertions.assertThat(list.size()).isEqualTo(2);
-        Assertions.assertThat(review).isEqualTo(1);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW_SERVICE_TEST"));
+
+        Assertions.assertThat(review).isEqualTo(4);
+        Assertions.assertThat(reviewImgRepository.findByReview(review).get(1)).isEqualTo("img2");
 
     }
 
@@ -142,57 +159,21 @@ public class ReviewServiceTest {
     void categoryUpdateTest(){
 
         //given
-        var review = createReview1();
-        createReview2();
-        createReview3();
+        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
 
         //when
-        ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        ReviewUpdateRequest reviewUpdateRequest = new ReviewUpdateRequest("나이키 비추", "나이키 싫어요", 1,imgList);
-        reviewService.update(any(),review,reviewUpdateRequest);
+        reviewService.update(loginId,1,reviewUpdateRequest);
 
         //then
-        Review list = reviewRepository.findById(review)
+        Review review = reviewRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_REVIEW"));
 
-        List<ReviewImg> reviewImg = reviewImgRepository.findByReview(list);
-        Assertions.assertThat(list.getContent()).isEqualTo("나이키 싫어요");
-        Assertions.assertThat(list.getStar()).isEqualTo(1);
+        List<ReviewImg> reviewImg = reviewImgRepository.findByReview(review);
+        Assertions.assertThat(review.getContent()).isEqualTo("상품 수정 좋아요");
+        Assertions.assertThat(review.getStar()).isEqualTo(5);
         Assertions.assertThat(reviewImg.size()).isEqualTo(3);
 
-
     }
 
-    private long createReview1(){
-
-        //given
-        ArrayList<String> imgList = ReviewBuilder.createImgList1();
-        //member1
-        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "나이키 후기", "나이키 좋아요", 5,imgList);
-
-        //when
-        return reviewService.create(any(),reviewRequest);
-    }
-
-    private void createReview2(){
-
-        //given
-        ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        //member2
-        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "뉴발란스 후기", "뉴발란스", 1,imgList);
-
-        //when
-        reviewService.create(any(),reviewRequest);
-    }
-
-    private void createReview3(){
-
-        //given
-        ArrayList<String> imgList = ReviewBuilder.createImgList2();
-        //member1
-        ReviewRequest reviewRequest = new ReviewRequest(item1.getItemId(),order1.getOrderId(), "뉴발란스 후기", "뉴발란스", 1,imgList);
-
-        //when
-        reviewService.create(any(),reviewRequest);
-    }
+    //리뷰 상세 조회, 리뷰 삭제
 }

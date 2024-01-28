@@ -1,17 +1,21 @@
 package com.project.shop.item.controller;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
-import com.project.shop.item.Builder.ReviewBuilder;
+import com.project.shop.common.controller.ControllerCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.ReviewBuilder;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.request.ReviewUpdateRequest;
 import com.project.shop.item.repository.*;
-import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.mock.WithCustomMockUser;
+import com.project.shop.order.builder.OrderBuilder;
+import com.project.shop.order.domain.Order;
+import com.project.shop.order.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ReviewControllerTest extends ControllerCommon{
+public class ReviewControllerTest extends ControllerCommon {
 
     @Autowired
     ItemRepository itemRepository;
@@ -45,10 +47,10 @@ public class ReviewControllerTest extends ControllerCommon{
     ItemImgRepository itemImgRepository;
     @Autowired
     OptionRepository optionRepository;
-
-    static Item item1;
-    static Item item2;
-
+    @Autowired
+    OrderRepository orderRepository;
+    Item item1; Item item2;
+    Order order1;
 
     @BeforeEach
     public void before(){
@@ -85,11 +87,19 @@ public class ReviewControllerTest extends ControllerCommon{
         optionRepository.save(option2);
         optionRepository.save(option3);
 
+        //order
+        order1 = OrderBuilder.createOrder(member1);
+        orderRepository.save(order1);
+
+        //review
         Review review = ReviewBuilder.createReview(member1,item1);
         reviewRepository.save(review);
 
+        //reviewImg
         ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
         reviewImgRepository.save(reviewImg);
+
+
     }
 
     @Test
@@ -150,7 +160,7 @@ public class ReviewControllerTest extends ControllerCommon{
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     void reviewCreate() throws Exception {
         //given
-        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item1);
+        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item1,order1);
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews")

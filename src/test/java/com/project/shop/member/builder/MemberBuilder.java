@@ -1,12 +1,10 @@
-package com.project.shop.member.Builder;
+package com.project.shop.member.builder;
 
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.LoginRequest;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import com.project.shop.member.dto.request.SignUpRequest;
-import org.apache.juli.logging.Log;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;

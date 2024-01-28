@@ -1,30 +1,24 @@
 package com.project.shop.order.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
+import com.project.shop.common.controller.ControllerCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Option;
-import com.project.shop.item.dto.request.CategoryRequest;
-import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.member.Builder.MemberBuilder;
-import com.project.shop.member.Builder.PointBuilder;
+import com.project.shop.member.builder.MemberBuilder;
+import com.project.shop.member.builder.PointBuilder;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.Point;
-import com.project.shop.member.domain.PointType;
-import com.project.shop.member.repository.AuthorityRepository;
-import com.project.shop.member.repository.MemberRepository;
 import com.project.shop.member.repository.PointRepository;
-import com.project.shop.member.service.AuthService;
 import com.project.shop.mock.WithCustomMockUser;
-import com.project.shop.order.Builder.OrderBuilder;
+import com.project.shop.order.builder.OrderBuilder;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
@@ -33,7 +27,6 @@ import com.project.shop.order.repository.OrderItemRepository;
 import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
-import com.project.shop.order.service.OrderService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,34 +35,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    AuthorityRepository authorityRepository;
-    @Autowired
-    OrderService orderService;
-    @Autowired
-    AuthService authService;
+public class OrderControllerTest extends ControllerCommon {
+
     @Autowired
     OrderRepository orderRepository;
     @Autowired

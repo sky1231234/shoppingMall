@@ -1,5 +1,6 @@
 package com.project.shop.member.service;
 
+import com.project.shop.common.service.ServiceCommon;
 import com.project.shop.item.service.ItemService;
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.AddressType;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class AddressServiceTest {
+public class AddressServiceTest extends ServiceCommon {
 
     @Autowired
     AddressService addressService;

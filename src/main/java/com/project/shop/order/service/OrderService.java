@@ -9,6 +9,8 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.member.domain.Address;
+import com.project.shop.member.domain.Authority;
+import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
@@ -28,7 +30,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,6 +41,7 @@ import java.util.List;
 public class OrderService {
 
     private final MemberRepository memberRepository;
+    private final AuthorityRepository authorityRepository;
     private final ItemRepository itemRepository ;
     private final ItemImgRepository itemImgRepository ;
 
@@ -51,13 +56,14 @@ public class OrderService {
     //주문내역 조회
     public List<OrderResponse> orderFindAll(String loginId){
 
+        authCheck(loginId);
+
         Member member = findLoginMember(loginId);
 
         List<Order> orderList = orderRepository.findAllByMember(member);
 
-        if(orderList.isEmpty()){
+        if(orderList.isEmpty())
             throw new RuntimeException("NOT_FOUND_ORDER");
-        }
 
         return orderList.stream()
                 .map( x -> {
@@ -212,19 +218,36 @@ public class OrderService {
 
         Member member = findLoginMember(loginId);
 
-        //주문 상품 있는지 확인
+        //1. 주문 상품 있는지 확인
         orderRequest.orderItemRequestList()
                 .stream()
                 .map(x -> {
-                    return itemRepository.findById(x.itemId())
-                        .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
-                }
-            );
+                            return itemRepository.findById(x.itemId())
+                                    .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM"));
+                        }
+                );
+
+        //2. 보유 포인트 확인
+        var sumPoint = pointRepository.findSumPoint(member.getUserId());
+        if ( sumPoint < orderRequest.usedPoint())
+            throw new RuntimeException("NOT_USE_ENOUGH_POINT");
+
+        //3. 상품 가격 확인
+        var totalPrice = orderRequest.orderItemRequestList().stream()
+                            .mapToInt(x -> x.itemPrice() * x.itemCount())
+                            .sum();
+
+        if(orderRequest.orderTotalPrice() != totalPrice)
+            throw new RuntimeException("NOT_EQUAL_ITEM_PRICE");
+
+        //4. 주문 금액, 결제 금액 확인
+        if(orderRequest.orderTotalPrice() != orderRequest.payPrice() + orderRequest.usedPoint() + orderRequest.deliverFee())
+            throw new RuntimeException("NOT_EQUAL_PRICE_PAY_AND_ITEM");
 
         //order
-
         //주문번호 랜덤 생성
-        String orderNum = "1223124";
+        String orderNum = new SimpleDateFormat("yyMMdd").format(new Date()) + "_" +
+                String.valueOf((Math.random() * 89999) + 10000);
         var order = orderRequest.orderToEntity(member,orderNum, OrderType.완료);
         var orderResult = orderRepository.save(order);
 
@@ -311,7 +334,6 @@ public class OrderService {
         //order 상태 변경
         var cancel = order.cancelOrder(orderType);
         var orderCancel = orderRepository.save(cancel);
-        List<OrderItem> updateList = new ArrayList<>();
 
         //orderItem 상태 변경
         List<OrderItem> orderItems = orderCancelRequest.item().stream()
@@ -332,9 +354,11 @@ public class OrderService {
         var payCancelEntity = orderCancelRequest.payCancelToEntity(orderCancel);
         payCancelRepository.save(payCancelEntity);
 
-        //사용 취소 포인트 등록
-        var point = orderCancelRequest.pointToEntity(member,order.getPoint(),pointType);
-        pointRepository.save(point);
+        //취소 상태일 때만 취소 포인트 등록
+        if(orderType.equals(OrderType.취소)){
+            var point = orderCancelRequest.pointToEntity(member,order.getPoint(),pointType);
+            pointRepository.save(point);
+        }
 
         return orderCancel.getOrderId();
     }
@@ -357,5 +381,16 @@ public class OrderService {
     private void equalLoginMemberCheck(Member member, Order order){
         if( ! member.equals(order.getMember()) )
             throw new RuntimeException("NOT_EQUAL_ORDER_MEMBER");
+    }
+
+    //admin 권한 확인
+    private void authCheck(String loginId){
+
+        Member member = findLoginMember(loginId);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
+
+        if(authority.getAuthName().equals("user"))
+            throw new RuntimeException("ONLY_ADMIN");
     }
 }

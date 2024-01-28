@@ -7,6 +7,7 @@ import com.project.shop.member.domain.Member;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public record OrderCancelRequest(
         return Point.builder()
                 .member(member)
                 .point(point)
-                .deadlineDate(LocalDateTime.now().plusWeeks(1))
+                .deadlineDate(LocalDate.now().plusWeeks(1))
                 .pointType(pointType)
                 .insertDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())

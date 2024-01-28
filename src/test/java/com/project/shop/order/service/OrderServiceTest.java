@@ -1,15 +1,17 @@
 package com.project.shop.order.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
+import com.project.shop.common.service.ServiceCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.member.domain.Authority;
 import com.project.shop.member.service.AuthService;
 import com.project.shop.mock.WithCustomMockUser;
+import com.project.shop.order.builder.OrderBuilder;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
@@ -20,8 +22,8 @@ import com.project.shop.order.repository.OrderItemRepository;
 import com.project.shop.order.repository.OrderRepository;
 import com.project.shop.order.repository.PayCancelRepository;
 import com.project.shop.order.repository.PayRepository;
-import com.project.shop.member.Builder.PointBuilder;
-import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.builder.PointBuilder;
+import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
 import com.project.shop.member.domain.Member;
@@ -31,16 +33,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +42,11 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-public class OrderServiceTest {
+public class OrderServiceTest extends ServiceCommon {
 
     @Autowired
     OrderService orderService;
-    @Autowired
-    AuthService authService;
+
     @Autowired
     OrderRepository orderRepository;
     @Autowired
@@ -73,28 +66,31 @@ public class OrderServiceTest {
      OptionRepository optionRepository;
     @Autowired
     PayCancelRepository payCancelRepository;
-    Member member1;
-    Member member2;
-     Item item1;
-     Item item2;
-     ItemImg itemImg1;
-     ItemImg itemImg2;
-     ItemImg itemImg3;
-
-     Option option1;
-     Option option2;
-     Option option3;
-     Point point1; Point point2;
     @Autowired
     ItemRepository itemRepository;
+    Member member1; Member member2;
+     Item item1; Item item2;
+     ItemImg itemImg1; ItemImg itemImg2; ItemImg itemImg3;
+
+     Option option1; Option option2; Option option3;
+     Point point1; Point point2;
+    Order order; Order order2;
+
 
     @BeforeEach
     public void before(){
         //user
-        member1 = MemberBuilder.createUser1();
-        member2 = MemberBuilder.createUser2();
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
+        member1 = memberBuilder.signUpMember();
+        member2 = memberBuilder.signUpAdminMember();
+        var memberSave = memberRepository.save(member1);
+        var adminSave = memberRepository.save(member2);
+
+        //auth
+        Authority auth = memberBuilder.auth(memberSave);
+        Authority authAdmin = memberBuilder.authAdmin(adminSave);
+        authorityRepository.save(auth);
+        authorityRepository.save(authAdmin);
 
         //category
         Category category = CategoryBuilder.createCategory1();
@@ -128,25 +124,33 @@ public class OrderServiceTest {
         pointRepository.save(point1);
         pointRepository.save(point2);
 
+        order = OrderBuilder.createOrder(member1);
+        order2 = OrderBuilder.createOrder(member2);
+        OrderItem orderItem1 = OrderBuilder.createOrderItem1(item1, order);
+        OrderItem orderItem2 = OrderBuilder.createOrderItem2(item1, order2);
+        Pay pay = OrderBuilder.createPay(order);
 
+        orderRepository.save(order);
+        orderRepository.save(order2);
+        orderItemRepository.save(orderItem1);
+        orderItemRepos cd.save(orderItem2);
+        payRepository.save(pay);
     }
 
     @Test
-    @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("주문 내역 전체 조회")
     void orderFindAll(){
 
         //given
-        createOrder();
 
         //when
-        List<OrderResponse> orderResponses= orderService.orderFindAll("loginId");
+        List<OrderResponse> orderResponses= orderService.orderFindAll(adminId);
 
         //then
         Assertions.assertThat(orderResponses.size()).isEqualTo(2);
         Assertions.assertThat(orderResponses.get(0)
-                .getOrderItem().get(1).getItemSize())
-                .isEqualTo("240");
+                .getOrderItem().get(0).getItemSize())
+                .isEqualTo("220");
 
     }
 

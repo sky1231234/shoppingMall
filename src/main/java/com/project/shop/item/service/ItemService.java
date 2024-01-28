@@ -8,6 +8,10 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.member.domain.Authority;
+import com.project.shop.member.domain.Member;
+import com.project.shop.member.repository.AuthorityRepository;
+import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,8 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
     private final OptionRepository optionRepository;
     private final ItemImgRepository itemImgRepository;
+    private final MemberRepository memberRepository ;
+    private final AuthorityRepository authorityRepository ;
 
     //상품 전체 조회
     public List<ItemListResponse> itemFindAll(){
@@ -118,7 +124,10 @@ public class ItemService {
 
     //상품 등록
     // item + itemImg + option
-    public long create(ItemRequest itemRequest){
+    public long create(String loginId, ItemRequest itemRequest){
+
+        authCheck(loginId);
+
         //category
         Category category = categoryRepository
                 .findByCategoryNameAndBrandName(
@@ -169,7 +178,9 @@ public class ItemService {
 
     //상품 수정
     //category + item + itemImg + option
-    public void update(Long itemId, ItemUpdateRequest itemUpdateRequest){
+    public void update(String loginId, long itemId, ItemUpdateRequest itemUpdateRequest){
+
+        authCheck(loginId);
 
         Category category = categoryRepository
                         .findByCategoryNameAndBrandName(
@@ -238,7 +249,10 @@ public class ItemService {
     }
 
     //상품 삭제
-    public void delete(long itemId){
+    public void delete(String loginId, long itemId){
+
+        authCheck(loginId);
+
         Item item = itemRepository.findById(itemId)
                         .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
@@ -246,4 +260,17 @@ public class ItemService {
         itemImgRepository.deleteByItem(item);
         optionRepository.deleteByItem(item);
     }
+
+    //admin 권한 확인
+    private void authCheck(String loginId){
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
+
+        if(authority.getAuthName().equals("user"))
+            throw new RuntimeException("ONLY_ADMIN");
+    }
+
 }

@@ -26,17 +26,13 @@ public class MemberService {
     //회원 정보 전체 조회
     public List<MemberResponse> userFindAll(String loginId){
 
-        Member member = findLoginMember(loginId);
-
-        Authority authority = authorityRepository.findByMember(member);
-
-        if(authority.getAuthName().equals("user"))
-            throw new RuntimeException("ONLY_ADMIN");
+        authCheck(loginId);
 
         return memberRepository.findAll()
                 .stream()
                 .map(x -> {
-                    Authority auth = authorityRepository.findByMember(x);
+                    Authority auth = authorityRepository.findByMember(x)
+                            .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
                     return MemberResponse.fromEntity(x,auth);
                 })
                 .toList();
@@ -48,7 +44,8 @@ public class MemberService {
 
         Member member = findLoginMember(loginId);
 
-        Authority authority = authorityRepository.findByMember(member);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
         return MemberResponse.fromEntity(member,authority);
     }
 
@@ -60,7 +57,8 @@ public class MemberService {
         Member updateMember = member.updateUser(memberUpdateRequest);
         memberRepository.save(updateMember);
 
-        Authority authority = authorityRepository.findByMember(member);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
         Authority updateAuth = authority.updateAuth(memberUpdateRequest.auth());
         authorityRepository.save(updateAuth);
     }
@@ -71,7 +69,8 @@ public class MemberService {
         Member member = findLoginMember(loginId);
 
         //권한 삭제
-        Authority authority = authorityRepository.findByMember(member);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
         authorityRepository.delete(authority);
 
         //member soft delete
@@ -91,6 +90,15 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 
+    //admin 권한 확인
+    private void authCheck(String loginId){
 
+        Member member = findLoginMember(loginId);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
+
+        if(authority.getAuthName().equals("user"))
+            throw new RuntimeException("ONLY_ADMIN");
+    }
 
 }

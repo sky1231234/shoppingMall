@@ -1,4 +1,4 @@
-package com.project.shop.item.Builder;
+package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
@@ -44,7 +44,7 @@ public class CategoryBuilder {
     public static Category createCategory4(){
 
         return Category.builder()
-                .categoryName("운동화")
+                .categoryName("슬리퍼")
                 .brandName("아디다스")
                 .insertDate(now)
                 .updateDate(now)
@@ -65,7 +65,7 @@ public class CategoryBuilder {
         return new CategoryRequest(
                 "admin",
                 "운동화",
-                "아디다스"
+                "나이키"
         );
     }
 
@@ -73,7 +73,7 @@ public class CategoryBuilder {
 
         return new CategoryUpdateRequest(
                 "admin",
-                "스니커즈",
+                "런닝화",
                 "뉴발란스"
         );
     }

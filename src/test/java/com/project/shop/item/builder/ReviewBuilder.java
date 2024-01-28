@@ -1,4 +1,4 @@
-package com.project.shop.item.Builder;
+package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Review;
@@ -53,8 +53,8 @@ public class ReviewBuilder {
         return Review.builder()
                 .item(item)
                 .member(member)
-                .title("후기")
-                .content("사이즈가 잘 맞아요")
+                .title("후기"+item.getItemId())
+                .content("사이즈가 잘 맞아요"+item.getItemId())
                 .star(5)
                 .insertDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
@@ -89,32 +89,8 @@ public class ReviewBuilder {
                 "리뷰 수정",
                 "상품 수정 좋아요",
                 5,
-                List.of("img11")
+                List.of("img11","url22","imgurl33")
         );
     }
-
-//    private long createReview1(){
-//
-//        //given
-//        ArrayList<String> imgList = ReviewBuilder.createImgList1();
-////        member1
-//        ReviewRequest reviewRequest =
-//                new ReviewRequest(item1, "나이키 후기", "나이키 좋아요", 5,imgList);
-//
-//        //when
-//        return reviewService.create(any(),reviewRequest);
-//    }
-//
-//    private void createReview2(){
-//
-//        //given
-//        ArrayList<String> imgList = ReviewBuilder.createImgList2();
-//        //member2
-//        ReviewRequest reviewRequest = new ReviewRequest(item1, "뉴발란스 후기", "뉴발란스", 1,imgList);
-//
-//        //when
-//        reviewService.create(any(),reviewRequest);
-//    }
-
 
 }

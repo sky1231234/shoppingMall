@@ -9,6 +9,7 @@ import com.project.shop.member.domain.Member;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public record OrderRequest(
 //                    {
 //                      "itemId" : "상품id",
 //                      "itemCount" : "주문상품 수량",
-//                      "itemPrice" : "상품 총 가격"
+//                      "itemPrice" : "상품 가격"
 //                      "itemSize" : "주문상품 사이즈",
 //                      "itemColor" : "주문상품 색상",
 //                    }
@@ -92,7 +93,7 @@ public record OrderRequest(
         return Point.builder()
                 .member(member)
                 .point(this.usedPoint())
-                .deadlineDate(LocalDateTime.now())
+                .deadlineDate(LocalDate.now())
                 .pointType(PointType.사용)
                 .insertDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
@@ -106,7 +107,7 @@ public record OrderRequest(
 //            {
 //              "itemId" : "상품id",
 //              "itemCount" : "주문상품 수량",
-//              "itemPrice" : "상품 총 가격"
+//              "itemPrice" : "상품 가격"
 //              "itemSize" : "주문상품 사이즈",
 //              "itemColor" : "주문상품 색상",
 //              }
@@ -125,6 +126,7 @@ public record OrderRequest(
                     .order(order)
                     .totalQuantity(this.itemCount())
                     .itemPrice(this.itemPrice())
+                    .totalPrice(this.itemCount() * this.itemPrice())
                     .itemOptionId(option.getOptionId())
                     .orderItemType(OrderItemType.완료)
                     .build();

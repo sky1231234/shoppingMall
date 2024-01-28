@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     username: root
-    password: root
+    password:
 
   jpa:
     database: h2
@@ -47,3 +47,8 @@ spring-doc:
 
 jwt:
   secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
+
+schedule:
+  cron: 0 0 0 * * *
+#  cron: 5 * * * * *
+  use: true

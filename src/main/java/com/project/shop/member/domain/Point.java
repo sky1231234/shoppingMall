@@ -1,5 +1,6 @@
 package com.project.shop.member.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.shop.member.dto.request.PointUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "point")
@@ -27,8 +29,9 @@ public class Point {
 
     @Column(name = "point", nullable = false)
     private int point;   //포인트
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "deadlineDate", nullable = true)
-    private LocalDateTime deadlineDate;    //유효기간
+    private LocalDate deadlineDate;    //유효기간
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private PointType pointType;   //포인트상태
@@ -38,10 +41,8 @@ public class Point {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //포인트 수정일
 
-    public Point editPoint(PointUpdateRequest pointUpdateRequest){
-        this.point = pointUpdateRequest.point();
-        this.deadlineDate = pointUpdateRequest.deadlineDate();
-        this.pointType = pointUpdateRequest.state();
+    public Point expirePoint(){
+        this.pointType = PointType.만료;
         this.updateDate = LocalDateTime.now();
         return this;
     }

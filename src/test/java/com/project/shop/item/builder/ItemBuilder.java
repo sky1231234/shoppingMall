@@ -1,13 +1,11 @@
-package com.project.shop.item.Builder;
+package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.*;
-import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
 
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemBuilder {
@@ -104,8 +102,18 @@ public class ItemBuilder {
                 .build();
     }
 
+    public static ItemRequest createItemRequest1(){
+        return new ItemRequest(
+                CategoryBuilder.createCategoryRequest2(),
+                "조던1",
+                5000,
+                "재고 없음",
+                List.of(createItemImg1(), createItemImg2()),
+                List.of(createOption1(), createOption2(),createOption3())
+        );
+    }
 
-    public static ItemRequest createItemRequest(){
+    public static ItemRequest createItemRequest2(){
 
         return new ItemRequest(
                 CategoryBuilder.createCategoryRequest2(),

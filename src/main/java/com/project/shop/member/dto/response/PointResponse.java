@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class PointResponse {
     public static class PointList{
         private long pointId; //포인트id
         private int point; //포인트
-        private LocalDateTime deadlineDate; //유효기간
+        private LocalDate deadlineDate; //유효기간
         private PointType state; //포인트 상태
         private LocalDateTime date; //적립/사용일
     }

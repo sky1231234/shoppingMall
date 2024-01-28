@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -198,7 +199,7 @@ public class ReviewService {
         Point point = Point.builder()
                 .member(member)
                 .point(savePoint)
-                .deadlineDate(LocalDateTime.now().plusYears(1))
+                .deadlineDate(LocalDate.now().plusYears(1))
                 .pointType(PointType.적립)
                 .insertDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())

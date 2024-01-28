@@ -1,5 +1,6 @@
 package com.project.shop.member.service;
 
+import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.PointType;
@@ -7,6 +8,7 @@ import com.project.shop.member.dto.request.PointRequest;
 import com.project.shop.member.dto.request.PointUpdateRequest;
 import com.project.shop.member.dto.request.PointUseRequest;
 import com.project.shop.member.dto.response.PointResponse;
+import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class PointService {
 
     private final PointRepository pointRepository;
     private final MemberRepository memberRepository;
+    private final AuthorityRepository authorityRepository;
 
     //포인트 전체 조회
     public PointResponse pointFindAll(String loginId){
@@ -52,7 +55,9 @@ public class PointService {
 
 
     //포인트 등록
-    public void create(PointRequest pointRequest){
+    public void create(String loginId, PointRequest pointRequest){
+
+        authCheck(loginId);
 
         Member member = memberRepository.findById(pointRequest.id())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
@@ -62,7 +67,9 @@ public class PointService {
     }
 
     //포인트 사용
-    public void use(PointUseRequest pointUseRequest){
+    public void use(String loginId, PointUseRequest pointUseRequest){
+
+        authCheck(loginId);
 
         Member member = memberRepository.findById(pointUseRequest.id())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
@@ -82,16 +89,14 @@ public class PointService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
     }
 
-    //point 확인
-    private Point pointFindById(long pointId){
+    //admin 권한 확인
+    private void authCheck(String loginId){
 
-        return pointRepository.findById(pointId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_POINT"));
-    }
+        Member member = findLoginMember(loginId);
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
 
-    //로그인 member와 point member 비교
-    private void equalLoginMemberCheck(Member member, Point point){
-        if( ! member.equals(point.getMember()) )
-            throw new RuntimeException("NOT_EQUAL_POINT_MEMBER");
+        if(authority.getAuthName().equals("user"))
+            throw new RuntimeException("ONLY_ADMIN");
     }
 }

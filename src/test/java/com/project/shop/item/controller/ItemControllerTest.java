@@ -1,7 +1,8 @@
 package com.project.shop.item.controller;
 
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
+import com.project.shop.common.controller.ControllerCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
@@ -12,9 +13,8 @@ import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Authority;
-import com.project.shop.member.domain.Point;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.mock.WithCustomMockUser;
 import org.assertj.core.api.Assertions;
@@ -45,10 +45,9 @@ public class ItemControllerTest extends ControllerCommon{
     @Autowired
     OptionRepository optionRepository;
 
-    Point point;
     Category category1; Category category2; Category category3;
-    Item item1; Item item2;
-    ItemImg itemImg1; ItemImg itemImg2;
+    Item item1;
+    ItemImg itemImg1;
     Option option1; Option option2; Option option3;
 
     @BeforeEach
@@ -129,7 +128,7 @@ public class ItemControllerTest extends ControllerCommon{
     void itemCreate() throws Exception {
 
         //given
-        ItemRequest itemRequest = ItemBuilder.createItemRequest();
+        ItemRequest itemRequest = ItemBuilder.createItemRequest2();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/items")

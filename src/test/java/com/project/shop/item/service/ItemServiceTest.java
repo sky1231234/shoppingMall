@@ -1,15 +1,17 @@
 package com.project.shop.item.service;
 
-import com.project.shop.item.Builder.CategoryBuilder;
-import com.project.shop.item.Builder.ItemBuilder;
+import com.project.shop.common.service.ServiceCommon;
+import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.ItemBuilder;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Option;
-import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.member.builder.MemberBuilder;
+import com.project.shop.member.domain.Authority;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class ItemServiceTest {
+public class ItemServiceTest extends ServiceCommon {
 
     @Autowired
     ItemService itemService;
@@ -36,6 +38,19 @@ public class ItemServiceTest {
     @BeforeEach
     public void before(){
 
+        //user
+        MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
+        member1 = memberBuilder.signUpMember();
+        member2 = memberBuilder.signUpAdminMember();
+        var memberSave = memberRepository.save(member1);
+        var adminSave = memberRepository.save(member2);
+
+        //auth
+        Authority auth = memberBuilder.auth(memberSave);
+        Authority authAdmin = memberBuilder.authAdmin(adminSave);
+        authorityRepository.save(auth);
+        authorityRepository.save(authAdmin);
+
         Category category = CategoryBuilder.createCategory1();
         categoryRepository.save(category);
 
@@ -49,7 +64,10 @@ public class ItemServiceTest {
     @Test
     @DisplayName("상품 전체 조회")
     void itemFindAll(){
+        //when
         var result = itemService.itemFindAll();
+
+        //then
         Assertions.assertThat(result.size()).isEqualTo(2);
     }
 
@@ -65,9 +83,12 @@ public class ItemServiceTest {
     @Test
     @DisplayName("상품 등록")
     void itemCreate(){
-        ItemRequest itemRequest = getItemRequest();
 
-        var result = itemService.create(itemRequest);
+        //given
+        ItemRequest itemRequest = ItemBuilder.createItemRequest1();
+
+        //when
+        var result = itemService.create(adminId,itemRequest);
 
         Item item = itemRepository.findById(result)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
@@ -79,28 +100,6 @@ public class ItemServiceTest {
 
     }
 
-    private ItemRequest getItemRequest() {
 
-        CategoryRequest categoryRequest = CategoryBuilder.createCategoryRequest1();
-
-//        final List<ItemRequest.ImgRequest> itemImg = List.of(
-//                new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1"),
-//                new ItemRequest.ImgRequest(ItemImgType.N,"itemImg2"));
-        List<ItemRequest.ImgRequest> itemImg = List.of(
-                ItemBuilder.createItemImg1(),
-                ItemBuilder.createItemImg2());
-
-        List<ItemRequest.OptionRequest> option = List.of(
-                ItemBuilder.createOption1(),
-                ItemBuilder.createOption2(),
-                ItemBuilder.createOption3());
-
-        return new ItemRequest(
-                categoryRequest,
-                "조던1",
-                5000,
-                "재고 없음",
-                itemImg,
-                option);
-    }
+    //상품 수정, 상품 삭제
 }

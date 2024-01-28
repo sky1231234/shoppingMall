@@ -1,8 +1,6 @@
-package com.project.shop.order.Builder;
+package com.project.shop.order.builder;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.member.domain.Address;
-import com.project.shop.member.domain.AddressType;
 import com.project.shop.member.domain.Member;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
@@ -10,7 +8,6 @@ import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 public class OrderBuilder {

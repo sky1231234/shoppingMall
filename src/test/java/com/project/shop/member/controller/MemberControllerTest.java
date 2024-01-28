@@ -1,6 +1,7 @@
 package com.project.shop.member.controller;
 
-import com.project.shop.member.Builder.MemberBuilder;
+import com.project.shop.common.controller.ControllerCommon;
+import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import com.project.shop.mock.WithCustomMockUser;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class MemberControllerTest extends ControllerCommon{
+public class MemberControllerTest extends ControllerCommon {
 
     @BeforeEach
     void beforeEach(){

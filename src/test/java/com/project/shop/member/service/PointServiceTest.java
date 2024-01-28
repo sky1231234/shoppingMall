@@ -1,12 +1,13 @@
 package com.project.shop.member.service;
 
+import com.project.shop.common.service.ServiceCommon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class PointServiceTest {
+public class PointServiceTest extends ServiceCommon {
 
     @BeforeEach
     public void before(){
