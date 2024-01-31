@@ -29,7 +29,9 @@ public class CategoryService {
 
     //브랜드별 조회 - 메인
     //카테고리별로 브랜드 나열
-    public List<CategoryResponse> categoryFindAll(){
+    public List<CategoryResponse> categoryFindAll(String loginId){
+
+        authCheck(loginId);
 
         Map<String,List<Category>> result = categoryRepository.findAll()
                  .stream()
@@ -79,13 +81,13 @@ public class CategoryService {
 
         authCheck(loginId);
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY_ID"));
-
         //동일한 브랜드명, 카테고리명 조회
         if(categoryRepository.findByCategoryNameAndBrandName(categoryUpdateRequest.categoryName(),categoryUpdateRequest.brandName()).isPresent()){
             throw new RuntimeException("ALREADY_CATEGORY");
         }
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY_ID"));
 
         var result = categoryRepository.save(category.updateCategory(categoryUpdateRequest));
         return result.getCategoryId();

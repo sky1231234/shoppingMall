@@ -75,12 +75,12 @@ public class CartService {
     //장바구니 등록
     public void create(String loginId, CartRequest cartRequest){
 
-        //해당 회원이 장바구니 등록해놓은게 있는지 확인
         Member member = findLoginMember(loginId);
 
         Item item = itemRepository.findById(cartRequest.itemId())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
+        //해당 회원이 장바구니 등록해놓은게 있는지 확인
         Optional<Cart> cart = cartRepository.findByMemberAndAndItemAndOptionId(member,item,cartRequest.optionNum());
 
             //등록한게 있으면 수량+

@@ -5,6 +5,7 @@ import com.project.shop.member.dto.request.AddressRequest;
 import com.project.shop.member.dto.request.AddressUpdateRequest;
 import com.project.shop.member.dto.response.AddressResponse;
 import com.project.shop.member.service.AddressService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
+@Tag( name = "AddressController", description = "[사용자] 배송지 API")
 public class AddressController {
     private final AddressService addressService;
 

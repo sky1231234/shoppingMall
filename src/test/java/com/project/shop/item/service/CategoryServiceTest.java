@@ -73,7 +73,7 @@ public class CategoryServiceTest extends ServiceCommon {
     void categoryFindAllTest(){
 
         //when
-        List<CategoryResponse> result = categoryService.categoryFindAll();
+        List<CategoryResponse> result = categoryService.categoryFindAll(adminId);
 
         //then
         Assertions.assertThat(result.size()).isEqualTo(2);

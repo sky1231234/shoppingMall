@@ -59,7 +59,7 @@ public class AuthService {
 
         HttpHeaders httpHeaders = new HttpHeaders();
 //
-//        // response header에 jwt token에 넣어줌
+//      // response header에 jwt token에 넣어줌
         httpHeaders.add("Authorization", "Bearer" + jwtToken.accessToken());
 
         return jwtToken;

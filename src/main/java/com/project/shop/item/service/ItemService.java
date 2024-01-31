@@ -33,7 +33,9 @@ public class ItemService {
     private final AuthorityRepository authorityRepository ;
 
     //상품 전체 조회
-    public List<ItemListResponse> itemFindAll(){
+    public List<ItemListResponse> itemFindAll(String loginId){
+
+        findLoginMember(loginId);
 
         return itemRepository.findAll()
                 .stream()
@@ -62,7 +64,9 @@ public class ItemService {
     }
 
     //상품 상세 조회
-    public ItemResponse itemDetailFind(long itemId){
+    public ItemResponse itemDetailFind(String loginId, long itemId){
+
+        findLoginMember(loginId);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
@@ -260,6 +264,14 @@ public class ItemService {
         itemImgRepository.deleteByItem(item);
         optionRepository.deleteByItem(item);
     }
+
+    //로그인 member 확인
+    private Member findLoginMember(String loginId){
+
+        return memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+    }
+
 
     //admin 권한 확인
     private void authCheck(String loginId){

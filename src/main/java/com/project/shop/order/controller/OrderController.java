@@ -8,6 +8,7 @@ import com.project.shop.order.dto.response.OrderDetailResponse;
 import com.project.shop.order.dto.response.OrderResponse;
 import com.project.shop.order.dto.response.OrderUserResponse;
 import com.project.shop.order.service.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
+@Tag( name = "OrderController", description = "[사용자] 주문 API")
 public class OrderController {
 
     private final OrderService orderService;

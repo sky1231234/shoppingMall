@@ -5,6 +5,7 @@ import com.project.shop.member.dto.request.CartRequest;
 import com.project.shop.member.dto.request.CartUpdateRequest;
 import com.project.shop.member.dto.response.CartResponse;
 import com.project.shop.member.service.CartService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
+@Tag( name = "CartController", description = "[사용자] 장바구니 API")
 public class CartController {
 
     private final CartService cartService;

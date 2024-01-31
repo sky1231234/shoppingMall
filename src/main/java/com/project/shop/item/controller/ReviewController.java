@@ -8,6 +8,7 @@ import com.project.shop.item.dto.response.ItemReviewResponse;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.item.dto.response.UserReviewResponse;
 import com.project.shop.item.service.ReviewService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
+@Tag( name = "ReviewController", description = "[사용자] 리뷰 API")
 public class ReviewController {
 
     private final ReviewService reviewService;

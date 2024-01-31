@@ -5,6 +5,7 @@ import com.project.shop.member.dto.request.LoginRequest;
 import com.project.shop.member.dto.request.SignUpRequest;
 import com.project.shop.member.service.AuthService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping ("/api")
 @RequiredArgsConstructor
 @Validated
+@Tag( name = "AuthController", description = "[사용자] 회원 관리 API")
 public class AuthController {
 
     private final AuthService authService;
