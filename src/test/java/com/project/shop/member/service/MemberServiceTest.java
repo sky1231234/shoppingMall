@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
 public class MemberServiceTest extends ServiceCommon {
 
     @Autowired
@@ -46,11 +45,10 @@ public class MemberServiceTest extends ServiceCommon {
 
         //given
         //when
-        List<MemberResponse> memberResponses = memberService.userFindAll(adminId);
+        List<MemberResponse> memberResponses = memberService.userFindAll(member2.getLoginId());
 
         //then
         Assertions.assertThat(memberResponses.size()).isEqualTo(2);
-        Assertions.assertThat(memberResponses.get(0).getLoginId()).isEqualTo("loginId");
         Assertions.assertThat(memberResponses.get(0).getLoginId()).isEqualTo("loginId");
     }
 
@@ -60,7 +58,7 @@ public class MemberServiceTest extends ServiceCommon {
     void userFindDetailTest(){
         //given
         //when
-        MemberResponse memberResponse = memberService.userDetailFind(loginId);
+        MemberResponse memberResponse = memberService.userDetailFind(member1.getLoginId());
 
         //then
         Assertions.assertThat(memberResponse.getName()).isEqualTo("스프링");
@@ -75,10 +73,10 @@ public class MemberServiceTest extends ServiceCommon {
         MemberUpdateRequest memberUpdateRequest = memberBuilder.memberUpdate();
 
         //when
-        memberService.update(loginId, memberUpdateRequest);
+        memberService.update(member1.getLoginId(), memberUpdateRequest);
 
         //then
-        Member member = memberRepository.findByLoginId(loginId)
+        Member member = memberRepository.findByLoginId(member1.getLoginId())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_TEST"));
 
         Assertions.assertThat(member.getPhoneNum()).isEqualTo("9999999");
@@ -89,7 +87,7 @@ public class MemberServiceTest extends ServiceCommon {
     void userDeleteTest(){
         //given
         //when
-        memberService.delete(loginId);
+        memberService.delete(member1.getLoginId());
 
         //then
         Assertions.assertThat(memberRepository.findAll().size()).isEqualTo(1);

@@ -40,9 +40,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-@SpringBootTest
 public class OrderServiceTest extends ServiceCommon {
 
     @Autowired
@@ -149,14 +149,14 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<OrderResponse> orderResponses = orderService.orderFindAll(adminId);
+        List<OrderResponse> orderResponses = orderService.orderFindAll(member2.getLoginId());
 
         //then
-        Assertions.assertThat(orderResponses.size()).isEqualTo(2);
-        Assertions.assertThat(orderResponses.get(0)
+        assertThat(orderResponses.size()).isEqualTo(2);
+        assertThat(orderResponses.get(0)
                         .getOrderItem().get(0).getItemSize())
                 .isEqualTo("220");
-        Assertions.assertThat(orderResponses.get(1)
+        assertThat(orderResponses.get(1)
                 .getOrderTotalPrice()).isEqualTo(23200);
 
     }
@@ -168,13 +168,13 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        OrderUserResponse orderUserResponse = orderService.orderFindByUser(loginId);
+        OrderUserResponse orderUserResponse = orderService.orderFindByUser(member1.getLoginId());
 
         //then
-        Assertions.assertThat(orderUserResponse.getOrder()
+        assertThat(orderUserResponse.getOrder()
                 .get(0).getOrderTotalPrice())
                 .isEqualTo(10000);
-        Assertions.assertThat(orderUserResponse.getOrder()
+        assertThat(orderUserResponse.getOrder()
                 .get(0).getDeliverFee())
                 .isEqualTo(0);
     }
@@ -187,15 +187,15 @@ public class OrderServiceTest extends ServiceCommon {
         long orderId = 1;
 
         //when
-        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(loginId, orderId);
+        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(member1.getLoginId(), orderId);
 
         //then
-        Assertions.assertThat(orderDetailResponse.getAddressDetail()).isEqualTo("상세주소");
-        Assertions.assertThat(orderDetailResponse.getOrderItem()
+        assertThat(orderDetailResponse.getAddressDetail()).isEqualTo("상세주소");
+        assertThat(orderDetailResponse.getOrderItem()
                         .get(0)
                         .getItemThumbnail().getUrl())
                 .isEqualTo("itemImg1");
-        Assertions.assertThat(orderDetailResponse.getPay().getPayPrice()).isEqualTo(26000);
+        assertThat(orderDetailResponse.getPay().getPayPrice()).isEqualTo(26000);
     }
 
     @Test
@@ -206,10 +206,10 @@ public class OrderServiceTest extends ServiceCommon {
         OrderRequest orderRequest = OrderBuilder.createOrderRequest(item1);
 
         //when
-        long order = orderService.create(loginId, orderRequest);
+        long order = orderService.create(member1.getLoginId(), orderRequest);
 
         //then
-        Assertions.assertThat(order).isEqualTo(3);
+        assertThat(order).isEqualTo(3);
 
         Order findOrder = orderRepository.findById(order)
                 .orElseThrow(()-> new RuntimeException("NOT_FOUND_ORDER_TEST"));
@@ -218,12 +218,12 @@ public class OrderServiceTest extends ServiceCommon {
         Pay pay = payRepository.findByOrder(findOrder);
         List<Point> point = pointRepository.findAllByMember(member1);
 
-        Assertions.assertThat(findOrder.getAddress()).isEqualTo("주소_REQUEST");
-        Assertions.assertThat(orderItem.size()).isEqualTo(2);
-        Assertions.assertThat(orderItem.get(0).getItemPrice()).isEqualTo(120000);
+        assertThat(findOrder.getAddress()).isEqualTo("주소_REQUEST");
+        assertThat(orderItem.size()).isEqualTo(2);
+        assertThat(orderItem.get(0).getItemPrice()).isEqualTo(120000);
 
-        Assertions.assertThat(pay.getCardNum()).isEqualTo("00000001");
-        Assertions.assertThat(point.size()).isEqualTo(3);
+        assertThat(pay.getCardNum()).isEqualTo("00000001");
+        assertThat(point.size()).isEqualTo(3);
     }
 
     @Test
@@ -234,14 +234,14 @@ public class OrderServiceTest extends ServiceCommon {
         OrderCancelRequest orderCancelRequest = OrderBuilder.createOrderCancelRequest2();
 
         //when
-        long orderCancel = orderService.orderCancelCreate(adminId, orderId, orderCancelRequest);
+        long orderCancel = orderService.orderCancelCreate(member2.getLoginId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_TEST"));
 
         PayCancel payCancel = payCancelRepository.findByOrder(order);
-        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("국민");
+        assertThat(payCancel.getPayCompany()).isEqualTo("국민");
 
 
     }
@@ -255,7 +255,7 @@ public class OrderServiceTest extends ServiceCommon {
         OrderCancelRequest orderCancelRequest =OrderBuilder.createOrderCancelRequest();
 
         //when
-        long orderCancel =  orderService.orderCancelCreate(loginId, orderId, orderCancelRequest);
+        long orderCancel =  orderService.orderCancelCreate(member1.getLoginId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -267,17 +267,17 @@ public class OrderServiceTest extends ServiceCommon {
         OrderItem orderItem = orderItemRepository.findByItemAndOrder(item, order)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ORDER_ITEM_TEST"));
 
-        Assertions.assertThat(orderCancel).isEqualTo(orderId);
+        assertThat(orderCancel).isEqualTo(orderId);
 
-        Assertions.assertThat(order.getOrderType()).isEqualTo(OrderType.부분취소);
-        Assertions.assertThat(orderItem.getItemPrice()).isEqualTo(4000);
-        Assertions.assertThat(orderItem.getOrderItemType()).isEqualTo(OrderItemType.취소);
+        assertThat(order.getOrderType()).isEqualTo(OrderType.부분취소);
+        assertThat(orderItem.getItemPrice()).isEqualTo(4000);
+        assertThat(orderItem.getOrderItemType()).isEqualTo(OrderItemType.취소);
 
         PayCancel payCancel = payCancelRepository.findByOrder(order);
-        Assertions.assertThat(payCancel.getPayCompany()).isEqualTo("농협");
+        assertThat(payCancel.getPayCompany()).isEqualTo("농협");
 
         List<Point> point = pointRepository.findAllByMember(member1);
-        Assertions.assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
+        assertThat(point.get(1).getPointType()).isEqualTo(PointType.적립);
 
     }
 

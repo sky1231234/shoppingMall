@@ -19,9 +19,7 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     @Query(nativeQuery = true , value =
             "SELECT COALESCE(sum(point), 0) as point " +
                     "FROM point " +
-                    "where now() <= deadline_date " +
-                    "AND state = '적립' " +
-                    "AND user_id = :userId"
+                    "where user_id = :userId"
     )
     int findSumPoint(@Param(value="userId") long userId);
 
@@ -31,7 +29,7 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     "SELECT COALESCE(sum(point), 0) as point " +
             "FROM point " +
             "WHERE state = '적립' " +
-            "AND deadline_date BETWEEN NOW() AND TIMESTAMPADD(MONTH, 1, NOW()) " +
+            "AND deadline_date BETWEEN FORMATDATETIME(NOW(),'yyyy-MM-dd') AND FORMATDATETIME(TIMESTAMPADD(MONTH, 1, NOW()),'yyyy-MM-dd') " +
             "AND user_id = :userId"
     )
     int findDisappearPoint(@Param(value="userId") long userId);

@@ -20,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
 public class AddressServiceTest extends ServiceCommon {
 
     @Autowired
@@ -58,7 +57,7 @@ public class AddressServiceTest extends ServiceCommon {
         addressRepository.save(address1);
 
         //when
-        List<AddressResponse> addressResponses = addressService.addressFindAll(loginId);
+        List<AddressResponse> addressResponses = addressService.addressFindAll(member1.getLoginId());
 
         //then
         Assertions.assertThat(addressResponses.size()).isEqualTo(2);
@@ -73,7 +72,7 @@ public class AddressServiceTest extends ServiceCommon {
         addressRepository.save(address1);
         long addressId= 2 ;
         //when
-        AddressResponse addressResponse = addressService.addressDetailFind(loginId,addressId);
+        AddressResponse addressResponse = addressService.addressDetailFind(member1.getLoginId(),addressId);
 
         //then
         Assertions.assertThat(addressResponse.getReceiverName()).isEqualTo("부산사람");
@@ -89,7 +88,7 @@ public class AddressServiceTest extends ServiceCommon {
         AddressRequest addressRequest = AddressBuilder.createAddressRequest();
 
         //when
-        var addressId = addressService.create(loginId, addressRequest);
+        var addressId = addressService.create(member1.getLoginId(), addressRequest);
 
         //then
         Address address = addressRepository.findById(addressId)
@@ -107,7 +106,7 @@ public class AddressServiceTest extends ServiceCommon {
         AddressUpdateRequest addressUpdateRequest = AddressBuilder.createAddressUpdateRequest();
 
         //when
-        addressService.update(loginId, addressId, addressUpdateRequest);
+        addressService.update(member1.getLoginId(), addressId, addressUpdateRequest);
 
         //then
         Address address = addressRepository.findById(addressId)
@@ -125,7 +124,7 @@ public class AddressServiceTest extends ServiceCommon {
         long addressId = 1;
 
         //when
-        addressService.delete(loginId, addressId);
+        addressService.delete(member1.getLoginId(), addressId);
 
         //then
         Assertions.assertThat(addressRepository.findAll().size()).isEqualTo(0);

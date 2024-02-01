@@ -16,23 +16,19 @@ import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Authority;
-import com.project.shop.member.repository.PointRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
+
 public class ItemServiceTest extends ServiceCommon {
 
     @Autowired
     ItemService itemService;
-    @Autowired
-    PointRepository pointRepository;
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
@@ -94,7 +90,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<ItemListResponse> itemListResponses = itemService.itemFindAll(loginId);
+        List<ItemListResponse> itemListResponses = itemService.itemFindAll(member1.getLoginId());
 
         //then
 
@@ -108,7 +104,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        var result = itemService.itemDetailFind(loginId, item1.getItemId());
+        var result = itemService.itemDetailFind(member1.getLoginId(), item1.getItemId());
 
         //then
         Assertions.assertThat(result.getItemName()).isEqualTo("조던");
@@ -123,7 +119,7 @@ public class ItemServiceTest extends ServiceCommon {
         ItemRequest itemRequest = ItemBuilder.createItemRequest1();
 
         //when
-        var result = itemService.create(adminId,itemRequest);
+        var result = itemService.create(member2.getLoginId(),itemRequest);
 
         Item item = itemRepository.findById(result)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
@@ -144,7 +140,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.update(adminId,itemId, itemUpdateRequest);
+        itemService.update(member2.getLoginId(),itemId, itemUpdateRequest);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM_TEST"));
@@ -164,7 +160,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.delete(adminId,itemId);
+        itemService.delete(member2.getLoginId(),itemId);
 
         Assertions.assertThat(itemRepository.findAll().size()).isEqualTo(0);
         Assertions.assertThat(optionRepository.findAll().size()).isEqualTo(0);

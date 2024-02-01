@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,17 +35,16 @@ public class PointService {
         var sumPoint = pointRepository.findSumPoint(member.getUserId());
         var disappearPoint = pointRepository.findDisappearPoint(member.getUserId());
 
-        List<Point> pointList = pointRepository.findAllByMember(member);
-
-        var list =  pointList.stream().map( x -> {
-            return PointResponse.PointList.builder()
-                    .pointId(x.getPointId())
-                    .point(x.getPoint())
-                    .deadlineDate(x.getDeadlineDate())
-                    .state(x.getPointType())
-                    .date(x.getInsertDate())
-                    .build();
-                })
+        var list =  pointRepository.findAllByMember(member)
+                .stream().map( x -> {
+                    return PointResponse.PointList.builder()
+                            .pointId(x.getPointId())
+                            .point(x.getPoint())
+                            .deadlineDate(x.getDeadlineDate())
+                            .state(x.getPointType())
+                            .date(x.getInsertDate())
+                            .build();
+                        })
                 .toList();
 
         return PointResponse.builder()
@@ -51,6 +52,7 @@ public class PointService {
                 .disappearPoint(disappearPoint)
                 .pointList(list)
                 .build();
+
     }
 
 
@@ -62,6 +64,9 @@ public class PointService {
         Member member = memberRepository.findById(pointRequest.id())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
 
+        if(pointRequest.deadlineDate().isBefore(LocalDate.now()))
+            throw new RuntimeException("NOT_CREATE_BEFORE_DATE");
+
         pointRepository.save(pointRequest.toEntity(member, PointType.적립));
 
     }
@@ -72,7 +77,7 @@ public class PointService {
         authCheck(loginId);
 
         Member member = memberRepository.findById(pointUseRequest.id())
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER_FOR_POINT"));
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
 
         var sumPoint = pointRepository.findSumPoint(member.getUserId());
         if ( sumPoint > pointUseRequest.point())

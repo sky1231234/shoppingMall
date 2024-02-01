@@ -26,8 +26,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@SpringBootTest
-//@Transactional
 public class ReviewServiceTest extends ServiceCommon {
 
     @Autowired
@@ -125,7 +123,7 @@ public class ReviewServiceTest extends ServiceCommon {
         //given
 
         //when
-        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(loginId);
+        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(member1.getLoginId());
 
         //then
         Assertions.assertThat(userReviewResponse.getReviewItemList().size()).isEqualTo(2);
@@ -160,7 +158,7 @@ public class ReviewServiceTest extends ServiceCommon {
         ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item2,order1);
 
         //when
-        var reviewId = reviewService.create(loginId, reviewRequest);
+        var reviewId = reviewService.create(member1.getLoginId(), reviewRequest);
 
 
         //then
@@ -180,7 +178,7 @@ public class ReviewServiceTest extends ServiceCommon {
         ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
 
         //when
-        reviewService.update(loginId,1,reviewUpdateRequest);
+        reviewService.update(member1.getLoginId(),1,reviewUpdateRequest);
 
         //then
         Review review = reviewRepository.findById(1L)
@@ -201,7 +199,7 @@ public class ReviewServiceTest extends ServiceCommon {
         long reviewId = 1;
 
         //when
-        reviewService.delete(loginId,reviewId);
+        reviewService.delete(member1.getLoginId(),reviewId);
 
         //then
         Assertions.assertThat(reviewRepository.findAll().size()).isEqualTo(2);

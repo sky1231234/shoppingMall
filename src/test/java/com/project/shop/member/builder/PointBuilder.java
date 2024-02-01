@@ -41,7 +41,7 @@ public class PointBuilder {
 
         return Point.builder()
                 .member(member)
-                .point(2200)
+                .point(-2200)
                 .deadlineDate(LocalDate.of(2024,12,21))
                 .pointType(PointType.사용)
                 .insertDate(LocalDateTime.now())
@@ -61,7 +61,7 @@ public class PointBuilder {
     public static PointUseRequest createPointUseRequest(){
 
         return new PointUseRequest(
-                1,
+                1L,
                 200
         );
     }

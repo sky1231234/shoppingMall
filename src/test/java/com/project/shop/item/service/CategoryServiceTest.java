@@ -18,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
-//@Transactional
 public class CategoryServiceTest extends ServiceCommon {
 
     @Autowired
@@ -61,7 +59,7 @@ public class CategoryServiceTest extends ServiceCommon {
         CategoryRequest categoryRequest1 = CategoryBuilder.createCategoryRequest1();
 
         //when
-        var category1 = categoryService.create(adminId, categoryRequest1);
+        var category1 = categoryService.create(member2.getLoginId(), categoryRequest1);
 
         //then
         Assertions.assertThat(category1).isEqualTo(4);
@@ -73,7 +71,7 @@ public class CategoryServiceTest extends ServiceCommon {
     void categoryFindAllTest(){
 
         //when
-        List<CategoryResponse> result = categoryService.categoryFindAll(adminId);
+        List<CategoryResponse> result = categoryService.categoryFindAll(member2.getLoginId());
 
         //then
         Assertions.assertThat(result.size()).isEqualTo(2);
@@ -92,7 +90,7 @@ public class CategoryServiceTest extends ServiceCommon {
         CategoryUpdateRequest categoryUpdateRequest1 = CategoryBuilder.createCategoryUpdateRequest();
 
         //when
-        var updateId1 = categoryService.update(adminId, find1.getCategoryId(), categoryUpdateRequest1);
+        var updateId1 = categoryService.update(member2.getLoginId(), find1.getCategoryId(), categoryUpdateRequest1);
 
         //then
         Assertions.assertThat(updateId1).isEqualTo(1);
@@ -102,7 +100,7 @@ public class CategoryServiceTest extends ServiceCommon {
     @DisplayName("카테고리 삭제")
     void categoryDeleteTest(){
 
-        categoryService.delete(adminId, category1.getCategoryId());
+        categoryService.delete(member2.getLoginId(), category1.getCategoryId());
 
         Assertions.assertThat(categoryRepository.count()).isEqualTo(2L);
 

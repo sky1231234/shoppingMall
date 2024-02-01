@@ -26,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
 public class CartServiceTest extends ServiceCommon {
 
     @Autowired
@@ -91,7 +90,7 @@ public class CartServiceTest extends ServiceCommon {
         cartRepository.save(cart2);
 
         //when
-        List<CartResponse> cartResponses = cartService.cartFindByUser(loginId);
+        List<CartResponse> cartResponses = cartService.cartFindByUser(member1.getLoginId());
 
         //then
         Assertions.assertThat(cartResponses.size()).isEqualTo(2);
@@ -108,8 +107,8 @@ public class CartServiceTest extends ServiceCommon {
         CartRequest cartRequest2 = CartBuilder.createAlreadyCart();
 
         //when
-        cartService.create(loginId,cartRequest1);
-        cartService.create(loginId,cartRequest2);
+        cartService.create(member1.getLoginId(),cartRequest1);
+        cartService.create(member1.getLoginId(),cartRequest2);
 
         //then
         List<Cart> carts = cartRepository.findAllByMember(member1);
@@ -127,7 +126,7 @@ public class CartServiceTest extends ServiceCommon {
         long cartId = 1;
 
         //when
-        cartService.update(loginId,cartId, cartUpdateRequest);
+        cartService.update(member1.getLoginId(),cartId, cartUpdateRequest);
 
         //then
         List<Cart> carts = cartRepository.findAllByMember(member1);
@@ -145,7 +144,7 @@ public class CartServiceTest extends ServiceCommon {
         long cartId = 1;
 
         //when
-        cartService.delete(loginId,cartId);
+        cartService.delete(member1.getLoginId(),cartId);
 
         //then
         List<Cart> carts = cartRepository.findAllByMember(member1);

@@ -8,6 +8,8 @@ import com.project.shop.member.dto.request.SignUpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 
 public class MemberBuilder {
     static LocalDateTime now = LocalDateTime.now();
@@ -42,8 +44,9 @@ public class MemberBuilder {
 
     public Member signUpMember(){
 
+        var id = new Random();
         return Member.builder()
-                .loginId("loginId")
+                .loginId(id.toString())
                 .password(passwordEncoder.encode("password"))
                 .name("스프링")
                 .phoneNum("0100000")
@@ -53,9 +56,10 @@ public class MemberBuilder {
     }
 
     public Member signUpAdminMember(){
+        var admin = new Random();
 
         return Member.builder()
-                .loginId("admin")
+                .loginId(admin.toString())
                 .password(passwordEncoder.encode("password"))
                 .name("admin")
                 .phoneNum("0100000")
