@@ -1,0 +1,53 @@
+
+spring:
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:8080/shopping?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: root
+    initialize: false
+
+  jpa:
+    database: mysql
+#    database-platform: org.hibernate.dialect.MySQLDialect
+#    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  thymeleaf:
+    prefix: classpath:templates
+    suffix: .html
+    mode: HTML
+    cache: false
+    check-template-location: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+springdoc:
+  packages-to-scan: com.project.shop
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+jwt:
+  secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
+
+schedule:
+  cron: 0 0 0 * * *
+  use: true

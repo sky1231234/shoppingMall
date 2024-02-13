@@ -32,7 +32,6 @@ public record ItemRequest(
                         .build();
         }
 
-
         //img
         public record ImgRequest(
                 @NotBlank ItemImgType mainImg,
