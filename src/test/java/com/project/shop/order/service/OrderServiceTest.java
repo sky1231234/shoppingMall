@@ -149,7 +149,7 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<OrderResponse> orderResponses = orderService.orderFindAll(member2.getLoginId());
+        List<OrderResponse> orderResponses = orderService.findAll(member2.getLoginId());
 
         //then
         assertThat(orderResponses.size()).isEqualTo(2);
@@ -168,7 +168,7 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        OrderUserResponse orderUserResponse = orderService.orderFindByUser(member1.getLoginId());
+        OrderUserResponse orderUserResponse = orderService.findAllByUser(member1.getLoginId());
 
         //then
         assertThat(orderUserResponse.getOrder()
@@ -187,7 +187,7 @@ public class OrderServiceTest extends ServiceCommon {
         long orderId = 1;
 
         //when
-        OrderDetailResponse orderDetailResponse = orderService.orderDetailFind(member1.getLoginId(), orderId);
+        OrderDetailResponse orderDetailResponse = orderService.detailFind(member1.getLoginId(), orderId);
 
         //then
         assertThat(orderDetailResponse.getAddressDetail()).isEqualTo("상세주소");
@@ -234,7 +234,7 @@ public class OrderServiceTest extends ServiceCommon {
         OrderCancelRequest orderCancelRequest = OrderBuilder.createOrderCancelRequest2();
 
         //when
-        long orderCancel = orderService.orderCancelCreate(member2.getLoginId(), orderId, orderCancelRequest);
+        long orderCancel = orderService.cancelCreate(member2.getLoginId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)
@@ -255,7 +255,7 @@ public class OrderServiceTest extends ServiceCommon {
         OrderCancelRequest orderCancelRequest =OrderBuilder.createOrderCancelRequest();
 
         //when
-        long orderCancel =  orderService.orderCancelCreate(member1.getLoginId(), orderId, orderCancelRequest);
+        long orderCancel =  orderService.cancelCreate(member1.getLoginId(), orderId, orderCancelRequest);
 
         //then
         Order order = orderRepository.findById(orderCancel)

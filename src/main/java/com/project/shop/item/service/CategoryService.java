@@ -29,7 +29,7 @@ public class CategoryService {
 
     //브랜드별 조회 - 메인
     //카테고리별로 브랜드 나열
-    public List<CategoryResponse> categoryFindAll(String loginId){
+    public List<CategoryResponse> findAll(String loginId){
 
         authCheck(loginId);
 

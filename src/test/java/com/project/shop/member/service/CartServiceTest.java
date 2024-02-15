@@ -90,7 +90,7 @@ public class CartServiceTest extends ServiceCommon {
         cartRepository.save(cart2);
 
         //when
-        List<CartResponse> cartResponses = cartService.cartFindByUser(member1.getLoginId());
+        List<CartResponse> cartResponses = cartService.findAll(member1.getLoginId());
 
         //then
         Assertions.assertThat(cartResponses.size()).isEqualTo(2);

@@ -33,7 +33,7 @@ public class CartService {
     private final OptionRepository optionRepository ;
 
     //장바구니 조회
-    public List<CartResponse> cartFindByUser(String loginId){
+    public List<CartResponse> findAll(String loginId){
 
         Member member = findLoginMember(loginId);
 

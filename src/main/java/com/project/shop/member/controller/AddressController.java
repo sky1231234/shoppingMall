@@ -25,21 +25,21 @@ public class AddressController {
     //배송지 전체 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<AddressResponse> addressFindAll(@AuthenticationPrincipal UserDto userDto){
-        return addressService.addressFindAll(userDto.getLoginId());
+    public List<AddressResponse> findAll(@AuthenticationPrincipal UserDto userDto){
+        return addressService.findAll(userDto.getLoginId());
     }
  
     //배송지 상세 조회
     @GetMapping("/{addressId}")
     @ResponseStatus(HttpStatus.OK)
-    public AddressResponse addressDetailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("addressId") Long addressId){
-        return addressService.addressDetailFind(userDto.getLoginId(), addressId);
+    public AddressResponse detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("addressId") Long addressId){
+        return addressService.detailFind(userDto.getLoginId(), addressId);
     }
 
     //등록
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addressCreate(@AuthenticationPrincipal UserDto userDto,
+    public void create(@AuthenticationPrincipal UserDto userDto,
                                   @RequestBody AddressRequest addressRequest){
         addressService.create(userDto.getLoginId(), addressRequest);
     }
@@ -47,7 +47,7 @@ public class AddressController {
     //수정
     @PutMapping("/{addressId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addressUpdate(@AuthenticationPrincipal UserDto userDto,
+    public void update(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") Long addressId, @RequestBody AddressUpdateRequest addressUpdateRequest){
         addressService.update(userDto.getLoginId(), addressId,addressUpdateRequest);
     }
@@ -55,7 +55,7 @@ public class AddressController {
     //삭제
     @DeleteMapping("/{addressId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addressDelete(@AuthenticationPrincipal UserDto userDto,
+    public void delete(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") long addressId){
         addressService.delete(userDto.getLoginId(), addressId);
     }

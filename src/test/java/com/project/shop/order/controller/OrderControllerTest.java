@@ -166,7 +166,7 @@ public class OrderControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("주문내역 상세 조회")
-    void orderDetailFind() throws Exception {
+    void detailFind() throws Exception {
         //given
 
         //when

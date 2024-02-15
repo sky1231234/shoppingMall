@@ -29,7 +29,7 @@ public class PointService {
     private final AuthorityRepository authorityRepository;
 
     //포인트 전체 조회
-    public PointResponse pointFindAll(String loginId){
+    public PointResponse findAll(String loginId){
         Member member = findLoginMember(loginId);
 
         var sumPoint = pointRepository.findSumPoint(member.getUserId());

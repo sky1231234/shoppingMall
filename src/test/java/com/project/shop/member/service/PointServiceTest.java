@@ -54,7 +54,7 @@ public class PointServiceTest extends ServiceCommon {
         pointRepository.save(point2);
 
         //when
-        PointResponse pointRequest = pointService.pointFindAll(member1.getLoginId());
+        PointResponse pointRequest = pointService.findAll(member1.getLoginId());
 
         //then
         var test = pointRepository.findAll();

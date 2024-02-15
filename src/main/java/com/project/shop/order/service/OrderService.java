@@ -1,6 +1,5 @@
 package com.project.shop.order.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.ItemImgType;
@@ -8,7 +7,6 @@ import com.project.shop.item.domain.Option;
 import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.order.domain.*;
@@ -31,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +50,8 @@ public class OrderService {
     private final PayCancelRepository payCancelRepository ;
     private final PointRepository pointRepository ;
 
-    //주문내역 조회
-    public List<OrderResponse> orderFindAll(String loginId){
+    //주문내역 전체 조회
+    public List<OrderResponse> findAll(String loginId){
 
         authCheck(loginId);
 
@@ -115,7 +112,7 @@ public class OrderService {
     }
 
     //회원별 주문내역 조회
-    public OrderUserResponse orderFindByUser(String loginId){
+    public OrderUserResponse findAllByUser(String loginId){
 
         Member member = findLoginMember(loginId);
 
@@ -145,7 +142,7 @@ public class OrderService {
     }
 
     //주문내역 상세 조회
-    public OrderDetailResponse orderDetailFind(String loginId, long orderId){
+    public OrderDetailResponse detailFind(String loginId, long orderId){
 
         Member member = findLoginMember(loginId);
         Order order = orderFindById(orderId);
@@ -310,7 +307,7 @@ public class OrderService {
     }
 
     //부분취소, 취소 등록
-    public long orderCancelCreate(String loginId, long orderId, OrderCancelRequest orderCancelRequest){
+    public long cancelCreate(String loginId, long orderId, OrderCancelRequest orderCancelRequest){
 
         OrderType orderType;
         OrderItemType orderItemType = OrderItemType.취소;

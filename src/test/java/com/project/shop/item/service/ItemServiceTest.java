@@ -90,7 +90,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<ItemListResponse> itemListResponses = itemService.itemFindAll(member1.getLoginId());
+        List<ItemListResponse> itemListResponses = itemService.findAll(member1.getLoginId());
 
         //then
 
@@ -104,7 +104,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        var result = itemService.itemDetailFind(member1.getLoginId(), item1.getItemId());
+        var result = itemService.detailFind(member1.getLoginId(), item1.getItemId());
 
         //then
         Assertions.assertThat(result.getItemName()).isEqualTo("조던");

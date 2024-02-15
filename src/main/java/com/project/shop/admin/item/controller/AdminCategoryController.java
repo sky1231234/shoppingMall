@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/admin")
+@RequestMapping ("/admin/categories")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "AdminCategoryController", description = "[관리자] 카테고리 API")
@@ -24,30 +24,30 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     //조회
-    @GetMapping("/categories")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CategoryResponse> categoryFindAll(@AuthenticationPrincipal UserDto userDto){
-        return categoryService.categoryFindAll(userDto.getLoginId());
+    public List<CategoryResponse> findAll(@AuthenticationPrincipal UserDto userDto){
+        return categoryService.findAll(userDto.getLoginId());
     }
 
     //등록
-    @PostMapping("/categories")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void categoryCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody CategoryRequest categoryRequest){
+    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody CategoryRequest categoryRequest){
         categoryService.create(userDto.getLoginId(), categoryRequest);
     }
 
     //수정
-    @PutMapping("/categories/{categoryId}")
+    @PutMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public void categoryUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
+    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
         categoryService.update(userDto.getLoginId(), categoryId,categoryUpdateRequest);
     }
 
     //삭제
-    @DeleteMapping("/categories/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void categoryDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId){
+    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId){
         categoryService.delete(userDto.getLoginId(), categoryId);
     }
 

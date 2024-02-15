@@ -23,8 +23,8 @@ public class PointController {
     //포인트 전체 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PointResponse pointFindAll(@AuthenticationPrincipal UserDto userDto){
-        return pointService.pointFindAll(userDto.getLoginId());
+    public PointResponse findAll(@AuthenticationPrincipal UserDto userDto){
+        return pointService.findAll(userDto.getLoginId());
     }
 
 

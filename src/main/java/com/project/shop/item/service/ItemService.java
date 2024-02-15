@@ -33,7 +33,7 @@ public class ItemService {
     private final AuthorityRepository authorityRepository ;
 
     //상품 전체 조회
-    public List<ItemListResponse> itemFindAll(String loginId){
+    public List<ItemListResponse> findAll(String loginId){
 
         findLoginMember(loginId);
 
@@ -64,7 +64,7 @@ public class ItemService {
     }
 
     //상품 상세 조회
-    public ItemResponse itemDetailFind(String loginId, long itemId){
+    public ItemResponse detailFind(String loginId, long itemId){
 
         findLoginMember(loginId);
 

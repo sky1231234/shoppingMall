@@ -57,7 +57,7 @@ public class AddressServiceTest extends ServiceCommon {
         addressRepository.save(address1);
 
         //when
-        List<AddressResponse> addressResponses = addressService.addressFindAll(member1.getLoginId());
+        List<AddressResponse> addressResponses = addressService.findAll(member1.getLoginId());
 
         //then
         Assertions.assertThat(addressResponses.size()).isEqualTo(2);
@@ -72,7 +72,7 @@ public class AddressServiceTest extends ServiceCommon {
         addressRepository.save(address1);
         long addressId= 2 ;
         //when
-        AddressResponse addressResponse = addressService.addressDetailFind(member1.getLoginId(),addressId);
+        AddressResponse addressResponse = addressService.detailFind(member1.getLoginId(),addressId);
 
         //then
         Assertions.assertThat(addressResponse.getReceiverName()).isEqualTo("부산사람");

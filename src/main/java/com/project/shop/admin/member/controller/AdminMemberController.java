@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/admin")
+@RequestMapping ("/admin/members")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "AdminMemberController", description = "[관리자] 회원 API")
@@ -25,10 +25,10 @@ public class AdminMemberController {
     private final MemberService memberService;
 
     //회원 전체 조회
-    @PostMapping("/members")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MemberResponse> userFindAll(@AuthenticationPrincipal UserDto userDto){
-        return memberService.userFindAll(userDto.getLoginId());
+    public List<MemberResponse> findAll(@AuthenticationPrincipal UserDto userDto){
+        return memberService.findAll(userDto.getLoginId());
     }
 
 

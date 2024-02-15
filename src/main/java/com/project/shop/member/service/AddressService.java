@@ -24,7 +24,7 @@ public class AddressService {
     private final MemberRepository memberRepository;
 
     //주소 전체 조회
-    public List<AddressResponse> addressFindAll(String loginId){
+    public List<AddressResponse> findAll(String loginId){
 
         Member member = findLoginMember(loginId);
 
@@ -36,7 +36,7 @@ public class AddressService {
     }
 
     //주소 상세 조회
-    public AddressResponse addressDetailFind(String loginId, long addressId){
+    public AddressResponse detailFind(String loginId, long addressId){
 
         Member member = findLoginMember(loginId);
         Address address = orderFindById(addressId);

@@ -45,7 +45,7 @@ public class MemberServiceTest extends ServiceCommon {
 
         //given
         //when
-        List<MemberResponse> memberResponses = memberService.userFindAll(member2.getLoginId());
+        List<MemberResponse> memberResponses = memberService.findAll(member2.getLoginId());
 
         //then
         Assertions.assertThat(memberResponses.size()).isEqualTo(2);
@@ -58,7 +58,7 @@ public class MemberServiceTest extends ServiceCommon {
     void userFindDetailTest(){
         //given
         //when
-        MemberResponse memberResponse = memberService.userDetailFind(member1.getLoginId());
+        MemberResponse memberResponse = memberService.detailFind(member1.getLoginId());
 
         //then
         Assertions.assertThat(memberResponse.getName()).isEqualTo("스프링");

@@ -25,7 +25,7 @@ public class MemberService {
     private final CartRepository cartRepository;
 
     //회원 정보 전체 조회
-    public List<MemberResponse> userFindAll(String loginId){
+    public List<MemberResponse> findAll(String loginId){
 
         authCheck(loginId);
 
@@ -42,7 +42,7 @@ public class MemberService {
     }
 
     //내 정보 조회
-    public MemberResponse userDetailFind(String loginId){
+    public MemberResponse detailFind(String loginId){
 
         Member member = findLoginMember(loginId);
 

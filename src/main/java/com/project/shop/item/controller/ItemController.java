@@ -26,15 +26,15 @@ public class ItemController {
     //상품 전체 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemListResponse> itemFindAll(@AuthenticationPrincipal UserDto userDto){
-        return itemService.itemFindAll(userDto.getLoginId());
+    public List<ItemListResponse> findAll(@AuthenticationPrincipal UserDto userDto){
+        return itemService.findAll(userDto.getLoginId());
     }
 
     //상품 상세 조회
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemResponse itemDetailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
-        return itemService.itemDetailFind(userDto.getLoginId(), itemId);
+    public ItemResponse detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
+        return itemService.detailFind(userDto.getLoginId(), itemId);
     }
 
 }

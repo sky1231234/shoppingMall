@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/admin")
+@RequestMapping ("/admin/points")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "AdminPointController", description = "[관리자] 포인트 API")
@@ -24,17 +24,17 @@ public class AdminPointController {
 
 
     //포인트 등록
-    @PostMapping("/points")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void pointCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody PointRequest pointRequest){
+    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody PointRequest pointRequest){
         pointService.create(userDto.getLoginId(), pointRequest);
     }
 
 
     //포인트 사용
-    @PostMapping("/points/uses")
+    @PostMapping("/uses")
     @ResponseStatus(HttpStatus.CREATED)
-    public void pointUse(@AuthenticationPrincipal UserDto userDto, @RequestBody PointUseRequest pointUseRequest){
+    public void use(@AuthenticationPrincipal UserDto userDto, @RequestBody PointUseRequest pointUseRequest){
         pointService.use(userDto.getLoginId(), pointUseRequest);
     }
 

@@ -26,28 +26,28 @@ public class CartController {
     //장바구니 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CartResponse> cartFindByUser(@AuthenticationPrincipal UserDto userDto){
-        return cartService.cartFindByUser(userDto.getLoginId());
+    public List<CartResponse> findAll(@AuthenticationPrincipal UserDto userDto){
+        return cartService.findAll(userDto.getLoginId());
     }
 
     //장바구니 등록
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cartCreate(@AuthenticationPrincipal UserDto userDto,@RequestBody CartRequest cartRequest){
+    public void create(@AuthenticationPrincipal UserDto userDto,@RequestBody CartRequest cartRequest){
         cartService.create(userDto.getLoginId(), cartRequest);
     }
 
     //장바구니 수정
     @PutMapping("/{cartId}")
     @ResponseStatus(HttpStatus.OK)
-    public void cartUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
+    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
         cartService.update(userDto.getLoginId(), cartId, cartUpdateRequest);
     }
 
     //장바구니 삭제
     @DeleteMapping("/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cartDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId){
+    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId){
         cartService.delete(userDto.getLoginId(), cartId);
     }
 

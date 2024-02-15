@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/admin")
+@RequestMapping ("/admin/items")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "AdminItemController", description = "[관리자] 상품 API")
@@ -26,23 +26,23 @@ public class AdminItemController {
     private final ItemService itemService;
 
     //상품 등록
-    @PostMapping("/items")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void itemCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody ItemRequest itemRequest){
+    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody ItemRequest itemRequest){
         itemService.create(userDto.getLoginId(), itemRequest);
     }
 
     //상품 수정
-    @PutMapping("/items/{itemId}")
+    @PutMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public void itemUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
+    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
         itemService.update(userDto.getLoginId(), itemId, itemUpdateRequest);
     }
 
     //상품 삭제
-    @DeleteMapping("/items/{itemId}")
+    @DeleteMapping("/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void itemDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
+    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
         itemService.delete(userDto.getLoginId(), itemId);
     }
 
