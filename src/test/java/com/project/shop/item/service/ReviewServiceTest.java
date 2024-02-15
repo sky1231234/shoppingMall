@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -107,7 +106,7 @@ public class ReviewServiceTest extends ServiceCommon {
         //given
 
         //when
-        ItemReviewResponse itemReviewResponse = reviewService.itemReviewFindAll(item1.getItemId());
+        ItemReviewResponse itemReviewResponse = reviewService.findAllByItem(item1.getItemId());
 
         //then
         Assertions.assertThat(itemReviewResponse.getReviewList().size()).isEqualTo(2);
@@ -123,7 +122,7 @@ public class ReviewServiceTest extends ServiceCommon {
         //given
 
         //when
-        UserReviewResponse userReviewResponse = reviewService.userReviewFindAll(member1.getLoginId());
+        UserReviewResponse userReviewResponse = reviewService.findAllByMember(member1.getLoginId());
 
         //then
         Assertions.assertThat(userReviewResponse.getReviewItemList().size()).isEqualTo(2);
@@ -141,7 +140,7 @@ public class ReviewServiceTest extends ServiceCommon {
         long reviewId = 1;
 
         //when
-        ReviewResponse reviewResponse = reviewService.reviewDetailFind(reviewId);
+        ReviewResponse reviewResponse = reviewService.detailFind(reviewId);
 
         //then
         Assertions.assertThat(reviewResponse.getReviewTitle()).isEqualTo("리뷰 제목");

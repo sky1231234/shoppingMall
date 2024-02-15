@@ -27,42 +27,42 @@ public class ReviewController {
     //상품 - 리뷰 조회
     @GetMapping("/items/{itemId}/reviews")
     @ResponseStatus(HttpStatus.OK)
-    public ItemReviewResponse itemReviewFindAll(@PathVariable("itemId") long itemId){
-        return reviewService.itemReviewFindAll(itemId);
+    public ItemReviewResponse findAllByItem(@PathVariable("itemId") long itemId){
+        return reviewService.findAllByItem(itemId);
     }
 
     //회원 - 리뷰 조회
     @GetMapping("/members/reviews")
     @ResponseStatus(HttpStatus.OK)
-    public UserReviewResponse userReviewFindAll(@AuthenticationPrincipal UserDto userDto){
-        return reviewService.userReviewFindAll(userDto.getLoginId());
+    public UserReviewResponse findAllByMember(@AuthenticationPrincipal UserDto userDto){
+        return reviewService.findAllByMember(userDto.getLoginId());
     }
 
     //리뷰 상세 조회
     @GetMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewResponse reviewDetailFind(@PathVariable("reviewId") long reviewId){
-        return reviewService.reviewDetailFind(reviewId);
+    public ReviewResponse detailFind(@PathVariable("reviewId") long reviewId){
+        return reviewService.detailFind(reviewId);
     }
 
     //리뷰 등록
     @PostMapping("/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
+    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
         reviewService.create(userDto.getLoginId(), reviewRequest);
     }
 
     //리뷰 수정
     @PutMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public void reviewUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
+    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
         reviewService.update(userDto.getLoginId(), reviewId, reviewUpdateRequest);
     }
 
     //리뷰 삭제
     @DeleteMapping("/reviews/{reviewId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId){
+    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId){
         reviewService.delete(userDto.getLoginId(), reviewId);
     }
 

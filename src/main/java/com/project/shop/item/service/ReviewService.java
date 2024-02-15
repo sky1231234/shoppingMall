@@ -1,6 +1,5 @@
 package com.project.shop.item.service;
 
-import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.*;
@@ -8,7 +7,6 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.ReviewImgRepository;
 import com.project.shop.item.repository.ReviewRepository;
-import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
@@ -17,9 +15,6 @@ import com.project.shop.member.repository.PointRepository;
 import com.project.shop.order.domain.Order;
 import com.project.shop.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +37,8 @@ public class ReviewService {
     private final PointRepository pointRepository;
 
     //상품 - 리뷰 조회
-    public ItemReviewResponse itemReviewFindAll(long itemId){
+    public ItemReviewResponse findAllByItem(long itemId){
+
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUNT_ITEM"));
 
@@ -82,7 +78,7 @@ public class ReviewService {
     }
 
     //회원 - 리뷰 조회
-    public UserReviewResponse userReviewFindAll(String loginId){
+    public UserReviewResponse findAllByMember(String loginId){
 
         Member member = findLoginMember(loginId);
 
@@ -104,7 +100,7 @@ public class ReviewService {
                                         .url(y.getImgUrl())
                                         .build();
                             }).findFirst().orElse(null)
-                        )
+                    )
                     .reviewTitle(x.getTitle())
                     .reviewContent(x.getContent())
                     .reviewStar(x.getStar())
@@ -113,13 +109,13 @@ public class ReviewService {
         }).toList();
 
         return UserReviewResponse.builder()
-                        .userId(member.getUserId())
-                        .reviewItemList(list)
-                        .build();
+                .userId(member.getUserId())
+                .reviewItemList(list)
+                .build();
     }
 
     //리뷰 상세 조회
-    public ReviewResponse reviewDetailFind(long reviewId){
+    public ReviewResponse detailFind(long reviewId){
 
         Review review = reviewFindById(reviewId);
 
