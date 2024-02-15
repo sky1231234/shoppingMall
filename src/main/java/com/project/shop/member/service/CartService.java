@@ -32,7 +32,7 @@ public class CartService {
     private final ItemImgRepository itemImgRepository ;
     private final OptionRepository optionRepository ;
 
-    //회원별 장바구니 조회
+    //장바구니 조회
     public List<CartResponse> cartFindByUser(String loginId){
 
         Member member = findLoginMember(loginId);

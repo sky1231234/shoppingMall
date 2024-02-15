@@ -89,7 +89,7 @@ public class CartControllerTest extends ControllerCommon {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/carts"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members/carts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*",hasSize(1)))
                 .andExpect(jsonPath("$[0].itemColor").value("검정"));

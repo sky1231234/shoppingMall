@@ -133,7 +133,7 @@ public class ReviewControllerTest extends ControllerCommon {
         reviewImgRepository.save(reviewImg);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/reviews"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members/reviews"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.reviewItemList.*",hasSize(1)))

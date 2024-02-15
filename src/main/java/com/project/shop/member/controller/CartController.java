@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/members/carts")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "CartController", description = "[사용자] 장바구니 API")
@@ -23,29 +23,29 @@ public class CartController {
 
     private final CartService cartService;
 
-    //회원별 장바구니 조회
-    @GetMapping("/users/carts")
+    //장바구니 조회
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CartResponse> cartFindByUser(@AuthenticationPrincipal UserDto userDto){
         return cartService.cartFindByUser(userDto.getLoginId());
     }
 
     //장바구니 등록
-    @PostMapping("/carts")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void cartCreate(@AuthenticationPrincipal UserDto userDto,@RequestBody CartRequest cartRequest){
         cartService.create(userDto.getLoginId(), cartRequest);
     }
 
     //장바구니 수정
-    @PutMapping("/carts/{cartId}")
+    @PutMapping("/{cartId}")
     @ResponseStatus(HttpStatus.OK)
     public void cartUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
         cartService.update(userDto.getLoginId(), cartId, cartUpdateRequest);
     }
 
     //장바구니 삭제
-    @DeleteMapping("/carts/{cartId}")
+    @DeleteMapping("/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cartDelete(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId){
         cartService.delete(userDto.getLoginId(), cartId);

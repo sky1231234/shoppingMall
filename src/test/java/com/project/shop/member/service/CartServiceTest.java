@@ -80,7 +80,7 @@ public class CartServiceTest extends ServiceCommon {
     }
 
     @Test
-    @DisplayName("회원별 장바구니 조회")
+    @DisplayName("장바구니 조회")
     void cartFindDetailTest(){
 
         //given

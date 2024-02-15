@@ -12,9 +12,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/api")
-@RequiredArgsConstructor
+//@RequestMapping ("/auth")
 @Validated
+@RequiredArgsConstructor
 @Tag( name = "AuthController", description = "[사용자] 회원 관리 API")
 public class AuthController {
 

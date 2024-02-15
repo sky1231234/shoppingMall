@@ -156,7 +156,7 @@ public class OrderControllerTest extends ControllerCommon {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/orders"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members/orders"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.order.*",hasSize(1)));

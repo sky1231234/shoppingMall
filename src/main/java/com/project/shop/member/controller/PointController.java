@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/members/points")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "PointController", description = "[사용자] 포인트 API")
@@ -21,7 +21,7 @@ public class PointController {
     private final PointService pointService;
 
     //포인트 전체 조회
-    @GetMapping("/points")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PointResponse pointFindAll(@AuthenticationPrincipal UserDto userDto){
         return pointService.pointFindAll(userDto.getLoginId());

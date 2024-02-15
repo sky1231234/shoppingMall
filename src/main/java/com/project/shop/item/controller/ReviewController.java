@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "ReviewController", description = "[사용자] 리뷰 API")
@@ -32,7 +32,7 @@ public class ReviewController {
     }
 
     //회원 - 리뷰 조회
-    @GetMapping("/users/reviews")
+    @GetMapping("/members/reviews")
     @ResponseStatus(HttpStatus.OK)
     public UserReviewResponse userReviewFindAll(@AuthenticationPrincipal UserDto userDto){
         return reviewService.userReviewFindAll(userDto.getLoginId());

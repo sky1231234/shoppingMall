@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/members")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "MemberController", description = "[사용자] 회원 API")
@@ -22,21 +22,21 @@ public class MemberController {
     private final MemberService memberService;
 
     //회원정보 조회
-    @GetMapping("/users")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public MemberResponse userDetailFind(@AuthenticationPrincipal UserDto userDto){
         return memberService.userDetailFind(userDto.getLoginId());
     }
 
     //회원정보 수정
-    @PutMapping("/users")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void userUpdate(@AuthenticationPrincipal UserDto userDto, @RequestBody MemberUpdateRequest memberUpdateRequest){
         memberService.update(userDto.getLoginId(), memberUpdateRequest);
     }
 
     //회원정보 탈퇴
-    @DeleteMapping("/users")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void userDelete(@AuthenticationPrincipal UserDto userDto){
         memberService.delete(userDto.getLoginId());

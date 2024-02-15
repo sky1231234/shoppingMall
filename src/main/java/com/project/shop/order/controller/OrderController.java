@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/members/orders")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "OrderController", description = "[사용자] 주문 API")
@@ -27,35 +27,35 @@ public class OrderController {
     private final OrderService orderService;
 
     //주문내역 회원별 조회
-    @GetMapping("/users/orders")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public OrderUserResponse orderFindByUser(@AuthenticationPrincipal UserDto userDto){
         return orderService.orderFindByUser(userDto.getLoginId());
     }
 
     //주문내역 상세 조회
-    @GetMapping("/orders/{orderId}")
+    @GetMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDetailResponse orderDetailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId){
         return orderService.orderDetailFind(userDto.getLoginId(), orderId);
     }
 
     //주문 등록
-    @PostMapping("/orders")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void orderCreate(@AuthenticationPrincipal UserDto userDto, @RequestBody OrderRequest orderRequest){
         orderService.create(userDto.getLoginId(), orderRequest);
     }
 
     //주문 수정
-    @PutMapping("/orders/{orderId}")
+    @PutMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public void orderUpdate(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderUpdateRequest orderUpdateRequest){
         orderService.update(userDto.getLoginId(), orderId, orderUpdateRequest);
     }
 
     //부분취소, 취소 등록
-    @PostMapping("/orders/{orderId}/cancels")
+    @PostMapping("/{orderId}/cancels")
     @ResponseStatus(HttpStatus.CREATED)
     public void orderCancelCreate(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
         orderService.orderCancelCreate(userDto.getLoginId(), orderId, orderCancelRequest);

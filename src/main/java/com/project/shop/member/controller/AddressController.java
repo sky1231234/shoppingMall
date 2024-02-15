@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/members/addresses")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "AddressController", description = "[사용자] 배송지 API")
@@ -23,21 +23,21 @@ public class AddressController {
     private final AddressService addressService;
 
     //배송지 전체 조회
-    @GetMapping("/users/addresses")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<AddressResponse> addressFindAll(@AuthenticationPrincipal UserDto userDto){
         return addressService.addressFindAll(userDto.getLoginId());
     }
  
     //배송지 상세 조회
-    @GetMapping("/users/addresses/{addressId}")
+    @GetMapping("/{addressId}")
     @ResponseStatus(HttpStatus.OK)
     public AddressResponse addressDetailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("addressId") Long addressId){
         return addressService.addressDetailFind(userDto.getLoginId(), addressId);
     }
 
     //등록
-    @PostMapping("/users/addresses")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addressCreate(@AuthenticationPrincipal UserDto userDto,
                                   @RequestBody AddressRequest addressRequest){
@@ -45,7 +45,7 @@ public class AddressController {
     }
 
     //수정
-    @PutMapping("/users/addresses/{addressId}")
+    @PutMapping("/{addressId}")
     @ResponseStatus(HttpStatus.OK)
     public void addressUpdate(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") Long addressId, @RequestBody AddressUpdateRequest addressUpdateRequest){
@@ -53,7 +53,7 @@ public class AddressController {
     }
 
     //삭제
-    @DeleteMapping("/users/addresses/{addressId}")
+    @DeleteMapping("/{addressId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addressDelete(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") long addressId){

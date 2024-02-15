@@ -25,7 +25,7 @@ public class AdminMemberController {
     private final MemberService memberService;
 
     //회원 전체 조회
-    @PostMapping("/users")
+    @PostMapping("/members")
     @ResponseStatus(HttpStatus.OK)
     public List<MemberResponse> userFindAll(@AuthenticationPrincipal UserDto userDto){
         return memberService.userFindAll(userDto.getLoginId());

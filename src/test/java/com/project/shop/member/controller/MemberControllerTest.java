@@ -36,7 +36,7 @@ public class MemberControllerTest extends ControllerCommon {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members"))
                 .andExpect(status().isOk());
 
         //then
@@ -52,7 +52,7 @@ public class MemberControllerTest extends ControllerCommon {
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
         MemberUpdateRequest memberUpdateRequest = memberBuilder.memberUpdate();
         //when
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/members")
                         .content(objectMapper.writeValueAsString(memberUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -68,7 +68,7 @@ public class MemberControllerTest extends ControllerCommon {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/users"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/members"))
                 .andExpect(status().isNoContent());
 
         //then

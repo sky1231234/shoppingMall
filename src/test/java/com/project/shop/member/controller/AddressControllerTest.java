@@ -59,7 +59,7 @@ public class AddressControllerTest extends ControllerCommon {
         addressRepository.save(address1);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/addresses"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members/addresses"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*",hasSize(2)));
 
@@ -72,7 +72,7 @@ public class AddressControllerTest extends ControllerCommon {
 
         //given
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/addresses",1))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/members/addresses",1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].address").value("서울시"))
                 .andExpect(jsonPath("$[0].defaultAddr").value("Y"));
@@ -87,7 +87,7 @@ public class AddressControllerTest extends ControllerCommon {
         AddressRequest addressRequest = AddressBuilder.createAddressRequest();
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/users/addresses")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/members/addresses")
                 .content(objectMapper.writeValueAsString(addressRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -105,7 +105,7 @@ public class AddressControllerTest extends ControllerCommon {
         AddressRequest addressRequest = AddressBuilder.createAddressRequest();
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/addresses/{addrId}",1)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/members/addresses/{addrId}",1)
                         .content(objectMapper.writeValueAsString(addressRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -121,7 +121,7 @@ public class AddressControllerTest extends ControllerCommon {
         //given
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/addresses/{addrId}",1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/members/addresses/{addrId}",1))
                 .andExpect(status().isNoContent());
 
         //then
