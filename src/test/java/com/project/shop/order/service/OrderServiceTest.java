@@ -9,8 +9,6 @@ import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
 import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.member.domain.Authority;
-import com.project.shop.member.service.AuthService;
-import com.project.shop.mock.WithCustomMockUser;
 import com.project.shop.order.builder.OrderBuilder;
 import com.project.shop.order.domain.*;
 import com.project.shop.order.dto.request.OrderCancelRequest;
@@ -29,15 +27,11 @@ import com.project.shop.member.domain.PointType;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.repository.MemberRepository;
-import org.aspectj.weaver.ast.Or;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -168,7 +162,7 @@ public class OrderServiceTest extends ServiceCommon {
         //given
 
         //when
-        OrderUserResponse orderUserResponse = orderService.findAllByUser(member1.getLoginId());
+        OrderUserResponse orderUserResponse = orderService.findAllByMember(member1.getLoginId());
 
         //then
         assertThat(orderUserResponse.getOrder()

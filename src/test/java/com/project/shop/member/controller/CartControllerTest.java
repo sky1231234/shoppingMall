@@ -85,7 +85,7 @@ public class CartControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원별 장바구니 조회")
-    void cartFindByUser() throws Exception {
+    void cartFindByMember() throws Exception {
         //given
 
         //when

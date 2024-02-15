@@ -5,7 +5,6 @@ import com.project.shop.order.dto.request.OrderCancelRequest;
 import com.project.shop.order.dto.request.OrderRequest;
 import com.project.shop.order.dto.request.OrderUpdateRequest;
 import com.project.shop.order.dto.response.OrderDetailResponse;
-import com.project.shop.order.dto.response.OrderResponse;
 import com.project.shop.order.dto.response.OrderUserResponse;
 import com.project.shop.order.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping ("/members/orders")
@@ -29,8 +26,8 @@ public class OrderController {
     //주문내역 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public OrderUserResponse findAll(@AuthenticationPrincipal UserDto userDto){
-        return orderService.findAllByUser(userDto.getLoginId());
+    public OrderUserResponse findAllByMember(@AuthenticationPrincipal UserDto userDto){
+        return orderService.findAllByMember(userDto.getLoginId());
     }
 
     //주문내역 상세 조회

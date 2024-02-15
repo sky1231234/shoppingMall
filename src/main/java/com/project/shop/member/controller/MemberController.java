@@ -21,7 +21,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //회원정보 조회
+    //내 정보 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public MemberResponse detailFind(@AuthenticationPrincipal UserDto userDto){

@@ -125,7 +125,7 @@ public class ReviewControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원-리뷰 조회")
-    void userReviewFindAll() throws Exception {
+    void memberReviewFindAll() throws Exception {
         //given
         Review review = ReviewBuilder.createReview2(member2,item1);
         reviewRepository.save(review);

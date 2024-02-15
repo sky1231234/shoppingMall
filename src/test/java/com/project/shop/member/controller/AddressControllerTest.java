@@ -53,7 +53,7 @@ public class AddressControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("배송지 전체 조회")
-    void userDetailFind() throws Exception {
+    void memberDetailFind() throws Exception {
         //given
         Address address1 = AddressBuilder.createAddress2(member1);
         addressRepository.save(address1);

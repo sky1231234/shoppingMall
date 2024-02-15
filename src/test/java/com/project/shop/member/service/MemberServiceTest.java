@@ -41,7 +41,7 @@ public class MemberServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("회원 정보 전체 조회")
-    void userFindAll(){
+    void memberFindAll(){
 
         //given
         //when
@@ -55,7 +55,7 @@ public class MemberServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("내 정보 조회")
-    void userFindDetailTest(){
+    void memberFindDetailTest(){
         //given
         //when
         MemberResponse memberResponse = memberService.detailFind(member1.getLoginId());
@@ -67,7 +67,7 @@ public class MemberServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("회원 정보 수정")
-    void userUpdateTest(){
+    void memberUpdateTest(){
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
         MemberUpdateRequest memberUpdateRequest = memberBuilder.memberUpdate();
@@ -84,7 +84,7 @@ public class MemberServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("회원 탈퇴")
-    void userDeleteTest(){
+    void memberDeleteTest(){
         //given
         //when
         memberService.delete(member1.getLoginId());

@@ -112,7 +112,7 @@ public class OrderService {
     }
 
     //회원별 주문내역 조회
-    public OrderUserResponse findAllByUser(String loginId){
+    public OrderUserResponse findAllByMember(String loginId){
 
         Member member = findLoginMember(loginId);
 

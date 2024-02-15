@@ -46,7 +46,7 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private Set<Authority> authorities  = new HashSet<>();
 
-    public Member updateUser(MemberUpdateRequest memberUpdateRequest){
+    public Member updateMember(MemberUpdateRequest memberUpdateRequest){
         this.password = memberUpdateRequest.password();
         this.name = memberUpdateRequest.name();
         this.phoneNum = memberUpdateRequest.phoneNum();

@@ -34,7 +34,7 @@ public class AuthServiceTest extends ServiceCommon {
 
     @Test
     @DisplayName("회원가입")
-    void userCreateTest(){
+    void memberCreateTest(){
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
         SignUpRequest signUpUser = memberBuilder.signUpUser();
@@ -55,7 +55,7 @@ public class AuthServiceTest extends ServiceCommon {
     }
     @Test
     @DisplayName("로그인")
-    void userLoginTest(){
+    void memberLoginTest(){
 
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);

@@ -35,7 +35,7 @@ public class AuthControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원가입")
-    void userDetailFind() throws Exception {
+    void memberDetailFind() throws Exception {
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
         SignUpRequest signUpRequest = memberBuilder.signUpUser();
@@ -53,7 +53,7 @@ public class AuthControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("로그인")
-    void userUpdate() throws Exception {
+    void memberUpdate() throws Exception {
 
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);

@@ -2,7 +2,6 @@ package com.project.shop.member.service;
 
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Cart;
-import com.project.shop.member.domain.DeleteType;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import com.project.shop.member.dto.response.MemberResponse;
@@ -56,7 +55,7 @@ public class MemberService {
     public void update(String loginId, MemberUpdateRequest memberUpdateRequest){
 
         Member member = findLoginMember(loginId);
-        Member updateMember = member.updateUser(memberUpdateRequest);
+        Member updateMember = member.updateMember(memberUpdateRequest);
         memberRepository.save(updateMember);
 
         Authority authority = authorityRepository.findByMember(member)

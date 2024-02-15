@@ -32,7 +32,7 @@ public class MemberControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원정보 조회")
-    void userDetailFind() throws Exception {
+    void memberDetailFind() throws Exception {
         //given
 
         //when
@@ -46,7 +46,7 @@ public class MemberControllerTest extends ControllerCommon {
     @Test
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     @DisplayName("회원정보 수정")
-    void userUpdate() throws Exception {
+    void memberUpdate() throws Exception {
 
         //given
         MemberBuilder memberBuilder = new MemberBuilder(passwordEncoder);
