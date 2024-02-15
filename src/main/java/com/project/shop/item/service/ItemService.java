@@ -33,9 +33,7 @@ public class ItemService {
     private final AuthorityRepository authorityRepository ;
 
     //상품 전체 조회
-    public List<ItemListResponse> findAll(String loginId){
-
-        findLoginMember(loginId);
+    public List<ItemListResponse> findAll(){
 
         return itemRepository.findAll()
                 .stream()
@@ -64,9 +62,7 @@ public class ItemService {
     }
 
     //상품 상세 조회
-    public ItemResponse detailFind(String loginId, long itemId){
-
-        findLoginMember(loginId);
+    public ItemResponse detailFind(long itemId){
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
