@@ -51,8 +51,8 @@ public class ReviewController {
     //리뷰 등록
     @PostMapping("/reviews")
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
-        reviewService.create(userDto.getLoginId(), reviewRequest);
-        return ResponseEntity.created(URI.create("/reviews")).build();
+        long reviewId = reviewService.create(userDto.getLoginId(), reviewRequest);
+        return ResponseEntity.created(URI.create("/reviews"+reviewId)).build();
     }
 
     //리뷰 수정

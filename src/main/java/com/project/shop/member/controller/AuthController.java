@@ -25,8 +25,8 @@ public class AuthController {
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signup(@RequestBody SignUpRequest signUpRequest){
-        authService.signUp(signUpRequest);
-        return ResponseEntity.created(URI.create("/signup")).build();
+        long signUpId = authService.signUp(signUpRequest);
+        return ResponseEntity.created(URI.create("/signup"+signUpId)).build();
 
     }
 

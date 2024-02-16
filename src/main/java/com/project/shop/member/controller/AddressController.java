@@ -42,8 +42,8 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto,
                                   @RequestBody AddressRequest addressRequest){
-        addressService.create(userDto.getLoginId(), addressRequest);
-        return ResponseEntity.created(URI.create("/members/addresses")).build();
+        long addressId = addressService.create(userDto.getLoginId(), addressRequest);
+        return ResponseEntity.created(URI.create("/members/addresses"+addressId)).build();
     }
 
     //수정

@@ -36,8 +36,8 @@ public class CartController {
     //장바구니 등록
     @PostMapping
     public ResponseEntity<ReviewResponse> create(@AuthenticationPrincipal UserDto userDto, @RequestBody CartRequest cartRequest){
-        cartService.create(userDto.getLoginId(), cartRequest);
-        return ResponseEntity.created(URI.create("/members/carts")).build();
+        long cartId = cartService.create(userDto.getLoginId(), cartRequest);
+        return ResponseEntity.created(URI.create("/members/carts"+cartId)).build();
 
     }
 

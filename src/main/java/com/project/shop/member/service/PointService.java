@@ -57,7 +57,7 @@ public class PointService {
 
 
     //포인트 등록
-    public void create(String loginId, PointRequest pointRequest){
+    public long create(String loginId, PointRequest pointRequest){
 
         authCheck(loginId);
 
@@ -67,12 +67,14 @@ public class PointService {
         if(pointRequest.deadlineDate().isBefore(LocalDate.now()))
             throw new RuntimeException("NOT_CREATE_BEFORE_DATE");
 
-        pointRepository.save(pointRequest.toEntity(member, PointType.적립));
+        Point point = pointRepository.save(pointRequest.toEntity(member, PointType.적립));
+
+        return point.getPointId();
 
     }
 
     //포인트 사용
-    public void use(String loginId, PointUseRequest pointUseRequest){
+    public long use(String loginId, PointUseRequest pointUseRequest){
 
         authCheck(loginId);
 
@@ -80,8 +82,10 @@ public class PointService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
 
         var sumPoint = pointRepository.findSumPoint(member.getUserId());
-        if ( sumPoint > pointUseRequest.point())
-            pointRepository.save(pointUseRequest.toEntity(member,PointType.사용));
+        if ( sumPoint > pointUseRequest.point()){
+            Point point = pointRepository.save(pointUseRequest.toEntity(member,PointType.사용));
+            return point.getPointId();
+        }
         else
             throw new RuntimeException("NOT_USE_ENOUGH_POINT");
 

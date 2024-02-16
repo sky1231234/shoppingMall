@@ -35,8 +35,8 @@ public class AdminCategoryController {
     //등록
     @PostMapping
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody CategoryRequest categoryRequest){
-        categoryService.create(userDto.getLoginId(), categoryRequest);
-        return ResponseEntity.created(URI.create("/admin/categories")).build();
+        long categoryId = categoryService.create(userDto.getLoginId(), categoryRequest);
+        return ResponseEntity.created(URI.create("/admin/categories"+categoryId)).build();
     }
 
     //수정

@@ -43,8 +43,8 @@ public class OrderController {
     //주문 등록
     @PostMapping
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody OrderRequest orderRequest){
-        orderService.create(userDto.getLoginId(), orderRequest);
-        return ResponseEntity.created(URI.create("/members/orders")).build();
+        long orderId = orderService.create(userDto.getLoginId(), orderRequest);
+        return ResponseEntity.created(URI.create("/members/orders"+orderId)).build();
     }
 
     //주문 수정
@@ -57,7 +57,7 @@ public class OrderController {
     //부분취소, 취소 등록
     @PostMapping("/{orderId}/cancels")
     public ResponseEntity<HttpStatus> cancelCreate(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
-        orderService.cancelCreate(userDto.getLoginId(), orderId, orderCancelRequest);
-        return ResponseEntity.created(URI.create("/members/orders/"+orderId+"/cancels")).build();
+        long orderCancelId = orderService.cancelCreate(userDto.getLoginId(), orderId, orderCancelRequest);
+        return ResponseEntity.created(URI.create("/members/orders/"+orderId+"/cancels"+orderCancelId)).build();
     }
 }

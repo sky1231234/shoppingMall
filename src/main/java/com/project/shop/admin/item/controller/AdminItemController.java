@@ -30,8 +30,8 @@ public class AdminItemController {
     //상품 등록
     @PostMapping
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody ItemRequest itemRequest){
-        itemService.create(userDto.getLoginId(), itemRequest);
-        return ResponseEntity.created(URI.create("/admin/items")).build();
+        long itemId = itemService.create(userDto.getLoginId(), itemRequest);
+        return ResponseEntity.created(URI.create("/admin/items"+itemId)).build();
     }
 
     //상품 수정

@@ -73,7 +73,7 @@ public class CartService {
     }
 
     //장바구니 등록
-    public void create(String loginId, CartRequest cartRequest){
+    public long create(String loginId, CartRequest cartRequest){
 
         Member member = findLoginMember(loginId);
 
@@ -82,15 +82,17 @@ public class CartService {
 
         //해당 회원이 장바구니 등록해놓은게 있는지 확인
         Optional<Cart> cart = cartRepository.findByMemberAndAndItemAndOptionId(member,item,cartRequest.optionNum());
-
+        Cart saveCart;
             //등록한게 있으면 수량+
             if(cart.isPresent()){
                     Cart count = cart.get().updateCount(cartRequest.count());
-                    cartRepository.save(count);
+                    saveCart = cartRepository.save(count);
             }else{
                 //등록된 장바구니 없으면 새로 등록
-                cartRepository.save(cartRequest.toEntity(item,member));
+                saveCart = cartRepository.save(cartRequest.toEntity(item,member));
             }
+
+            return saveCart.getCartId();
     }
 
     //장바구니 수정

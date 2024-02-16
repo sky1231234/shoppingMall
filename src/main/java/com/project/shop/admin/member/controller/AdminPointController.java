@@ -29,16 +29,16 @@ public class AdminPointController {
     //포인트 등록
     @PostMapping
     public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody PointRequest pointRequest){
-        pointService.create(userDto.getLoginId(), pointRequest);
-        return ResponseEntity.created(URI.create("/admin/points")).build();
+        long pointId = pointService.create(userDto.getLoginId(), pointRequest);
+        return ResponseEntity.created(URI.create("/admin/points"+pointId)).build();
     }
 
 
     //포인트 사용
     @PostMapping("/uses")
     public ResponseEntity<HttpStatus> use(@AuthenticationPrincipal UserDto userDto, @RequestBody PointUseRequest pointUseRequest){
-        pointService.use(userDto.getLoginId(), pointUseRequest);
-        return ResponseEntity.created(URI.create("/admin/points/uses")).build();
+        long pointUseId = pointService.use(userDto.getLoginId(), pointUseRequest);
+        return ResponseEntity.created(URI.create("/admin/points/uses"+pointUseId)).build();
 
     }
 
