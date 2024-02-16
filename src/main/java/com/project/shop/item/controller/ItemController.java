@@ -8,6 +8,7 @@ import com.project.shop.item.service.ItemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +26,16 @@ public class ItemController {
 
     //상품 전체 조회
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ItemListResponse> findAll(){
-        return itemService.findAll();
+    public ResponseEntity<List<ItemListResponse>> findAll(){
+        return ResponseEntity.ok()
+                .body(itemService.findAll());
     }
 
     //상품 상세 조회
     @GetMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ItemResponse detailFind(@PathVariable("itemId") long itemId){
-        return itemService.detailFind(itemId);
+    public ResponseEntity<ItemResponse> detailFind(@PathVariable("itemId") long itemId){
+        return ResponseEntity.ok()
+                .body(itemService.detailFind(itemId));
     }
 
 }

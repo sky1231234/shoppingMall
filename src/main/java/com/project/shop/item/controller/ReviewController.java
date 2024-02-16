@@ -11,9 +11,12 @@ import com.project.shop.item.service.ReviewService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping
@@ -26,44 +29,45 @@ public class ReviewController {
 
     //상품 - 리뷰 조회
     @GetMapping("/items/{itemId}/reviews")
-    @ResponseStatus(HttpStatus.OK)
-    public ItemReviewResponse findAllByItem(@PathVariable("itemId") long itemId){
-        return reviewService.findAllByItem(itemId);
+    public ResponseEntity<ItemReviewResponse> findAllByItem(@PathVariable("itemId") long itemId){
+        return ResponseEntity.ok()
+                .body(reviewService.findAllByItem(itemId));
     }
 
     //회원 - 리뷰 조회
     @GetMapping("/members/reviews")
-    @ResponseStatus(HttpStatus.OK)
-    public UserReviewResponse findAllByMember(@AuthenticationPrincipal UserDto userDto){
-        return reviewService.findAllByMember(userDto.getLoginId());
+    public ResponseEntity<UserReviewResponse> findAllByMember(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(reviewService.findAllByMember(userDto.getLoginId()));
     }
 
     //리뷰 상세 조회
     @GetMapping("/reviews/{reviewId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ReviewResponse detailFind(@PathVariable("reviewId") long reviewId){
-        return reviewService.detailFind(reviewId);
+    public ResponseEntity<ReviewResponse> detailFind(@PathVariable("reviewId") long reviewId){
+        return ResponseEntity.ok()
+                .body(reviewService.detailFind(reviewId));
     }
 
     //리뷰 등록
     @PostMapping("/reviews")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody ReviewRequest reviewRequest){
         reviewService.create(userDto.getLoginId(), reviewRequest);
+        return ResponseEntity.created(URI.create("/reviews")).build();
     }
 
     //리뷰 수정
     @PutMapping("/reviews/{reviewId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
+    public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest){
         reviewService.update(userDto.getLoginId(), reviewId, reviewUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //리뷰 삭제
     @DeleteMapping("/reviews/{reviewId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId){
+    public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("reviewId") long reviewId){
         reviewService.delete(userDto.getLoginId(), reviewId);
+        return ResponseEntity.noContent().build();
+
     }
 
 }

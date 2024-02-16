@@ -8,10 +8,12 @@ import com.project.shop.item.service.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,30 +27,30 @@ public class AdminCategoryController {
 
     //조회
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<CategoryResponse> findAll(@AuthenticationPrincipal UserDto userDto){
-        return categoryService.findAll(userDto.getLoginId());
+    public ResponseEntity<List<CategoryResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(categoryService.findAll(userDto.getLoginId()));
     }
 
     //등록
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody CategoryRequest categoryRequest){
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody CategoryRequest categoryRequest){
         categoryService.create(userDto.getLoginId(), categoryRequest);
+        return ResponseEntity.created(URI.create("/admin/categories")).build();
     }
 
     //수정
     @PutMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
+    public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId, @RequestBody CategoryUpdateRequest categoryUpdateRequest){
         categoryService.update(userDto.getLoginId(), categoryId,categoryUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //삭제
     @DeleteMapping("/{categoryId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId){
+    public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("categoryId") long categoryId){
         categoryService.delete(userDto.getLoginId(), categoryId);
+        return ResponseEntity.noContent().build();
     }
 
 }

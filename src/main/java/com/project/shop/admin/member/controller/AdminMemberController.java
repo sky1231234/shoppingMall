@@ -9,6 +9,7 @@ import com.project.shop.member.service.PointService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,9 @@ public class AdminMemberController {
 
     //회원 전체 조회
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<MemberResponse> findAll(@AuthenticationPrincipal UserDto userDto){
-        return memberService.findAll(userDto.getLoginId());
+    public ResponseEntity<List<MemberResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(memberService.findAll(userDto.getLoginId()));
     }
 
 

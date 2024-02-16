@@ -6,6 +6,7 @@ import com.project.shop.order.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,9 @@ public class AdminOrderController {
 
     //주문내역 전체 조회
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> findAll(@AuthenticationPrincipal UserDto userDto){
-        return orderService.findAll(userDto.getLoginId());
+    public ResponseEntity<List<OrderResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(orderService.findAll(userDto.getLoginId()));
     }
 
 

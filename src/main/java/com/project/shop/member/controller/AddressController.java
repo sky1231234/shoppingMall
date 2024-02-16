@@ -8,10 +8,12 @@ import com.project.shop.member.service.AddressService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,40 +26,40 @@ public class AddressController {
 
     //배송지 전체 조회
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<AddressResponse> findAll(@AuthenticationPrincipal UserDto userDto){
-        return addressService.findAll(userDto.getLoginId());
+    public ResponseEntity<List<AddressResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(addressService.findAll(userDto.getLoginId()));
     }
  
     //배송지 상세 조회
     @GetMapping("/{addressId}")
-    @ResponseStatus(HttpStatus.OK)
-    public AddressResponse detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("addressId") Long addressId){
-        return addressService.detailFind(userDto.getLoginId(), addressId);
+    public ResponseEntity<AddressResponse> detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("addressId") Long addressId){
+        return ResponseEntity.ok()
+                .body(addressService.detailFind(userDto.getLoginId(), addressId));
     }
 
     //등록
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto,
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto,
                                   @RequestBody AddressRequest addressRequest){
         addressService.create(userDto.getLoginId(), addressRequest);
+        return ResponseEntity.created(URI.create("/members/addresses")).build();
     }
 
     //수정
     @PutMapping("/{addressId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@AuthenticationPrincipal UserDto userDto,
+    public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") Long addressId, @RequestBody AddressUpdateRequest addressUpdateRequest){
         addressService.update(userDto.getLoginId(), addressId,addressUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //삭제
     @DeleteMapping("/{addressId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal UserDto userDto,
+    public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal UserDto userDto,
                               @PathVariable("addressId") long addressId){
         addressService.delete(userDto.getLoginId(), addressId);
+        return ResponseEntity.noContent().build();
     }
 
 }

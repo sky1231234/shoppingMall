@@ -10,9 +10,12 @@ import com.project.shop.order.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping ("/members/orders")
@@ -25,36 +28,36 @@ public class OrderController {
 
     //주문내역 조회
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public OrderUserResponse findAllByMember(@AuthenticationPrincipal UserDto userDto){
-        return orderService.findAllByMember(userDto.getLoginId());
+    public ResponseEntity<OrderUserResponse> findAllByMember(@AuthenticationPrincipal UserDto userDto){
+        return ResponseEntity.ok()
+                .body(orderService.findAllByMember(userDto.getLoginId()));
     }
 
     //주문내역 상세 조회
     @GetMapping("/{orderId}")
-    @ResponseStatus(HttpStatus.OK)
-    public OrderDetailResponse detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId){
-        return orderService.detailFind(userDto.getLoginId(), orderId);
+    public ResponseEntity<OrderDetailResponse> detailFind(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId){
+        return ResponseEntity.ok()
+                .body(orderService.detailFind(userDto.getLoginId(), orderId));
     }
 
     //주문 등록
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody OrderRequest orderRequest){
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody OrderRequest orderRequest){
         orderService.create(userDto.getLoginId(), orderRequest);
+        return ResponseEntity.created(URI.create("/members/orders")).build();
     }
 
     //주문 수정
     @PutMapping("/{orderId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderUpdateRequest orderUpdateRequest){
+    public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderUpdateRequest orderUpdateRequest){
         orderService.update(userDto.getLoginId(), orderId, orderUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //부분취소, 취소 등록
     @PostMapping("/{orderId}/cancels")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void cancelCreate(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
+    public ResponseEntity<HttpStatus> cancelCreate(@AuthenticationPrincipal UserDto userDto, @PathVariable("orderId") long orderId, @RequestBody OrderCancelRequest orderCancelRequest){
         orderService.cancelCreate(userDto.getLoginId(), orderId, orderCancelRequest);
+        return ResponseEntity.created(URI.create("/members/orders/"+orderId+"/cancels")).build();
     }
 }

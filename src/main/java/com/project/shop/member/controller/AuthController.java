@@ -8,8 +8,11 @@ import com.project.shop.member.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @Validated
@@ -21,16 +24,17 @@ public class AuthController {
 
     //회원가입
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<HttpStatus> signup(@RequestBody SignUpRequest signUpRequest){
         authService.signUp(signUpRequest);
+        return ResponseEntity.created(URI.create("/signup")).build();
+
     }
 
     //로그인
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public TokenResponse login(@RequestBody LoginRequest loginRequest){
-        return authService.login(loginRequest);
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest){
+        return ResponseEntity.ok()
+                .body(authService.login(loginRequest));
     }
 
 

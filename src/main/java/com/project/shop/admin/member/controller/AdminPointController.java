@@ -8,10 +8,13 @@ import com.project.shop.member.service.PointService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping ("/admin/points")
@@ -25,17 +28,18 @@ public class AdminPointController {
 
     //포인트 등록
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody PointRequest pointRequest){
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody PointRequest pointRequest){
         pointService.create(userDto.getLoginId(), pointRequest);
+        return ResponseEntity.created(URI.create("/admin/points")).build();
     }
 
 
     //포인트 사용
     @PostMapping("/uses")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void use(@AuthenticationPrincipal UserDto userDto, @RequestBody PointUseRequest pointUseRequest){
+    public ResponseEntity<HttpStatus> use(@AuthenticationPrincipal UserDto userDto, @RequestBody PointUseRequest pointUseRequest){
         pointService.use(userDto.getLoginId(), pointUseRequest);
+        return ResponseEntity.created(URI.create("/admin/points/uses")).build();
+
     }
 
 

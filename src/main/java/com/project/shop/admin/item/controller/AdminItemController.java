@@ -10,10 +10,12 @@ import com.project.shop.item.service.ItemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -27,23 +29,23 @@ public class AdminItemController {
 
     //상품 등록
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@AuthenticationPrincipal UserDto userDto, @RequestBody ItemRequest itemRequest){
+    public ResponseEntity<HttpStatus> create(@AuthenticationPrincipal UserDto userDto, @RequestBody ItemRequest itemRequest){
         itemService.create(userDto.getLoginId(), itemRequest);
+        return ResponseEntity.created(URI.create("/admin/items")).build();
     }
 
     //상품 수정
     @PutMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
+    public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId, @RequestBody ItemUpdateRequest itemUpdateRequest){
         itemService.update(userDto.getLoginId(), itemId, itemUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //상품 삭제
     @DeleteMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
+    public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("itemId") long itemId){
         itemService.delete(userDto.getLoginId(), itemId);
+        return ResponseEntity.noContent().build();
     }
 
 }
