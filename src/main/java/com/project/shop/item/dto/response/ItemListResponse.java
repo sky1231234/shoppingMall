@@ -3,8 +3,6 @@ package com.project.shop.item.dto.response;
 import lombok.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ItemListResponse {
@@ -28,10 +26,9 @@ public class ItemListResponse {
     private int price;
     private Thumbnail thumbnail;
 
-    @Builder
     @Getter
-    @Setter
     @AllArgsConstructor
+    @Builder
     public static class Thumbnail{
         private long itemImgId;
         private String imgUrl;
