@@ -1,15 +1,9 @@
 package com.project.shop.item.dto.response;
 
-import com.project.shop.item.domain.Item;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,15 +25,16 @@ public class ItemListResponse {
     private String categoryName;
     private String brandName;
     private String itemName;
-    private int itemPrice;
+    private int price;
     private Thumbnail thumbnail;
 
     @Builder
     @Getter
+    @Setter
+    @AllArgsConstructor
     public static class Thumbnail{
-        private long imgId;
-        private String url;
+        private long itemImgId;
+        private String imgUrl;
     }
-
 
 }

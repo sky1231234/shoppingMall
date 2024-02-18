@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.global.config.Mapper.ItemMapper;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemListResponse;
@@ -35,28 +36,15 @@ public class ItemService {
     //상품 전체 조회
     public List<ItemListResponse> findAll(){
 
-        return itemRepository.findAll()
-                .stream()
-                .map(x -> {
-                    List<ItemImg> itemImgList = itemImgRepository.findByItem(x);
+        return itemRepository.findAll().stream()
+                .map(item -> {
 
-                    return ItemListResponse.builder()
-                            .itemId(x.getItemId())
-                            .categoryName(x.getCategory().getCategoryName())
-                            .brandName(x.getCategory().getBrandName())
-                            .itemName(x.getItemName())
-                            .itemPrice(x.getPrice())
-                            .thumbnail(itemImgList.stream()
-                                    .filter(y -> y.getItemImgType() == ItemImgType.Y)
-                                    .map(y-> {
-                                        return ItemListResponse.Thumbnail.builder()
-                                                .imgId(y.getItemImgId())
-                                                .url(y.getImgUrl())
-                                                .build();
-                                    })
-                                    .findFirst().orElse(null)
-                            ).build();
-                })
+                        ItemImg mainItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y);
+
+                        return ItemMapper.INSTANCE.toItemListResponse(item, mainItemImg);
+
+                    }
+                )
                 .toList();
 
     }

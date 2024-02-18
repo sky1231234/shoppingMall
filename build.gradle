@@ -30,8 +30,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 //	implementation 'mysql:mysql-connector-java:8.0.34'
-
 	runtimeOnly 'com.h2database:h2'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.mockito:mockito-core:4.8.0'
@@ -47,6 +47,10 @@ dependencies {
 
 //	spring security
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.5'
+
+//	MapStruct
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
 
 tasks.named('test') {
