@@ -6,7 +6,6 @@ import com.project.shop.member.domain.Member;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
