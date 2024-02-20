@@ -27,7 +27,6 @@ public class CategoryService {
     private final MemberRepository memberRepository ;
     private final AuthorityRepository authorityRepository ;
 
-    //브랜드별 조회 - 메인
     //카테고리별로 브랜드 나열
     public List<CategoryResponse> findAll(String loginId){
 
