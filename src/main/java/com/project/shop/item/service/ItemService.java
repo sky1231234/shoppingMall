@@ -249,21 +249,13 @@ public class ItemService {
         optionRepository.deleteByItem(item);
     }
 
-    //로그인 member 확인
-    private Member findLoginMember(String loginId){
-
-        return memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
-    }
-
-
     //admin 권한 확인
     private void authCheck(String loginId){
 
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
         Authority authority = authorityRepository.findByMember(member)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));;
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));
 
         if(authority.getAuthName().equals("user"))
             throw new RuntimeException("ONLY_ADMIN");

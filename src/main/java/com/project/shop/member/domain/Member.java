@@ -40,7 +40,7 @@ public class Member {
     private LocalDateTime insertDate;   //가입일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //수정일
-    @Column(name = "deleteDate", nullable = true)
+    @Column(name = "deleteDate")
     private LocalDateTime deleteDate;   //탈퇴일
 
     @Builder.Default
