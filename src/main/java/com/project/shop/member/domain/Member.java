@@ -43,6 +43,7 @@ public class Member {
     @Column(name = "deleteDate", nullable = true)
     private LocalDateTime deleteDate;   //탈퇴일
 
+    @Builder.Default
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private Set<Authority> authorities  = new HashSet<>();
 
