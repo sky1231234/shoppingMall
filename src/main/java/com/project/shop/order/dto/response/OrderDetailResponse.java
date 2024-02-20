@@ -1,10 +1,7 @@
 package com.project.shop.order.dto.response;
 
 import com.project.shop.order.domain.OrderType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

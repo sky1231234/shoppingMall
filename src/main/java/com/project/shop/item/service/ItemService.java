@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional
 @RequiredArgsConstructor
+@Service
 public class ItemService {
 
     private final ItemRepository itemRepository;
