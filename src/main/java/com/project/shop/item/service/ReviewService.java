@@ -219,11 +219,9 @@ public class ReviewService {
         //reviewImg
         List<ReviewImg> reviewImgList = reviewImgRepository.findByReview(review);
 
-        if(reviewImgList.isEmpty()){
-            throw new RuntimeException("NOT_FOUND_REVIEW_IMG");
+        if(!reviewImgList.isEmpty()){
+            reviewImgRepository.deleteAll(reviewImgList);
         }
-
-        reviewImgRepository.deleteAll(reviewImgList);
 
         List<ReviewImg> reviewImgUpdateList = reviewUpdateRequest
                 .reviewImgUpdateRequest()
