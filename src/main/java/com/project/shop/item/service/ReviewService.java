@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReviewService {
 
@@ -159,6 +159,7 @@ public class ReviewService {
     }
 
     //리뷰 등록
+    @Transactional
     public long create(String loginId, ReviewRequest reviewRequest){
 
         Member member = findLoginMember(loginId);
@@ -206,6 +207,7 @@ public class ReviewService {
     }
 
     //리뷰 수정
+    @Transactional
     public void update(String loginId, long reviewId, ReviewUpdateRequest reviewUpdateRequest){
 
         Member member = findLoginMember(loginId);
@@ -240,6 +242,7 @@ public class ReviewService {
     }
 
     //리뷰 삭제
+    @Transactional
     public void delete(String loginId, long reviewId){
         Member member = findLoginMember(loginId);
         Review review = reviewFindById(reviewId);

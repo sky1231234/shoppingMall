@@ -5,10 +5,7 @@ import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemListResponse;
 import com.project.shop.item.dto.response.ItemResponse;
-import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemImgRepository;
-import com.project.shop.item.repository.ItemRepository;
-import com.project.shop.item.repository.OptionRepository;
+import com.project.shop.item.repository.*;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.repository.AuthorityRepository;
@@ -21,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ItemService {
@@ -112,6 +109,7 @@ public class ItemService {
 
     //상품 등록
     // item + itemImg + option
+    @Transactional
     public long create(String loginId, ItemRequest itemRequest){
 
         authCheck(loginId);
@@ -166,6 +164,7 @@ public class ItemService {
 
     //상품 수정
     //category + item + itemImg + option
+    @Transactional
     public void update(String loginId, long itemId, ItemUpdateRequest itemUpdateRequest){
 
         authCheck(loginId);
@@ -237,6 +236,7 @@ public class ItemService {
     }
 
     //상품 삭제
+    @Transactional
     public void delete(String loginId, long itemId){
 
         authCheck(loginId);

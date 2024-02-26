@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -52,6 +52,7 @@ public class MemberService {
 
 
     //회원 정보 수정
+    @Transactional
     public void update(String loginId, MemberUpdateRequest memberUpdateRequest){
 
         Member member = findLoginMember(loginId);
@@ -65,6 +66,7 @@ public class MemberService {
     }
 
     //회원 탈퇴
+    @Transactional
     public void delete(String loginId){
 
         Member member = findLoginMember(loginId);

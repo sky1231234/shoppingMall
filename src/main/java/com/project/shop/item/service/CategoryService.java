@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryService {
 
@@ -60,6 +60,7 @@ public class CategoryService {
     }
 
     //카테고리 등록
+    @Transactional
     public long create(String loginId, CategoryRequest categoryRequest){
 
         authCheck(loginId);
@@ -74,6 +75,7 @@ public class CategoryService {
     }
 
     //카테고리 수정
+    @Transactional
     public long update(String loginId, Long categoryId, CategoryUpdateRequest categoryUpdateRequest){
 
         authCheck(loginId);
@@ -91,6 +93,7 @@ public class CategoryService {
     }
 
     //카테고리 삭제
+    @Transactional
     public void delete(String loginId, long categoryId){
 
         authCheck(loginId);

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PointService {
 
@@ -57,6 +57,7 @@ public class PointService {
 
 
     //포인트 등록
+    @Transactional
     public long create(String loginId, PointRequest pointRequest){
 
         authCheck(loginId);
@@ -74,6 +75,7 @@ public class PointService {
     }
 
     //포인트 사용
+    @Transactional
     public long use(String loginId, PointUseRequest pointUseRequest){
 
         authCheck(loginId);

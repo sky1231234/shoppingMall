@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AddressService {
 
@@ -46,6 +46,7 @@ public class AddressService {
     }
 
     //주소 등록
+    @Transactional
     public long create(String loginId, AddressRequest addressRequest){
 
         Member member = findLoginMember(loginId);
@@ -56,6 +57,7 @@ public class AddressService {
     }
 
     //주소 수정
+    @Transactional
     public void update(String loginId, long addressId, AddressUpdateRequest addressUpdateRequest){
 
         Member member = findLoginMember(loginId);
@@ -66,6 +68,7 @@ public class AddressService {
     }
 
     //주소 삭제
+    @Transactional
     public void delete(String loginId, long addressId){
 
         Member member = findLoginMember(loginId);

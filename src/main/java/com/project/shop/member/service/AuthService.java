@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -29,6 +28,7 @@ public class AuthService {
     private final AuthorityRepository authorityRepository;
 
     //회원가입
+    @Transactional
     public long signUp(SignUpRequest signUpRequest){
 
         //loginId 중복 확인
@@ -47,6 +47,9 @@ public class AuthService {
 
         return user.getUserId();
     }
+
+    //로그인
+    @Transactional
     public TokenResponse login(LoginRequest loginRequest){
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.loginId(), loginRequest.password());
@@ -58,7 +61,7 @@ public class AuthService {
         TokenResponse jwtToken = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-//
+
 //      // response header에 jwt token에 넣어줌
         httpHeaders.add("Authorization", "Bearer" + jwtToken.accessToken());
 

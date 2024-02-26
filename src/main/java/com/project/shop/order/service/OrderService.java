@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService {
 
@@ -209,6 +209,7 @@ public class OrderService {
     }
 
     //주문 등록
+    @Transactional
     public long create(String loginId, OrderRequest orderRequest){
 
         Member member = findLoginMember(loginId);
@@ -272,6 +273,7 @@ public class OrderService {
     }
 
     //주문 수정
+    @Transactional
     public void update(String loginId, long orderId, OrderUpdateRequest orderUpdateRequest){
 
         Member member = findLoginMember(loginId);
@@ -307,6 +309,7 @@ public class OrderService {
     }
 
     //부분취소, 취소 등록
+    @Transactional
     public long cancelCreate(String loginId, long orderId, OrderCancelRequest orderCancelRequest){
 
         OrderType orderType;

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CartService {
 
@@ -73,6 +73,7 @@ public class CartService {
     }
 
     //장바구니 등록
+    @Transactional
     public long create(String loginId, CartRequest cartRequest){
 
         Member member = findLoginMember(loginId);
@@ -96,6 +97,7 @@ public class CartService {
     }
 
     //장바구니 수정
+    @Transactional
     public void update(String loginId, long cartId, CartUpdateRequest cartUpdateRequest){
 
         Member member = findLoginMember(loginId);
@@ -107,6 +109,7 @@ public class CartService {
     }
 
     //장바구니 삭제
+    @Transactional
     public void delete(String loginId, long cartId){
 
         Member member = findLoginMember(loginId);
