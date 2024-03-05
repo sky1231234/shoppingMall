@@ -3,8 +3,7 @@ package com.project.shop.item.service;
 import com.project.shop.global.config.Mapper.ItemMapper;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
-import com.project.shop.item.dto.response.ItemListResponse;
-import com.project.shop.item.dto.response.ItemResponse;
+import com.project.shop.item.dto.response.*;
 import com.project.shop.item.repository.*;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Member;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -36,10 +36,11 @@ public class ItemService {
         return itemRepository.findAll().stream()
                 .map(item -> {
 
-                        ItemImg mainItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y);
+                    ItemImg thumbnailItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
+                            .stream().findFirst()
+                            .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
 
-                        return ItemMapper.INSTANCE.toItemListResponse(item, mainItemImg);
-
+                        return ItemListResponse.of(item, thumbnailItemImg);
                     }
                 )
                 .toList();
@@ -52,59 +53,28 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
 
-        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
         List<Option> option = optionRepository.findByItem(item);
 
-        List<ItemResponse.ItemImgResponse> itemImg = null;
-                
-        if(!itemImgList.isEmpty()){
-            itemImg = itemImgList.stream()
-                    .filter(y -> y.getItemImgType() == ItemImgType.N)
-                    .map(y -> {
-                        return ItemResponse.ItemImgResponse.builder()
-                                .imgId(y.getItemImgId())
-                                .url(y.getImgUrl())
-                                .build();
-                    })
-                    .toList();
-        }
-        
-        var size = option.stream()
-                .map(x -> {
-                    return ItemResponse.OptionSize.builder()
-                            .optionId(x.getOptionId())
-                            .size(x.getSize())
-                            .build();
-                }).toList();
+        //상품 메인 이미지
+        ItemImgResponse thumbnailItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
+                                                .stream().findFirst()
+                .map(ItemImgResponse::of)
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
 
-        var color = option.stream()
-                .map(x -> {
-                    return ItemResponse.OptionColor.builder()
-                            .optionId(x.getOptionId())
-                            .color(x.getColor())
-                            .build();
-                }).toList();
+        //나머지 이미지
+        List<ItemImgResponse> itemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.N)
+                                    .stream()
+                                    .map(ItemImgResponse::of)
+                                    .toList();
 
-        return ItemResponse.builder()
-                .itemId(item.getItemId())
-                .categoryName(item.getCategory().getCategoryName())
-                .brandName(item.getCategory().getBrandName())
-                .itemName(item.getItemName())
-                .itemExplain(item.getExplain())
-                .itemPrice(item.getPrice())
-                .itemThumbnail(itemImgList.stream()
-                        .filter(y -> y.getItemImgType() == ItemImgType.Y)
-                        .map(y -> {
-                            return ItemResponse.ItemImgResponse.builder()
-                                    .imgId(y.getItemImgId())
-                                    .url(y.getImgUrl())
-                                    .build();
-                        })
-                        .findFirst().orElse(null))
-                .itemImgResponseList(itemImg)
-                .optionSizeList(size)
-                .optionColorList(color)
-                .build();
+        List<OptionSize> size = option.stream()
+                .map(OptionSize::of).toList();
+
+        List<OptionColor> color = option.stream()
+                .map(OptionColor::of).toList();
+
+        return ItemResponse.of(item,thumbnailItemImg,itemImg,size,color);
+
     }
 
     //상품 등록
@@ -180,7 +150,11 @@ public class ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
 
-        itemRepository.save(item.editItem(category,itemUpdateRequest));
+        String itemName = itemUpdateRequest.itemName();
+        int price = itemUpdateRequest.price();
+        String explain = itemUpdateRequest.explain();
+
+        item.updateAfterUpdateItemInfo(category, itemName, price, explain);
 
         //itemImg
         //기존 이미지 삭제 후 등록

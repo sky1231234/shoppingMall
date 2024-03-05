@@ -1,5 +1,7 @@
 package com.project.shop.item.dto.response;
 
+import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImg;
 import lombok.*;
 
 @Getter
@@ -26,12 +28,17 @@ public class ItemListResponse {
     private int price;
     private Thumbnail thumbnail;
 
-    @Getter
-    @AllArgsConstructor
-    @Builder
-    public static class Thumbnail{
-        private long itemImgId;
-        private String imgUrl;
-    }
+    public static ItemListResponse of(Item item, ItemImg mainItemImg){
 
+        return new ItemListResponse(
+                item.getItemId(),
+                item.getCategory().getCategoryName(),
+                item.getCategory().getBrandName(),
+                item.getItemName(),
+                item.getPrice(),
+                new Thumbnail(
+                        mainItemImg.getItemImgId(),
+                        mainItemImg.getImgUrl())
+        );
+    }
 }

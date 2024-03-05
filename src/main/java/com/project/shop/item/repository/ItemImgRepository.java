@@ -14,7 +14,7 @@ import java.util.List;
 public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
 
     List<ItemImg> findByItem(Item item);
-    ItemImg findByItemAndItemImgType(Item item, ItemImgType imgType);
+    List<ItemImg> findByItemAndItemImgType(Item item, ItemImgType imgType);
     void deleteByItem(Item item);
 }
 

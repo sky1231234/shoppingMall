@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -58,25 +59,26 @@ public class ItemResponse {
     private List<OptionSize> optionSizeList;
     private List<OptionColor> optionColorList;
 
-    @Builder
-    @Getter
-    public static class ItemImgResponse{
-        private long imgId;
-        private String url;
-    }
+    public static ItemResponse of(
+            Item item,
+            ItemImgResponse mainItemImg,
+            List<ItemImgResponse> itemImgList,
+            List<OptionSize> sizeList,
+            List<OptionColor> colorList
+    ){
 
-    @Builder
-    @Getter
-    public static class OptionSize{
-        private long optionId;
-        private String size;
-    }
-
-    @Builder
-    @Getter
-    public static class OptionColor{
-        private long optionId;
-        private String color;
+        return new ItemResponse(
+                item.getItemId(),
+                item.getCategory().getCategoryName(),
+                item.getCategory().getBrandName(),
+                item.getItemName(),
+                item.getPrice(),
+                item.getExplain(),
+                mainItemImg,
+                itemImgList,
+                sizeList,
+                colorList
+        );
     }
 
 }
