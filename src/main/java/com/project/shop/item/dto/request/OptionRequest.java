@@ -16,8 +16,8 @@ public record OptionRequest(
     public Option toEntity(Item item){
         return Option.builder()
                 .item(item)
-                .size(x.size())
-                .color(x.color())
+                .size(size)
+                .color(color)
                 .insertDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
