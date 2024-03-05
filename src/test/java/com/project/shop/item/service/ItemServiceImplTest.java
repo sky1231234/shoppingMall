@@ -25,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 
-public class ItemServiceTest extends ServiceCommon {
+public class ItemServiceImplTest extends ServiceCommon {
 
     @Autowired
-    ItemService itemService;
+    ItemServiceImpl itemServiceImpl;
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
@@ -90,7 +90,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        List<ItemListResponse> itemListResponses = itemService.findAll();
+        List<ItemListResponse> itemListResponses = itemServiceImpl.findAll();
 
         //then
 
@@ -104,7 +104,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        var result = itemService.detailFind(item1.getItemId());
+        var result = itemServiceImpl.detailFind(item1.getItemId());
 
         //then
         Assertions.assertThat(result.getItemName()).isEqualTo("조던");
@@ -119,7 +119,7 @@ public class ItemServiceTest extends ServiceCommon {
         ItemRequest itemRequest = ItemBuilder.createItemRequest1();
 
         //when
-        var result = itemService.create(member2.getLoginId(),itemRequest);
+        var result = itemServiceImpl.create(member2.getLoginId(),itemRequest);
 
         Item item = itemRepository.findById(result)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
@@ -140,7 +140,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.update(member2.getLoginId(),itemId, itemUpdateRequest);
+        itemServiceImpl.update(member2.getLoginId(),itemId, itemUpdateRequest);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM_TEST"));
@@ -160,7 +160,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.delete(member2.getLoginId(),itemId);
+        itemServiceImpl.delete(member2.getLoginId(),itemId);
 
         Assertions.assertThat(itemRepository.findAll().size()).isEqualTo(0);
         Assertions.assertThat(optionRepository.findAll().size()).isEqualTo(0);

@@ -1,8 +1,10 @@
 package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.*;
+import com.project.shop.item.dto.request.ImgRequest;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.item.dto.request.OptionRequest;
 
 
 import java.time.LocalDateTime;
@@ -139,29 +141,29 @@ public class ItemBuilder {
 
 
 
-    public static ItemRequest.ImgRequest createItemImg1(){
+    public static ImgRequest createItemImg1(){
 
-        return new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1");
+        return new ImgRequest(ItemImgType.Y,"itemImg1");
     }
 
-    public static ItemRequest.ImgRequest createItemImg2(){
+    public static ImgRequest createItemImg2(){
 
-        return new ItemRequest.ImgRequest(ItemImgType.N,"itemImg2");
+        return new ImgRequest(ItemImgType.N,"itemImg2");
     }
 
-    public static ItemRequest.OptionRequest createOption1(){
+    public static OptionRequest createOption1(){
 
-        return new ItemRequest.OptionRequest("220","검정");
+        return new OptionRequest("220","검정");
     }
 
-    public static ItemRequest.OptionRequest createOption2(){
+    public static OptionRequest createOption2(){
 
-        return new ItemRequest.OptionRequest("230","파랑");
+        return new OptionRequest("230","파랑");
     }
 
-    public static ItemRequest.OptionRequest createOption3(){
+    public static OptionRequest createOption3(){
 
-        return new ItemRequest.OptionRequest("240","빨강");
+        return new OptionRequest("240","빨강");
     }
 
     public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest1(){
