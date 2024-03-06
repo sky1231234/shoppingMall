@@ -28,7 +28,7 @@ public class ItemListResponse {
     private int price;
     private Thumbnail thumbnail;
 
-    public static ItemListResponse of(Item item, ItemImg mainItemImg){
+    public static ItemListResponse of(Item item, Thumbnail mainItemImg){
 
         return new ItemListResponse(
                 item.getItemId(),
@@ -36,9 +36,7 @@ public class ItemListResponse {
                 item.getCategory().getBrandName(),
                 item.getItemName(),
                 item.getPrice(),
-                new Thumbnail(
-                        mainItemImg.getItemImgId(),
-                        mainItemImg.getImgUrl())
+                mainItemImg
         );
     }
 }

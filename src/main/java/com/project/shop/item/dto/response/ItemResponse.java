@@ -53,7 +53,7 @@ public class ItemResponse {
     private String itemName;
     private int itemPrice;
     private String itemExplain;
-    private ItemImgResponse itemThumbnail;   //상품 대표 이미지
+    private Thumbnail itemThumbnail;   //상품 대표 이미지
 
     private List<ItemImgResponse> itemImgResponseList;
     private List<OptionSize> optionSizeList;
@@ -61,7 +61,7 @@ public class ItemResponse {
 
     public static ItemResponse of(
             Item item,
-            ItemImgResponse mainItemImg,
+            Thumbnail mainItemImg,
             List<ItemImgResponse> itemImgList,
             List<OptionSize> sizeList,
             List<OptionColor> colorList

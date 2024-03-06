@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,16 +28,15 @@ public class ItemServiceImpl implements ItemService {
     private final AuthorityRepository authorityRepository ;
 
     //상품 전체 조회
+    @Override
     public List<ItemListResponse> findAll(){
 
         return itemRepository.findAll().stream()
                 .map(item -> {
 
-                    ItemImg thumbnailItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
-                            .stream().findFirst()
-                            .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
+                    Thumbnail thumbnailItemImg = getMainImgByItem(item);
 
-                        return ItemListResponse.of(item, thumbnailItemImg);
+                    return ItemListResponse.of(item, thumbnailItemImg);
                     }
                 )
                 .toList();
@@ -47,32 +44,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     //상품 상세 조회
+    @Override
     public ItemResponse detailFind(long itemId){
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(()->new RuntimeException("NOT_FOUND_ITEM"));
+        Item item = getItemById(itemId);
 
-        List<Option> option = optionRepository.findByItem(item);
+        //이미지
+        Thumbnail thumbnailItemImg = getMainImgByItem(item);
+        List<ItemImgResponse> itemImg = getImgByItem(item);
 
-        //상품 메인 이미지
-        ItemImgResponse thumbnailItemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
-                                                .stream().findFirst()
-                .map(ItemImgResponse::of)
-                .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
+        OptionDetails optionDetails = getOptionByItem(item);
 
-        //나머지 이미지
-        List<ItemImgResponse> itemImg = itemImgRepository.findByItemAndItemImgType(item,ItemImgType.N)
-                                    .stream()
-                                    .map(ItemImgResponse::of)
-                                    .toList();
-
-        List<OptionSize> size = option.stream()
-                .map(OptionSize::of).toList();
-
-        List<OptionColor> color = option.stream()
-                .map(OptionColor::of).toList();
-
-        return ItemResponse.of(item,thumbnailItemImg,itemImg,size,color);
+        return ItemResponse.of(item,
+                thumbnailItemImg,
+                itemImg,
+                optionDetails.getOptionSizeList(),
+                optionDetails.getOptionColorList());
 
     }
 
@@ -108,6 +95,7 @@ public class ItemServiceImpl implements ItemService {
     //상품 수정
     //category + item + itemImg + option
     @Transactional
+    @Override
     public void update(String loginId, long itemId, ItemUpdateRequest itemUpdateRequest){
 
         authCheck(loginId);
@@ -132,6 +120,7 @@ public class ItemServiceImpl implements ItemService {
 
     //상품 삭제
     @Transactional
+    @Override
     public void delete(String loginId, long itemId){
 
         authCheck(loginId);
@@ -270,5 +259,45 @@ public class ItemServiceImpl implements ItemService {
     private void deleteItemData(Item item){
         deleteItemImgByItemIfNotEmpty(item);
         deleteItemOptionByItemIfNotEmpty(item);
+    }
+
+
+    //메인 이미지와 나머지 이미지를 가져오는 부분이 거의 비슷함
+    private Thumbnail getMainImgByItem(Item item){
+
+        return itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
+                .stream().findFirst()
+                .map(Thumbnail::of)
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
+
+    }
+
+    private List<ItemImgResponse> getImgByItem(Item item){
+        return itemImgRepository.findByItemAndItemImgType(item,ItemImgType.N)
+                .stream()
+                .map(ItemImgResponse::of)
+                .toList();
+    }
+
+    private OptionDetails getOptionByItem(Item item){
+
+        List<Option> option = optionRepository.findByItem(item);
+
+        List<OptionSize> size = getOptionSizeByItem(option);
+        List<OptionColor> color = getOptionColorByItem(option);
+
+        return new OptionDetails(size, color);
+    }
+
+    private List<OptionSize> getOptionSizeByItem(List<Option> option){
+
+         return option.stream()
+                .map(OptionSize::of).toList();
+    }
+
+    private List<OptionColor> getOptionColorByItem(List<Option> option){
+
+        return option.stream()
+                .map(OptionColor::of).toList();
     }
 }

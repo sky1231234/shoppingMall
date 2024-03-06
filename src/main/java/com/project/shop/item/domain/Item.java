@@ -37,17 +37,11 @@ public class Item {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public Item updateCategory(Category category){
+    public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
-        return this;
-    }
-
-    public Item editItem(Category category, ItemUpdateRequest itemUpdateRequest){
-        this.category = category;
-        this.itemName = itemUpdateRequest.itemName();
-        this.price = itemUpdateRequest.price();
-        this.explain = itemUpdateRequest.explain();
-        return this;
+        this.itemName = itemName;
+        this.price = price;
+        this.explain = explain;
     }
 
 }

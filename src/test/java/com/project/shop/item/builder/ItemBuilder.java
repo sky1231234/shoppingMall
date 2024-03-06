@@ -1,10 +1,7 @@
 package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.*;
-import com.project.shop.item.dto.request.ImgRequest;
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
-import com.project.shop.item.dto.request.OptionRequest;
+import com.project.shop.item.dto.request.*;
 
 
 import java.time.LocalDateTime;
@@ -166,15 +163,15 @@ public class ItemBuilder {
         return new OptionRequest("240","빨강");
     }
 
-    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest1(){
+    public static OptionUpdateRequest createOptionUpdateRequest1(){
 
-        return new ItemUpdateRequest.OptionUpdateRequest(
+        return new OptionUpdateRequest(
                 "240","빨강");
     }
 
-    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest2(){
+    public static OptionUpdateRequest createOptionUpdateRequest2(){
 
-        return new ItemUpdateRequest.OptionUpdateRequest(
+        return new OptionUpdateRequest(
                 "220","검정");
     }
 
