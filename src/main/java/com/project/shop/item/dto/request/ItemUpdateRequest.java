@@ -1,7 +1,6 @@
 package com.project.shop.item.dto.request;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImgType;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -25,15 +24,4 @@ public record ItemUpdateRequest(
                 .build();
     }
 
-    //img
-    public record ImgUpdateRequest(
-            @NotBlank ItemImgType mainImg,
-            @NotBlank String url
-    ) {}
-
-    //option
-    public record OptionUpdateRequest(
-            @NotBlank String size,
-            @NotBlank String color
-    ) {}
 }
