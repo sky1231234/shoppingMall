@@ -20,9 +20,9 @@ public record ItemRequest(
         public Item toEntity(Category category){
                 return Item.builder()
                         .category(category)
-                        .itemName(this.itemName())
-                        .price(this.price())
-                        .explain(this.explain())
+                        .itemName(itemName)
+                        .price(price)
+                        .explain(explain)
                         .insertDate(LocalDateTime.now())
                         .updateDate(LocalDateTime.now())
                         .build();

@@ -26,9 +26,9 @@ public class ItemListResponse {
     private String brandName;
     private String itemName;
     private int price;
-    private Thumbnail thumbnail;
+    private ItemImgResponse thumbnail;
 
-    public static ItemListResponse of(Item item, Thumbnail mainItemImg){
+    public static ItemListResponse of(Item item, ItemImgResponse mainItemImg){
 
         return new ItemListResponse(
                 item.getItemId(),

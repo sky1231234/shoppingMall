@@ -1,8 +1,11 @@
 package com.project.shop.item.service;
 
 import com.project.shop.item.domain.Category;
+import com.project.shop.item.domain.Item;
+import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
+import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.response.CategoryResponse;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.member.domain.Authority;
@@ -116,6 +119,13 @@ public class CategoryService {
 
         if(authority.getAuthName().equals("user"))
             throw new RuntimeException("ONLY_ADMIN");
+    }
+
+    public Category getCategory(String categoryName, String brandName) {
+        return categoryRepository
+                .findByCategoryNameAndBrandName(categoryName, brandName)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
+
     }
 
 }

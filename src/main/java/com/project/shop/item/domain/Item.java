@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "item")
 @Entity
@@ -36,6 +39,9 @@ public class Item {
     private LocalDateTime insertDate;   //상품 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemImg> itemImgList = new ArrayList<>();
 
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;

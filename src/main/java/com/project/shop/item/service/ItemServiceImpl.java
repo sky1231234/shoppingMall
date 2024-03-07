@@ -4,16 +4,12 @@ import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.*;
 import com.project.shop.item.repository.*;
-import com.project.shop.member.domain.Authority;
-import com.project.shop.member.domain.Member;
-import com.project.shop.member.repository.AuthorityRepository;
-import com.project.shop.member.repository.MemberRepository;
+import com.project.shop.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -21,11 +17,13 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final CategoryRepository categoryRepository;
     private final OptionRepository optionRepository;
     private final ItemImgRepository itemImgRepository;
-    private final MemberRepository memberRepository ;
-    private final AuthorityRepository authorityRepository ;
+
+    private final AuthService authService;
+    private final CategoryService categoryService;
+    private final ItemImgService itemImgService;
+    private final OptionService optionService;
 
     //상품 전체 조회
     @Override
@@ -34,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll().stream()
                 .map(item -> {
 
-                    Thumbnail thumbnailItemImg = getMainImgByItem(item);
+                    ItemImgResponse thumbnailItemImg = getMainImgByItem(item);
 
                     return ItemListResponse.of(item, thumbnailItemImg);
                     }
@@ -44,23 +42,28 @@ public class ItemServiceImpl implements ItemService {
     }
 
     //상품 상세 조회
+    //메소드명
     @Override
-    public ItemResponse detailFind(long itemId){
+    public ItemResponse findItemDetailInfo(long itemId){
 
         Item item = getItemById(itemId);
 
-        //이미지
-        Thumbnail thumbnailItemImg = getMainImgByItem(item);
-        List<ItemImgResponse> itemImg = getImgByItem(item);
+        ItemImgResponse thumbnailItemImg = getMainImgByItem(item);
+
+        List<ItemImgResponse> itemImg = getItemImgByItemType(item, ItemImgType.Y);
 
         OptionDetails optionDetails = getOptionByItem(item);
+
+        return returnItemResponse(item, thumbnailItemImg, itemImg, optionDetails);
+    }
+
+    private ItemResponse returnItemResponse(Item item, ItemImgResponse thumbnailItemImg, List<ItemImgResponse> itemImg, OptionDetails optionDetails) {
 
         return ItemResponse.of(item,
                 thumbnailItemImg,
                 itemImg,
                 optionDetails.getOptionSizeList(),
                 optionDetails.getOptionColorList());
-
     }
 
     //상품 등록
@@ -69,28 +72,20 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public long create(String loginId, ItemRequest itemRequest){
 
-        authCheck(loginId);
+        checkUserPermission(loginId);
 
-        //category
-        CategoryRequest categoryRequest = itemRequest.categoryRequest();
-        Category category = getCategory(
-                categoryRequest.categoryName(),
-                categoryRequest.brandName());
+        Category category = categoryService.getCategory(
+                itemRequest.categoryRequest().categoryName(),
+                itemRequest.categoryRequest().brandName());
 
-        //item
-        Item item = toItem(itemRequest, category);
+        Item item = toItem(category, itemRequest);
         Item createItem = createItem(item);
 
-        //itemImg
-        createItemImg(itemRequest, item);
-
-        //option
-        createOption(itemRequest, item);
+        itemImgService.createItemImg(itemRequest, item);
+        optionService.createOption(itemRequest, item);
 
         return createItem.getItemId();
     }
-
-
 
     //상품 수정
     //category + item + itemImg + option
@@ -98,24 +93,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void update(String loginId, long itemId, ItemUpdateRequest itemUpdateRequest){
 
-        authCheck(loginId);
+        checkUserPermission(loginId);
 
-        CategoryUpdateRequest categoryRequest = itemUpdateRequest.categoryUpdateRequest();
-        Category category = getCategory(
-                categoryRequest.categoryName(),
-                categoryRequest.brandName());
+        Category category = categoryService.getCategory(
+                itemUpdateRequest.categoryUpdateRequest().categoryName(),
+                itemUpdateRequest.categoryUpdateRequest().brandName());
 
         //item
         Item item = getItemById(itemId);
         updateItem(itemId, itemUpdateRequest, category);
 
-        // 고치기 : updateItemImg와 updateItemOption는 중복되는 부분이 많은데
-        // 합치면 제네릭으로? 이런것도 합치는게 좋은지
-        //itemImg
-        updateItemImg(item, itemUpdateRequest);
-
-        //option
-        updateItemOption(item,itemUpdateRequest);
+        itemImgService.updateItemImg(item, itemUpdateRequest);
+        optionService.updateItemOption(item,itemUpdateRequest);
     }
 
     //상품 삭제
@@ -123,7 +112,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(String loginId, long itemId){
 
-        authCheck(loginId);
+        checkUserPermission(loginId);
 
         Item item = getItemById(itemId);
 
@@ -131,26 +120,7 @@ public class ItemServiceImpl implements ItemService {
         deleteItemData(item);
     }
 
-    //admin 권한 확인
-    private void authCheck(String loginId){
-
-        Member member = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
-        Authority authority = authorityRepository.findByMember(member)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));
-
-        if(authority.getAuthName().equals("user"))
-            throw new RuntimeException("ONLY_ADMIN");
-    }
-
-    private Category getCategory(String categoryName, String brandName) {
-        return categoryRepository
-                .findByCategoryNameAndBrandName(categoryName, brandName)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));
-
-    }
-
-    private Item toItem(ItemRequest itemRequest, Category category) {
+    private Item toItem(Category category,ItemRequest itemRequest) {
         return itemRequest.toEntity(category);
     }
 
@@ -159,26 +129,8 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.save(item);
     }
 
-    @Transactional
-    private void createItemImg(ItemRequest itemRequest, Item item){
-
-        List<ItemImg> itemImgList = itemRequest.itemImgRequestList()
-                .stream()
-                .map(ImgRequest -> ImgRequest.toEntity(item))
-                .toList();
-
-        itemImgRepository.saveAll(itemImgList);
-    }
-
-    @Transactional
-    private void createOption(ItemRequest itemRequest, Item item){
-
-        List<Option> optionList = itemRequest.optionRequestList()
-                .stream()
-                .map(OptionRequest -> OptionRequest.toEntity(item))
-                .toList();
-
-        optionRepository.saveAll(optionList);
+    private void checkUserPermission(String loginId) {
+        authService.authCheck(loginId);
     }
 
     private void updateItem(long itemId, ItemUpdateRequest itemUpdateRequest, Category category){
@@ -195,88 +147,51 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
     }
 
-    private void updateItemImg(Item item, ItemUpdateRequest itemUpdateRequest){
-
-        //기존 이미지 삭제 후 등록
-        deleteItemImgByItemIfNotEmpty(item);
-
-        //고치기 : createItemImg와 메소드 합치고싶음
-        createItemImgForUpdate(item, itemUpdateRequest);
-
-    }
-
-    private void deleteItemImgByItemIfNotEmpty(Item item){
-        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
-        if (!itemImgList.isEmpty()) {
-            itemImgRepository.deleteAll(itemImgList);
-        }
-    }
-
-    private void createItemImgForUpdate(Item item, ItemUpdateRequest itemUpdateRequest){
-
-        List<ItemImg> itemImgUpdateList = itemUpdateRequest
-                .itemImgUpdateRequestList()
-                .stream()
-                .map(ImgUpdateRequest -> ImgUpdateRequest.toEntity(item))
-                .toList();
-
-        itemImgRepository.saveAll(itemImgUpdateList);
-    }
-
-
-    //기존 옵션 삭제 후 등록
-    private void updateItemOption(Item item, ItemUpdateRequest itemUpdateRequest){
-
-        deleteItemOptionByItemIfNotEmpty(item);
-        createItemOptionForUpdate(item, itemUpdateRequest);
-
-    }
-
-    private void deleteItemOptionByItemIfNotEmpty(Item item){
-        List<Option> optionList = optionRepository.findByItem(item);
-        if (!optionList.isEmpty()) {
-            optionRepository.deleteAll(optionList);
-        }
-    }
-
-    private void createItemOptionForUpdate(Item item, ItemUpdateRequest itemUpdateRequest){
-
-        List<Option> optionUpdateList = itemUpdateRequest
-                .optionUpdateRequestList()
-                .stream()
-                .filter(option -> optionRepository.findByItemAndColorAndSize(item,option.color(), option.size()).isEmpty())
-                .map(OptionUpdateRequest -> OptionUpdateRequest.toEntity(item))
-                .collect(Collectors.toList());
-
-        optionRepository.saveAll(optionUpdateList);
-
-    }
-
     private void deleteItemById(long itemId){
         itemRepository.deleteById(itemId);
     }
 
     private void deleteItemData(Item item){
-        deleteItemImgByItemIfNotEmpty(item);
-        deleteItemOptionByItemIfNotEmpty(item);
+        itemImgService.deleteItemImgByItemIfNotEmpty(item);
+        optionService.deleteItemOptionByItemIfNotEmpty(item);
     }
 
 
-    //메인 이미지와 나머지 이미지를 가져오는 부분이 거의 비슷함
-    private Thumbnail getMainImgByItem(Item item){
+    //메인 이미지와 나머지 이미지를 가져오는 부분이 거의 비슷해서
+//    1번과
+    private ItemImgResponse getMainImg(Item item){
 
-        return itemImgRepository.findByItemAndItemImgType(item,ItemImgType.Y)
-                .stream().findFirst()
-                .map(Thumbnail::of)
-                .orElseThrow(()->new RuntimeException("NOT_FOUND_THUMBNAIL"));
+        return item.getItemImgList().stream()
+                .filter(itemImg -> itemImg.getItemImgType() == ItemImgType.Y)
+                .findFirst()
+                .map(ItemImgResponse::of)
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_IMG"));
 
     }
-
+//    2번을
     private List<ItemImgResponse> getImgByItem(Item item){
-        return itemImgRepository.findByItemAndItemImgType(item,ItemImgType.N)
-                .stream()
+
+        return item.getItemImgList().stream()
+                .filter(itemImg -> itemImg.getItemImgType() == ItemImgType.N)
                 .map(ItemImgResponse::of)
                 .toList();
+    }
+
+//    합침
+    private List<ItemImgResponse> getItemImgByItemType(Item item, ItemImgType itemImgType){
+
+        return item.getItemImgList().stream()
+                .filter(itemImg -> itemImg.getItemImgType() == itemImgType)
+                .map(ItemImgResponse::of)
+                .toList();
+
+    }
+
+    private ItemImgResponse getMainImgByItem(Item item){
+
+        return getItemImgByItemType(item,ItemImgType.Y)
+                .stream().findFirst()
+                .orElseThrow(()->new RuntimeException("NOT_FOUND_IMG"));
     }
 
     private OptionDetails getOptionByItem(Item item){

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ItemService {
     List<ItemListResponse> findAll();
-    ItemResponse detailFind(long itemId);
+    ItemResponse findItemDetailInfo(long itemId);
     long create(String loginId, ItemRequest itemRequest);
     void update(String loginId, long itemId, ItemUpdateRequest itemUpdateRequest);
     void delete(String loginId, long itemId);
