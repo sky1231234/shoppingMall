@@ -11,5 +11,4 @@ public class OptionDetails {
     private List<OptionSize> optionSizeList;
     private List<OptionColor> optionColorList;
 
-
 }
