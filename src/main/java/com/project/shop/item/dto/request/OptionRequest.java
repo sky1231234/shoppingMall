@@ -18,8 +18,7 @@ public record OptionRequest(
                 .item(item)
                 .size(size)
                 .color(color)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 }

@@ -18,8 +18,7 @@ public record ImgUpdateRequest(
                 .item(item)
                 .imgUrl(url)
                 .itemImgType(mainImg)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

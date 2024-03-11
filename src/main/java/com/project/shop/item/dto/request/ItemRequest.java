@@ -23,8 +23,7 @@ public record ItemRequest(
                         .itemName(itemName)
                         .price(price)
                         .explain(explain)
-                        .insertDate(LocalDateTime.now())
-                        .updateDate(LocalDateTime.now())
+                        .dateTime(LocalDateTime.now())
                         .build();
         }
 

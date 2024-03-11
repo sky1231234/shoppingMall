@@ -1,9 +1,6 @@
 package com.project.shop.item.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,9 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "option")
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Option {
 
     @Id
@@ -34,4 +29,13 @@ public class Option {
     private LocalDateTime insertDate;   //옵션 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //옵션 수정일
+
+    @Builder
+    public Option(Item item, String color, String size, LocalDateTime dateTime) {
+        this.item = item;
+        this.color = color;
+        this.size = size;
+        this.insertDate = dateTime;
+        this.updateDate = dateTime;
+    }
 }

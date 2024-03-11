@@ -1,11 +1,6 @@
 package com.project.shop.item.domain;
 
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,9 +10,7 @@ import java.util.List;
 @Table(name = "item")
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +33,19 @@ public class Item {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
+    @Builder.Default
     @OneToMany(mappedBy = "item")
     private List<ItemImg> itemImgList = new ArrayList<>();
+
+    @Builder
+    public Item(Category category, String itemName, int price, String explain, LocalDateTime dateTime) {
+        this.category = category;
+        this.itemName = itemName;
+        this.price = price;
+        this.explain = explain;
+        this.insertDate = dateTime;
+        this.updateDate = dateTime;
+    }
 
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;

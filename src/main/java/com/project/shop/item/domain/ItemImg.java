@@ -1,9 +1,6 @@
 package com.project.shop.item.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,9 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "itemImg")
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemImg {
 
     @Id
@@ -30,11 +25,19 @@ public class ItemImg {
 
     @Column(name = "mainImg", nullable = false)
     @Enumerated(EnumType.STRING)
-    private  ItemImgType itemImgType;    //대표 이미지 여부
+    private ItemImgType itemImgType;    //대표 이미지 여부
 
     @Column(name = "insertDate", nullable = false)
     private LocalDateTime insertDate;   //상품 이미지 등록일
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 이미지 수정일
 
+    @Builder
+    public ItemImg(Item item, String imgUrl, ItemImgType itemImgType, LocalDateTime dateTime) {
+        this.item = item;
+        this.imgUrl = imgUrl;
+        this.itemImgType = itemImgType;
+        this.insertDate = dateTime;
+        this.updateDate = dateTime;
+    }
 }
