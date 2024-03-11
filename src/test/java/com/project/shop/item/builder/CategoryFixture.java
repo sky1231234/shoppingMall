@@ -7,16 +7,11 @@ import com.project.shop.item.dto.request.CategoryUpdateRequest;
 import java.time.LocalDateTime;
 
 
-public class CategoryBuilder {
+public class CategoryFixture {
 
-    public static Category createCategory1(){
+    public static Category createCategory(long id, String categoryName, String brandName, LocalDateTime now){
 
-        return Category.builder()
-                .categoryName("운동화")
-                .brandName("나이키")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        return new Category(id, categoryName, brandName, now, now);
     }
 
     public static Category createCategory2(){

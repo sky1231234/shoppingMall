@@ -15,7 +15,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 
 
-public class ReviewBuilder {
+public class ReviewFixture {
 
     public static ArrayList<String> createImgList1(){
 

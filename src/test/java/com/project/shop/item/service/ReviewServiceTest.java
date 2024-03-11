@@ -1,9 +1,9 @@
 package com.project.shop.item.service;
 
 import com.project.shop.common.service.ServiceCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
-import com.project.shop.item.builder.ReviewBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
+import com.project.shop.item.builder.ReviewFixture;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 import com.project.shop.item.dto.response.ItemReviewResponse;
@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +47,7 @@ public class ReviewServiceTest extends ServiceCommon {
 
     Item item1; Item item2;
     Order order1;
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     public void before(){
         //user
@@ -62,21 +64,21 @@ public class ReviewServiceTest extends ServiceCommon {
         authorityRepository.save(authAdmin);
 
         //category
-        Category category = CategoryBuilder.createCategory1();
+        Category category = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
         categoryRepository.save(category);
 
         //item
-        item1 = ItemBuilder.createItem1(category);
-        item2 = ItemBuilder.createItem2(category);
+        item1 = ItemFixture.createItem1(category);
+        item2 = ItemFixture.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
-        ItemImg itemImg1 = ItemBuilder.createImg1(item1);
+        ItemImg itemImg1 = ItemFixture.createImg1(item1);
         itemImgRepository.save(itemImg1);
 
-        Option option1 = ItemBuilder.createOption1(item1);
-        Option option2 = ItemBuilder.createOption2(item1);
-        Option option3 = ItemBuilder.createOption3(item1);
+        Option option1 = ItemFixture.createOption1(item1);
+        Option option2 = ItemFixture.createOption2(item1);
+        Option option3 = ItemFixture.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
@@ -86,15 +88,15 @@ public class ReviewServiceTest extends ServiceCommon {
         orderRepository.save(order1);
 
         //review
-        Review review1 = ReviewBuilder.createReview(member1,item1);
-        Review review2= ReviewBuilder.createReview2(member1,item2);
-        Review review3= ReviewBuilder.createReview2(member2,item1);
+        Review review1 = ReviewFixture.createReview(member1,item1);
+        Review review2= ReviewFixture.createReview2(member1,item2);
+        Review review3= ReviewFixture.createReview2(member2,item1);
         reviewRepository.save(review1);
         reviewRepository.save(review2);
         reviewRepository.save(review3);
 
         //reviewImg
-        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review1);
+        ReviewImg reviewImg = ReviewFixture.createReviewImg(review1);
         reviewImgRepository.save(reviewImg);
 
     }
@@ -154,7 +156,7 @@ public class ReviewServiceTest extends ServiceCommon {
     void reviewCreate(){
 
         //given
-        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item2,order1);
+        ReviewRequest reviewRequest = ReviewFixture.createReviewRequest(item2,order1);
 
         //when
         var reviewId = reviewService.create(member1.getLoginId(), reviewRequest);
@@ -174,7 +176,7 @@ public class ReviewServiceTest extends ServiceCommon {
     void categoryUpdate(){
 
         //given
-        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
+        ReviewUpdateRequest reviewUpdateRequest = ReviewFixture.createReviewUpdateRequest();
 
         //when
         reviewService.update(member1.getLoginId(),1,reviewUpdateRequest);

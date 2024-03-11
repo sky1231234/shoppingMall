@@ -1,7 +1,7 @@
 package com.project.shop.item.controller;
 
 import com.project.shop.common.controller.ControllerCommon;
-import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.CategoryFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
@@ -21,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +36,7 @@ public class CategoryControllerTest extends ControllerCommon {
     CategoryRepository categoryRepository;
     Category category1; Category category2; Category category3;
 
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     void beforeEach(){
 
@@ -51,9 +54,9 @@ public class CategoryControllerTest extends ControllerCommon {
         authorityRepository.save(authAdmin);
 
         //category
-        category1 = CategoryBuilder.createCategory1();
-        category2 = CategoryBuilder.createCategory2();
-        category3 = CategoryBuilder.createCategory3();
+        category1 = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
+        category2 = CategoryFixture.createCategory2();
+        category3 = CategoryFixture.createCategory3();
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
@@ -78,7 +81,7 @@ public class CategoryControllerTest extends ControllerCommon {
     @DisplayName("카테고리 등록")
     void categoryCreate() throws Exception {
         //given
-        CategoryRequest categoryRequest = CategoryBuilder.createCategoryRequest1();
+        CategoryRequest categoryRequest = CategoryFixture.createCategoryRequest1();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/categories")
@@ -96,7 +99,7 @@ public class CategoryControllerTest extends ControllerCommon {
     @DisplayName("카테고리 수정")
     void categoryUpdate() throws Exception {
         //given
-        CategoryUpdateRequest categoryUpdateRequest = CategoryBuilder.createCategoryUpdateRequest();
+        CategoryUpdateRequest categoryUpdateRequest = CategoryFixture.createCategoryUpdateRequest();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/categories/{categoryId}",1)

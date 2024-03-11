@@ -1,8 +1,8 @@
 package com.project.shop.member.controller;
 
 import com.project.shop.common.controller.ControllerCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.Option;
@@ -29,6 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +52,7 @@ public class CartControllerTest extends ControllerCommon {
     Cart cart;
     Item item1; Item item2;
     Option option1; Option option2;
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     void beforeEach(){
 
@@ -62,18 +65,18 @@ public class CartControllerTest extends ControllerCommon {
         authorityRepository.save(auth);
 
         //category
-        Category category = CategoryBuilder.createCategory1();
+        Category category = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
         categoryRepository.save(category);
 
         //item
-        item1 = ItemBuilder.createItem1(category);
-        item2 = ItemBuilder.createItem2(category);
+        item1 = ItemFixture.createItem1(category);
+        item2 = ItemFixture.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
         //option
-        option1 = ItemBuilder.createOption1(item1);
-        option2 = ItemBuilder.createOption2(item1);
+        option1 = ItemFixture.createOption1(item1);
+        option2 = ItemFixture.createOption2(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
 

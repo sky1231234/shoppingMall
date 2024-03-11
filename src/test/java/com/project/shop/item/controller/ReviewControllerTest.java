@@ -2,9 +2,9 @@ package com.project.shop.item.controller;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.project.shop.common.controller.ControllerCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
-import com.project.shop.item.builder.ReviewBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
+import com.project.shop.item.builder.ReviewFixture;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.ReviewRequest;
 import com.project.shop.item.dto.request.ReviewUpdateRequest;
@@ -25,6 +25,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,6 +54,7 @@ public class ReviewControllerTest extends ControllerCommon {
     Item item1; Item item2;
     Order order1;
 
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     public void before(){
 
@@ -64,25 +67,25 @@ public class ReviewControllerTest extends ControllerCommon {
         authorityRepository.save(auth);
 
         //category
-        Category category1 = CategoryBuilder.createCategory1();
-        Category category2 = CategoryBuilder.createCategory2();
-        Category category3 = CategoryBuilder.createCategory3();
+        Category category1 = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
+        Category category2 = CategoryFixture.createCategory2();
+        Category category3 = CategoryFixture.createCategory3();
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
 
         //item
-        item1 = ItemBuilder.createItem1(category1);
-        item2 = ItemBuilder.createItem2(category2);
+        item1 = ItemFixture.createItem1(category1);
+        item2 = ItemFixture.createItem2(category2);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
-        ItemImg itemImg1 = ItemBuilder.createImg1(item1);
+        ItemImg itemImg1 = ItemFixture.createImg1(item1);
         itemImgRepository.save(itemImg1);
 
-        Option option1 = ItemBuilder.createOption1(item1);
-        Option option2 = ItemBuilder.createOption2(item1);
-        Option option3 = ItemBuilder.createOption3(item1);
+        Option option1 = ItemFixture.createOption1(item1);
+        Option option2 = ItemFixture.createOption2(item1);
+        Option option3 = ItemFixture.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
@@ -92,11 +95,11 @@ public class ReviewControllerTest extends ControllerCommon {
         orderRepository.save(order1);
 
         //review
-        Review review = ReviewBuilder.createReview(member1,item1);
+        Review review = ReviewFixture.createReview(member1,item1);
         reviewRepository.save(review);
 
         //reviewImg
-        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        ReviewImg reviewImg = ReviewFixture.createReviewImg(review);
         reviewImgRepository.save(reviewImg);
 
 
@@ -108,10 +111,10 @@ public class ReviewControllerTest extends ControllerCommon {
     void itemReviewFindAll() throws Exception {
 
         //given
-        Review review = ReviewBuilder.createReview2(member1,item1);
+        Review review = ReviewFixture.createReview2(member1,item1);
         reviewRepository.save(review);
 
-        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        ReviewImg reviewImg = ReviewFixture.createReviewImg(review);
         reviewImgRepository.save(reviewImg);
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/items/{itemId}/reviews",1))
@@ -127,9 +130,9 @@ public class ReviewControllerTest extends ControllerCommon {
     @DisplayName("회원-리뷰 조회")
     void memberReviewFindAll() throws Exception {
         //given
-        Review review = ReviewBuilder.createReview2(member2,item1);
+        Review review = ReviewFixture.createReview2(member2,item1);
         reviewRepository.save(review);
-        ReviewImg reviewImg = ReviewBuilder.createReviewImg(review);
+        ReviewImg reviewImg = ReviewFixture.createReviewImg(review);
         reviewImgRepository.save(reviewImg);
 
         //when
@@ -160,7 +163,7 @@ public class ReviewControllerTest extends ControllerCommon {
     @WithCustomMockUser(loginId = "loginId",authority = "user")
     void reviewCreate() throws Exception {
         //given
-        ReviewRequest reviewRequest = ReviewBuilder.createReviewRequest(item1,order1);
+        ReviewRequest reviewRequest = ReviewFixture.createReviewRequest(item1,order1);
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews")
@@ -177,7 +180,7 @@ public class ReviewControllerTest extends ControllerCommon {
     @DisplayName("리뷰 수정")
     void reviewUpdate() throws Exception {
         //given
-        ReviewUpdateRequest reviewUpdateRequest = ReviewBuilder.createReviewUpdateRequest();
+        ReviewUpdateRequest reviewUpdateRequest = ReviewFixture.createReviewUpdateRequest();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/reviews/{reviewId}",1)
