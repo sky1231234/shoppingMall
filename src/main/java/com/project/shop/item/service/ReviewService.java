@@ -43,7 +43,7 @@ public class ReviewService {
                 .orElseThrow(() -> new RuntimeException("NOT_FOUNT_ITEM"));
 
         List<Review> reviewList = reviewRepository.findAllByItem(item);
-        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+        List<ItemImg> itemImgList = item.getItemImgList();
 
         var list = reviewList.stream().map(x -> {
             return ItemReviewResponse.ReviewItem.builder()
@@ -84,14 +84,14 @@ public class ReviewService {
 
         List<Review> reviewList = reviewRepository.findAllByMember(member);
 
-        var list = reviewList.stream().map(x -> {
-            List<ItemImg> itemImgList = itemImgRepository.findByItem(x.getItem());
+        var list = reviewList.stream().map(review -> {
+            List<ItemImg> itemImgList = review.getItem().getItemImgList();
 
             return UserReviewResponse.ReviewItem.builder()
-                    .itemId(x.getItem().getItemId())
-                    .categoryName(x.getItem().getCategory().getCategoryName())
-                    .itemName(x.getItem().getItemName())
-                    .brandName(x.getItem().getCategory().getBrandName())
+                    .itemId(review.getItem().getItemId())
+                    .categoryName(review.getItem().getCategory().getCategoryName())
+                    .itemName(review.getItem().getItemName())
+                    .brandName(review.getItem().getCategory().getBrandName())
                     .itemThumbnail(itemImgList.stream()
                             .filter(y -> y.getItemImgType() == ItemImgType.Y)
                             .map(y -> {
@@ -101,10 +101,10 @@ public class ReviewService {
                                         .build();
                             }).findFirst().orElse(null)
                     )
-                    .reviewTitle(x.getTitle())
-                    .reviewContent(x.getContent())
-                    .reviewStar(x.getStar())
-                    .insertDate(x.getInsertDate())
+                    .reviewTitle(review.getTitle())
+                    .reviewContent(review.getContent())
+                    .reviewStar(review.getStar())
+                    .insertDate(review.getInsertDate())
                     .build();
         }).toList();
 
@@ -132,7 +132,7 @@ public class ReviewService {
 
         var item = review.getItem();
 
-        List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+        List<ItemImg> itemImgList = item.getItemImgList();
 
         return ReviewResponse.builder()
                 .itemId(item.getItemId())

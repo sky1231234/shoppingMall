@@ -1,7 +1,7 @@
 package com.project.shop.item.service;
 
 import com.project.shop.common.service.ServiceCommon;
-import com.project.shop.item.builder.CategoryBuilder;
+import com.project.shop.item.builder.CategoryFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CategoryServiceTest extends ServiceCommon {
@@ -25,6 +26,7 @@ public class CategoryServiceTest extends ServiceCommon {
     CategoryRepository categoryRepository;
 
     Category category1; Category category2; Category category3;
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     public void before(){
 
@@ -41,9 +43,9 @@ public class CategoryServiceTest extends ServiceCommon {
         authorityRepository.save(auth);
         authorityRepository.save(authAdmin);
 
-        category1 = CategoryBuilder.createCategory1();
-        category2 = CategoryBuilder.createCategory2();
-        category3 = CategoryBuilder.createCategory3();
+        category1 = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
+        category2 = CategoryFixture.createCategory2();
+        category3 = CategoryFixture.createCategory3();
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
@@ -55,7 +57,7 @@ public class CategoryServiceTest extends ServiceCommon {
     void categoryCreateTest(){
 
         //given
-        CategoryRequest categoryRequest1 = CategoryBuilder.createCategoryRequest1();
+        CategoryRequest categoryRequest1 = CategoryFixture.createCategoryRequest1();
 
         //when
         var category1 = categoryService.create(member2.getLoginId(), categoryRequest1);
@@ -86,7 +88,7 @@ public class CategoryServiceTest extends ServiceCommon {
         //given
         var find1 = categoryRepository.findById(category1.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY1_TEST"));
-        CategoryUpdateRequest categoryUpdateRequest1 = CategoryBuilder.createCategoryUpdateRequest();
+        CategoryUpdateRequest categoryUpdateRequest1 = CategoryFixture.createCategoryUpdateRequest();
 
         //when
         var updateId1 = categoryService.update(member2.getLoginId(), find1.getCategoryId(), categoryUpdateRequest1);

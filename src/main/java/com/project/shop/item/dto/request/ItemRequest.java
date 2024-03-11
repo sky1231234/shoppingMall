@@ -1,9 +1,6 @@
 package com.project.shop.item.dto.request;
 
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.domain.ItemImgType;
-import com.project.shop.item.domain.Option;
+import com.project.shop.item.domain.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,31 +13,18 @@ public record ItemRequest(
         @NotNull int price,
         @NotBlank String explain,
 
-        //service에서 처리
         @NotBlank List<ImgRequest> itemImgRequestList,
         @NotBlank List<OptionRequest> optionRequestList
         ) {
 
-        public Item toEntity(){
+        public Item toEntity(Category category){
                 return Item.builder()
-                        .category(categoryRequest.toEntity())
-                        .itemName(this.itemName())
-                        .price(this.price())
-                        .explain(this.explain())
-                        .insertDate(LocalDateTime.now())
-                        .updateDate(LocalDateTime.now())
+                        .category(category)
+                        .itemName(itemName)
+                        .price(price)
+                        .explain(explain)
+                        .dateTime(LocalDateTime.now())
                         .build();
         }
 
-        //img
-        public record ImgRequest(
-                @NotBlank ItemImgType mainImg,
-                @NotBlank String url
-        ) {}
-
-        //option
-        public record OptionRequest(
-                @NotBlank String size,
-                @NotBlank String color
-        ) {}
 }

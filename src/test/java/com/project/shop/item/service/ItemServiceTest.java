@@ -1,8 +1,8 @@
 package com.project.shop.item.service;
 
 import com.project.shop.common.service.ServiceCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -43,6 +44,7 @@ public class ItemServiceTest extends ServiceCommon {
     ItemImg itemImg1;
     Option option1; Option option2; Option option3;
 
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     public void before(){
 
@@ -60,24 +62,24 @@ public class ItemServiceTest extends ServiceCommon {
         authorityRepository.save(authAdmin);
 
         //category
-        category1 = CategoryBuilder.createCategory1();
-        category2 = CategoryBuilder.createCategory2();
-        category3 = CategoryBuilder.createCategory4();
+        category1 = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
+        category2 = CategoryFixture.createCategory2();
+        category3 = CategoryFixture.createCategory4();
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
 
         //item
-        item1 =  ItemBuilder.createItem1(category1);
+        item1 =  ItemFixture.createItem(category1, "조던", 1000000, "인기 많음", now);
         itemRepository.save(item1);
 
-        itemImg1 = ItemBuilder.createImg1(item1);
+        itemImg1 = ItemFixture.createImg1(item1);
         itemImgRepository.save(itemImg1);
 
-        option1 = ItemBuilder.createOption1(item1);
-        option2 = ItemBuilder.createOption2(item1);
-        option3 = ItemBuilder.createOption3(item1);
+        option1 = ItemFixture.createOption1(item1);
+        option2 = ItemFixture.createOption2(item1);
+        option3 = ItemFixture.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
@@ -104,7 +106,7 @@ public class ItemServiceTest extends ServiceCommon {
         //given
 
         //when
-        var result = itemService.detailFind(item1.getItemId());
+        var result = itemService.findItemDetailInfo(item1.getItemId());
 
         //then
         Assertions.assertThat(result.getItemName()).isEqualTo("조던");
@@ -116,7 +118,7 @@ public class ItemServiceTest extends ServiceCommon {
     void itemCreate(){
 
         //given
-        ItemRequest itemRequest = ItemBuilder.createItemRequest1();
+        ItemRequest itemRequest = ItemFixture.createItemRequest1();
 
         //when
         var result = itemService.create(member2.getLoginId(),itemRequest);
@@ -136,7 +138,7 @@ public class ItemServiceTest extends ServiceCommon {
     void itemUpdate(){
 
         //given
-        ItemUpdateRequest itemUpdateRequest = ItemBuilder.createItemUpdateRequest();
+        ItemUpdateRequest itemUpdateRequest = ItemFixture.createItemUpdateRequest();
         long itemId = 1;
 
         //when

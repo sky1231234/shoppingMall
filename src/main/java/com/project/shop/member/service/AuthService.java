@@ -4,6 +4,7 @@ import com.project.shop.global.config.security.filter.JwtFilter;
 import com.project.shop.global.config.security.domain.TokenResponse;
 import com.project.shop.global.config.security.TokenProvider;
 import com.project.shop.member.domain.Authority;
+import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.LoginRequest;
 import com.project.shop.member.dto.request.SignUpRequest;
 import com.project.shop.member.repository.AuthorityRepository;
@@ -68,5 +69,14 @@ public class AuthService {
         return jwtToken;
     }
 
+    public void authCheck(String loginId){
 
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_MEMBER"));
+        Authority authority = authorityRepository.findByMember(member)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_AUTH"));
+
+        if(authority.getAuthName().equals("user"))
+            throw new RuntimeException("ONLY_ADMIN");
+    }
 }

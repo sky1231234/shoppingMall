@@ -1,20 +1,16 @@
 package com.project.shop.item.domain;
 
-import com.project.shop.item.dto.request.ItemUpdateRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "item")
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,17 +33,25 @@ public class Item {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    public Item updateCategory(Category category){
+    @Builder.Default
+    @OneToMany(mappedBy = "item")
+    private List<ItemImg> itemImgList = new ArrayList<>();
+
+    @Builder
+    public Item(Category category, String itemName, int price, String explain, LocalDateTime dateTime) {
         this.category = category;
-        return this;
+        this.itemName = itemName;
+        this.price = price;
+        this.explain = explain;
+        this.insertDate = dateTime;
+        this.updateDate = dateTime;
     }
 
-    public Item editItem(Category category, ItemUpdateRequest itemUpdateRequest){
+    public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
-        this.itemName = itemUpdateRequest.itemName();
-        this.price = itemUpdateRequest.price();
-        this.explain = itemUpdateRequest.explain();
-        return this;
+        this.itemName = itemName;
+        this.price = price;
+        this.explain = explain;
     }
 
 }

@@ -45,7 +45,7 @@ public class CartService {
                     Option option = optionRepository.findById(x.getOptionId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
 
-                    List<ItemImg> itemImg = itemImgRepository.findByItem(item);
+                    List<ItemImg> itemImg = item.getItemImgList();
 
                     return CartResponse.builder()
                             .itemId(item.getItemId())

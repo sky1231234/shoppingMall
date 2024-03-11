@@ -72,7 +72,7 @@ public class OrderService {
                     var list = orderItemList.stream()
                             .map( y -> {
                                 var item = y.getItem();
-                                List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+                                List<ItemImg> itemImgList = item.getItemImgList();
 
                                 Option option = optionRepository.findById(y.getItemOptionId())
                                         .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));
@@ -157,7 +157,7 @@ public class OrderService {
                 .map( x -> {
                     var item = x.getItem();
 
-                    List<ItemImg> itemImgList = itemImgRepository.findByItem(item);
+                    List<ItemImg> itemImgList = item.getItemImgList();
 
                     Option option = optionRepository.findById(x.getItemOptionId())
                             .orElseThrow(() -> new RuntimeException("NOT_FOUND_OPTION"));

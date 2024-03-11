@@ -1,16 +1,27 @@
 package com.project.shop.item.builder;
 
 import com.project.shop.item.domain.*;
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.item.dto.request.*;
 
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ItemBuilder {
+public class ItemFixture {
 
     static LocalDateTime now = LocalDateTime.now();
+
+    public static Item createItem(Category category,String itemName, int price, String explain, LocalDateTime now){
+
+        return Item.builder()
+                .category(category)
+                .itemName(itemName)
+                .price(price)
+                .explain(explain)
+                .insertDate(now)
+                .updateDate(now)
+                .build();
+    }
 
     public static Item createItem1(Category category){
 
@@ -104,7 +115,7 @@ public class ItemBuilder {
 
     public static ItemRequest createItemRequest1(){
         return new ItemRequest(
-                CategoryBuilder.createCategoryRequest2(),
+                CategoryFixture.createCategoryRequest2(),
                 "조던1",
                 5000,
                 "재고 없음",
@@ -116,7 +127,7 @@ public class ItemBuilder {
     public static ItemRequest createItemRequest2(){
 
         return new ItemRequest(
-                CategoryBuilder.createCategoryRequest2(),
+                CategoryFixture.createCategoryRequest2(),
                 "삼바",
                 109000,
                 "품절이 잦습니다.",
@@ -128,7 +139,7 @@ public class ItemBuilder {
     public static ItemUpdateRequest createItemUpdateRequest(){
 
         return new ItemUpdateRequest(
-                CategoryBuilder.createCategoryUpdateRequest(),
+                CategoryFixture.createCategoryUpdateRequest(),
                 "물",
                 230000,
                 "신상품",
@@ -139,40 +150,40 @@ public class ItemBuilder {
 
 
 
-    public static ItemRequest.ImgRequest createItemImg1(){
+    public static ImgRequest createItemImg1(){
 
-        return new ItemRequest.ImgRequest(ItemImgType.Y,"itemImg1");
+        return new ImgRequest(ItemImgType.Y,"itemImg1");
     }
 
-    public static ItemRequest.ImgRequest createItemImg2(){
+    public static ImgRequest createItemImg2(){
 
-        return new ItemRequest.ImgRequest(ItemImgType.N,"itemImg2");
+        return new ImgRequest(ItemImgType.N,"itemImg2");
     }
 
-    public static ItemRequest.OptionRequest createOption1(){
+    public static OptionRequest createOption1(){
 
-        return new ItemRequest.OptionRequest("220","검정");
+        return new OptionRequest("220","검정");
     }
 
-    public static ItemRequest.OptionRequest createOption2(){
+    public static OptionRequest createOption2(){
 
-        return new ItemRequest.OptionRequest("230","파랑");
+        return new OptionRequest("230","파랑");
     }
 
-    public static ItemRequest.OptionRequest createOption3(){
+    public static OptionRequest createOption3(){
 
-        return new ItemRequest.OptionRequest("240","빨강");
+        return new OptionRequest("240","빨강");
     }
 
-    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest1(){
+    public static OptionUpdateRequest createOptionUpdateRequest1(){
 
-        return new ItemUpdateRequest.OptionUpdateRequest(
+        return new OptionUpdateRequest(
                 "240","빨강");
     }
 
-    public static ItemUpdateRequest.OptionUpdateRequest createOptionUpdateRequest2(){
+    public static OptionUpdateRequest createOptionUpdateRequest2(){
 
-        return new ItemUpdateRequest.OptionUpdateRequest(
+        return new OptionUpdateRequest(
                 "220","검정");
     }
 

@@ -1,8 +1,8 @@
 package com.project.shop.item.controller;
 
 import com.project.shop.common.controller.ControllerCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
@@ -27,6 +27,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +52,7 @@ public class ItemControllerTest extends ControllerCommon{
     ItemImg itemImg1;
     Option option1; Option option2; Option option3;
 
+    LocalDateTime now = LocalDateTime.now();
     @BeforeEach
     void beforeEach(){
 
@@ -66,24 +69,24 @@ public class ItemControllerTest extends ControllerCommon{
         authorityRepository.save(authAdmin);
 
         //category
-        category1 = CategoryBuilder.createCategory1();
-        category2 = CategoryBuilder.createCategory2();
-        category3 = CategoryBuilder.createCategory4();
+        category1 = CategoryFixture.createCategory(1L, "운동화", "나이키", now);
+        category2 = CategoryFixture.createCategory(2L, "스니커즈", "뉴발란스", now);
+        category3 = CategoryFixture.createCategory(3L, "슬리퍼", "아디다스", now);
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
 
         //item
-        item1 =  ItemBuilder.createItem1(category1);
+        item1 =  ItemFixture.createItem(category1, "조던", 1000000, "인기 많음", now);
         itemRepository.save(item1);
 
-        itemImg1 = ItemBuilder.createImg1(item1);
+        itemImg1 = ItemFixture.createImg1(item1);
         itemImgRepository.save(itemImg1);
 
-        option1 = ItemBuilder.createOption1(item1);
-        option2 = ItemBuilder.createOption2(item1);
-        option3 = ItemBuilder.createOption3(item1);
+        option1 = ItemFixture.createOption1(item1);
+        option2 = ItemFixture.createOption2(item1);
+        option3 = ItemFixture.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);
@@ -95,7 +98,7 @@ public class ItemControllerTest extends ControllerCommon{
     void itemFindAll() throws Exception {
 
         //given
-        Item item = ItemBuilder.createItem2(category1);
+        Item item = ItemFixture.createItem2(category1);
         itemRepository.save(item);
 
         //when
@@ -111,7 +114,7 @@ public class ItemControllerTest extends ControllerCommon{
     void itemDetailFind() throws Exception {
 
         //given
-        Item item = ItemBuilder.createItem2(category1);
+        Item item = ItemFixture.createItem2(category1);
         itemRepository.save(item);
 
         //when
@@ -128,7 +131,7 @@ public class ItemControllerTest extends ControllerCommon{
     void itemCreate() throws Exception {
 
         //given
-        ItemRequest itemRequest = ItemBuilder.createItemRequest2();
+        ItemRequest itemRequest = ItemFixture.createItemRequest2();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/items")
@@ -147,7 +150,7 @@ public class ItemControllerTest extends ControllerCommon{
     @DisplayName("상품 수정")
     void itemUpdate() throws Exception {
         //given
-        ItemUpdateRequest itemUpdateRequest = ItemBuilder.createItemUpdateRequest();
+        ItemUpdateRequest itemUpdateRequest = ItemFixture.createItemUpdateRequest();
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/items/{itemId}",1)

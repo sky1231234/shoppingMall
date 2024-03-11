@@ -30,7 +30,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponse> detailFind(@PathVariable("itemId") long itemId){
         return ResponseEntity.ok()
-                .body(itemService.detailFind(itemId));
+                .body(itemService.findItemDetailInfo(itemId));
     }
 
 }

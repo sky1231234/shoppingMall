@@ -1,8 +1,8 @@
 package com.project.shop.order.controller;
 
 import com.project.shop.common.controller.ControllerCommon;
-import com.project.shop.item.builder.CategoryBuilder;
-import com.project.shop.item.builder.ItemBuilder;
+import com.project.shop.item.builder.CategoryFixture;
+import com.project.shop.item.builder.ItemFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
@@ -37,6 +37,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -70,6 +72,7 @@ public class OrderControllerTest extends ControllerCommon {
     Option option1; Option option2; Option option3;
     Point point1; Point point2;
     Order order; Order order2;
+    LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
     public void before(){
@@ -88,27 +91,27 @@ public class OrderControllerTest extends ControllerCommon {
         authorityRepository.save(authAdmin);
 
         //category
-        Category category = CategoryBuilder.createCategory1();
+        Category category = CategoryFixture.createCategory(1L, "운동화", "나이키", now );
         categoryRepository.save(category);
 
         //item
-        item1 = ItemBuilder.createItem1(category);
-        item2 = ItemBuilder.createItem2(category);
+        item1 = ItemFixture.createItem1(category);
+        item2 = ItemFixture.createItem2(category);
         itemRepository.save(item1);
         itemRepository.save(item2);
 
         //itemImg
-        itemImg1 = ItemBuilder.createImg1(item1);
-        itemImg2 = ItemBuilder.createImg2(item1);
-        itemImg3 = ItemBuilder.createImg3(item2);
+        itemImg1 = ItemFixture.createImg1(item1);
+        itemImg2 = ItemFixture.createImg2(item1);
+        itemImg3 = ItemFixture.createImg3(item2);
         itemImgRepository.save(itemImg1);
         itemImgRepository.save(itemImg2);
         itemImgRepository.save(itemImg3);
 
         //option
-        option1 = ItemBuilder.createOption1(item1);
-        option2 = ItemBuilder.createOption2(item1);
-        option3 = ItemBuilder.createOption3(item1);
+        option1 = ItemFixture.createOption1(item1);
+        option2 = ItemFixture.createOption2(item1);
+        option3 = ItemFixture.createOption3(item1);
         optionRepository.save(option1);
         optionRepository.save(option2);
         optionRepository.save(option3);

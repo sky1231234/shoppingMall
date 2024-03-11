@@ -1,7 +1,6 @@
 package com.project.shop.member.service;
 
 import com.project.shop.common.service.ServiceCommon;
-import com.project.shop.item.service.ItemService;
 import com.project.shop.member.builder.AddressBuilder;
 import com.project.shop.member.builder.MemberBuilder;
 import com.project.shop.member.domain.Address;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
