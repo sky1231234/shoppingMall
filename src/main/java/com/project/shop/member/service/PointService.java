@@ -1,23 +1,22 @@
 package com.project.shop.member.service;
 
+import com.project.shop.member.exception.PointException;
+import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.member.domain.Authority;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.PointType;
 import com.project.shop.member.dto.request.PointRequest;
-import com.project.shop.member.dto.request.PointUpdateRequest;
 import com.project.shop.member.dto.request.PointUseRequest;
 import com.project.shop.member.dto.response.PointResponse;
-import com.project.shop.member.repository.AuthorityRepository;
 import com.project.shop.member.repository.PointRepository;
 import com.project.shop.member.repository.MemberRepository;
+import com.project.shop.ordersheet.exception.OrderSheetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -109,5 +108,16 @@ public class PointService {
 
         if(authority.getAuthName().equals("user"))
             throw new RuntimeException("ONLY_ADMIN");
+    }
+
+    public int calculatePointByUserId(long userId) {
+        return pointRepository.findSumPoint(userId);
+    }
+
+    public int checkAvailablePoint(int sumPoint, int usingPoint){
+        if(sumPoint < usingPoint)
+            throw new RuntimeException(PointException.AVAILABLE_MAXIMUM_POINT.getMessage() + sumPoint);
+
+        return usingPoint;
     }
 }

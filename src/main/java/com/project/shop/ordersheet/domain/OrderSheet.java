@@ -1,9 +1,15 @@
 package com.project.shop.ordersheet.domain;
 
+import com.project.shop.member.exception.PointException;
+import com.project.shop.order.domain.OrderItem;
+import com.project.shop.ordersheet.dto.request.OrderItemRequest;
+import com.project.shop.ordersheet.exception.OrderSheetException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Table(name = "orderSheets")
 @Entity
@@ -56,5 +62,31 @@ public class OrderSheet {
         this.phoneNum =phoneNum;
         this.insertDate = dateTime;
         this.updateDate = dateTime;
+    }
+
+    public int calculateItemSumPrice(List<OrderItemRequest> orderItemRequestList) {
+
+        return orderItemRequestList.stream()
+                .mapToInt(item -> item.itemPrice() * item.itemCount())
+                .sum();
+    }
+
+    public int calculateDeliverFee(int itemSumPrice){
+
+        if(itemSumPrice >= 50000)
+            return 0;
+        else  return 2500;
+
+    }
+
+    public int calculateTotalPrice(int itemSumPrice, int deliverFee, int usingPoint) {
+
+        int totalPrice = itemSumPrice + deliverFee;
+        int finalPrice = totalPrice - usingPoint;
+
+        if(finalPrice < 0)
+            throw new RuntimeException(PointException.AVAILABLE_MAXIMUM_POINT.getMessage() + totalPrice );
+
+        return finalPrice;
     }
 }
