@@ -1,9 +1,10 @@
 package com.project.shop.order.dto.request;
 
-import com.project.shop.order.domain.*;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
 import com.project.shop.member.domain.Member;
+import com.project.shop.order.domain.Order;
+import com.project.shop.order.domain.PayCancel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -55,8 +56,7 @@ public record OrderCancelRequest(
                 .point(point)
                 .deadlineDate(LocalDate.now().plusWeeks(1))
                 .pointType(pointType)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

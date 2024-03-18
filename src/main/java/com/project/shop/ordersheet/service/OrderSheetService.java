@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderSheetService {
 
-//        주문서에서 현재 주문의 최종 결제 금액을 계산하는 책임
-//        해당 고객이 보유한 쿠폰 or 포인트 반영
-
     private PointService pointService;
     private OrderSheet orderSheet;
     private Point point;
@@ -21,13 +18,13 @@ public class OrderSheetService {
         int point = pointService.calculatePointByUserId(userId);
         int finalPoint = pointService.checkAvailablePoint(point, usingPoint);
 
-        int itemSumPrice = orderSheet.calculateItemSumPrice(orderSheetRequest.orderItemRequestList());
-        int deliverFee = orderSheet.calculateDeliverFee(itemSumPrice);
-
-        int totalPrice = orderSheet.calculateTotalPrice(
-                itemSumPrice,
-                deliverFee,
-                finalPoint);
+//        int itemSumPrice = orderSheet.calculateItemSumPrice(orderSheetRequest.orderItemRequestList());
+//        int deliverFee = orderSheet.calculateDeliverFee(itemSumPrice);
+//
+//        int totalPrice = orderSheet.calculateTotalPrice(
+//                itemSumPrice,
+//                deliverFee,
+//                finalPoint);
     }
 
 }

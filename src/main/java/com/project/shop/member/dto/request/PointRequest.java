@@ -1,12 +1,10 @@
 package com.project.shop.member.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
 import com.project.shop.member.domain.Member;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,8 +23,7 @@ public record PointRequest(
                         .point(this.point())
                         .deadlineDate(this.deadlineDate())
                         .pointType(pointType)
-                        .insertDate(LocalDateTime.now())
-                        .updateDate(LocalDateTime.now())
+                        .dateTime(LocalDateTime.now())
                         .build();
         }
 }

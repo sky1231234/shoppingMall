@@ -1,8 +1,6 @@
 package com.project.shop.ordersheet.domain;
 
-import com.project.shop.member.exception.PointException;
-import com.project.shop.order.domain.OrderItem;
-import com.project.shop.ordersheet.dto.request.OrderItemRequest;
+import com.project.shop.member.domain.Address;
 import com.project.shop.ordersheet.exception.OrderSheetException;
 import lombok.*;
 
@@ -22,71 +20,91 @@ public class OrderSheet {
     @Column(name = "id")
     private long orderSheetId;     //주문번호
 
+    @OneToMany(mappedBy = "orderSheet", cascade = CascadeType.ALL)
+    private List<OrderSheetItem> orderSheetItems;
+
     @Column(name = "usedPoint", nullable = false)
     private int usedPoint;
     @Column(name = "itemSumPrice", nullable = false)
     private int itemSumPrice;
+    @Column(name = "deliverFee", nullable = false)
+    private int deliverFee;
     @Column(name = "finalPrice", nullable = false)
     private int finalPrice;
 
-    @Column(name = "deliverFee", nullable = false)
-    private int deliverFee;     //배송비
-    @Column(name = "receiverName", nullable = false)
-    private String receiverName;     //받는분 이름
-    @Column(name = "zipcode", nullable = false)
-    private String zipcode;    //우편번호
-    @Column(name = "receiverAddr", nullable = false)
-    private String address;     //주소
-    @Column(name = "receiverAddrDetail", nullable = false)
-    private String addrDetail;      //상세주소
-    @Column(name = "receiverPhoneNum", nullable = false)
-    private String phoneNum;    //받는분 전화번호
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "addressId")
+    private Address address;
 
     @Column(name = "insertDate", nullable = false)
-    private LocalDateTime insertDate;   //주문일
+    private LocalDateTime insertDate;
     @Column(name = "updateDate", nullable = false)
-    private LocalDateTime updateDate;   //주문 수정일
+    private LocalDateTime updateDate;
 
     @Builder
-    public OrderSheet(int usedPoint, int itemSumPrice, int finalPrice,
-                      int deliverFee, String receiverName, String zipcode, String address, String addrDetail, String phoneNum,
+    public OrderSheet(List<OrderSheetItem> orderSheetItems,
+                      int usedPoint, int itemSumPrice, int finalPrice,
+                      int deliverFee, Address address,
                       LocalDateTime dateTime) {
+        this.orderSheetItems = orderSheetItems;
         this.usedPoint = usedPoint;
         this.itemSumPrice = itemSumPrice;
         this.finalPrice = finalPrice;
         this.deliverFee = deliverFee;
-        this.receiverName = receiverName;
-        this.zipcode = zipcode;
         this.address = address;
-        this.addrDetail = addrDetail;
-        this.phoneNum =phoneNum;
         this.insertDate = dateTime;
         this.updateDate = dateTime;
     }
 
-    public int calculateItemSumPrice(List<OrderItemRequest> orderItemRequestList) {
-
-        return orderItemRequestList.stream()
-                .mapToInt(item -> item.itemPrice() * item.itemCount())
-                .sum();
+    public void addOrderSheetItem(List<OrderSheetItem> orderSheetItems){
+        this.orderSheetItems = orderSheetItems;
     }
 
-    public int calculateDeliverFee(int itemSumPrice){
-
-        if(itemSumPrice >= 50000)
-            return 0;
-        else  return 2500;
-
+    public int sumAllPriceAndAmount(List<OrderSheetItem> orderSheetItems){
+        for (OrderSheetItem item : orderSheetItems
+             ) {
+            this.itemSumPrice += item.getItemPrice() * item.getOrderQuantity();
+        }
+        return this.itemSumPrice;
     }
 
-    public int calculateTotalPrice(int itemSumPrice, int deliverFee, int usingPoint) {
+    public int applyPoints(int itemSumPrice, int point) {
 
-        int totalPrice = itemSumPrice + deliverFee;
-        int finalPrice = totalPrice - usingPoint;
+        if(itemSumPrice < point)
+            throw new RuntimeException(OrderSheetException.EXCEED_AVAILABLE_POINT.getMessage() + itemSumPrice);
 
-        if(finalPrice < 0)
-            throw new RuntimeException(PointException.AVAILABLE_MAXIMUM_POINT.getMessage() + totalPrice );
-
-        return finalPrice;
+        return itemSumPrice - point;
     }
+
+    public int calculateTotalPriceAfterPoints(int totalPriceAfterPoints, int deliverFee){
+        this.finalPrice = totalPriceAfterPoints + deliverFee;
+        return this.finalPrice;
+    }
+
+
+//    public int calculateItemSumPrice(List<OrderItemRequest> orderItemRequestList) {
+//
+//        return orderItemRequestList.stream()
+//                .mapToInt(item -> item.itemPrice() * item.itemCount())
+//                .sum();
+//    }
+//
+//    public int calculateDeliverFee(int itemSumPrice){
+//
+//        if(itemSumPrice >= 50000)
+//            return 0;
+//        else  return 2500;
+//
+//    }
+//
+//    public int calculateTotalPrice(int itemSumPrice, int deliverFee, int usingPoint) {
+//
+//        int totalPrice = itemSumPrice + deliverFee;
+//        int finalPrice = totalPrice - usingPoint;
+//
+//        if(finalPrice < 0)
+//            throw new RuntimeException(PointException.AVAILABLE_MAXIMUM_POINT.getMessage() + totalPrice );
+//
+//        return finalPrice;
+//    }
 }

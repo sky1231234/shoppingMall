@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum OrderSheetException{
 
-//    AVAILABLE_MAXIMUM_POINT("The maximum available point is ")
+    EXCEED_AVAILABLE_POINT("The maximum available point is ")
     ;
 
     private final String message;

@@ -33,7 +33,6 @@ public class Item {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    @Builder.Default
     @OneToMany(mappedBy = "item")
     private List<ItemImg> itemImgList = new ArrayList<>();
 
@@ -49,9 +48,25 @@ public class Item {
 
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
+        editMetaInfo(itemName, explain);
+        changePrice(price);
+
+    }
+    //비즈니스 룰이 명확히 드러나거나
+    //책임을 완전히 나눈다.
+//    public void updateCategoryWithMetaData(Category category, int price, MetaData metaData){
+//        this.category = category;
+//        changePrice(price);
+//        editMetaInfo(itemName, explain);
+//    }
+
+    public void editMetaInfo(String itemName, String explain){
         this.itemName = itemName;
-        this.price = price;
         this.explain = explain;
+
+    }
+    private void changePrice(int price){
+        this.price = price;
     }
 
 }

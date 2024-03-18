@@ -1,10 +1,9 @@
 package com.project.shop.member.builder;
 
+import com.project.shop.member.domain.Member;
 import com.project.shop.member.domain.Point;
 import com.project.shop.member.domain.PointType;
-import com.project.shop.member.domain.Member;
 import com.project.shop.member.dto.request.PointRequest;
-import com.project.shop.member.dto.request.PointUpdateRequest;
 import com.project.shop.member.dto.request.PointUseRequest;
 
 import java.time.LocalDate;
@@ -19,8 +18,7 @@ public class PointBuilder {
                 .point(1000)
                 .deadlineDate(LocalDate.of(2024,12,21))
                 .pointType(PointType.적립)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -32,8 +30,7 @@ public class PointBuilder {
                 .deadlineDate(LocalDate.of(2024,12,21)
                 )
                 .pointType(PointType.적립)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -44,8 +41,7 @@ public class PointBuilder {
                 .point(-2200)
                 .deadlineDate(LocalDate.of(2024,12,21))
                 .pointType(PointType.사용)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

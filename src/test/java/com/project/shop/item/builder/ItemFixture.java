@@ -3,7 +3,6 @@ package com.project.shop.item.builder;
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,15 +10,14 @@ public class ItemFixture {
 
     static LocalDateTime now = LocalDateTime.now();
 
-    public static Item createItem(Category category,String itemName, int price, String explain, LocalDateTime now){
+    public static Item createItem(Category category, String itemName, int price, String explain, LocalDateTime now){
 
         return Item.builder()
                 .category(category)
                 .itemName(itemName)
                 .price(price)
                 .explain(explain)
-                .insertDate(now)
-                .updateDate(now)
+                .dateTime(now)
                 .build();
     }
 
@@ -30,8 +28,7 @@ public class ItemFixture {
                 .itemName("조던")
                 .price(1000000)
                 .explain("인기 많음")
-                .insertDate(now)
-                .updateDate(now)
+                .dateTime(now)
                 .build();
     }
 
@@ -42,8 +39,7 @@ public class ItemFixture {
                 .itemName("덩크")
                 .price(5000000)
                 .explain("인기 없음")
-                .insertDate(now)
-                .updateDate(now)
+                .dateTime(now)
                 .build();
     }
 
@@ -53,8 +49,7 @@ public class ItemFixture {
                 .item(item)
                 .imgUrl("itemImg1")
                 .itemImgType(ItemImgType.Y)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 
@@ -64,8 +59,7 @@ public class ItemFixture {
                 .item(item)
                 .imgUrl("itemImg2")
                 .itemImgType(ItemImgType.N)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 
@@ -75,8 +69,7 @@ public class ItemFixture {
                 .item(item)
                 .imgUrl("itemImg3")
                 .itemImgType(ItemImgType.Y)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 
@@ -86,8 +79,7 @@ public class ItemFixture {
                 .item(item)
                 .size("220")
                 .color("검정")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 
@@ -97,8 +89,7 @@ public class ItemFixture {
                 .item(item)
                 .size("230")
                 .color("파랑")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 
@@ -108,8 +99,7 @@ public class ItemFixture {
                 .item(item)
                 .size("240")
                 .color("빨강")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(now)
                 .build();
     }
 

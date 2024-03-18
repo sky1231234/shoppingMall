@@ -53,7 +53,7 @@ public class AddressService {
 
         var address = addressRepository.save(addressRequest.toEntity(member));
 
-        return address.getAddrId();
+        return address.getAddressId();
     }
 
     //주소 수정
