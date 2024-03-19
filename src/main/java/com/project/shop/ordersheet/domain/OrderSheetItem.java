@@ -1,6 +1,7 @@
 package com.project.shop.ordersheet.domain;
 
 import com.project.shop.item.domain.Item;
+import com.project.shop.order.domain.Order;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,10 @@ public class OrderSheetItem {
     private long orderSheetItemId;     //주문상품번호
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderSheetId")
+    private OrderSheet orderSheet;     //주문 번호
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;     //상품 번호
 
@@ -30,9 +35,10 @@ public class OrderSheetItem {
 
     @Builder
     public OrderSheetItem(
-            Item item, long itemOptionId,
+            OrderSheet orderSheet, Item item, long itemOptionId,
                      int orderQuantity,int itemPrice
      ){
+        this.orderSheet = orderSheet;
         this.item = item;
         this.itemOptionId = itemOptionId;
         this.orderQuantity = orderQuantity;

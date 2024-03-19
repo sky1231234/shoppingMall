@@ -68,43 +68,18 @@ public class OrderSheet {
         return this.itemSumPrice;
     }
 
-    public int applyPoints(int itemSumPrice, int point) {
+    public int checkAvailablePoint(int itemSumPrice, int point, int deliverFee){
 
         if(itemSumPrice < point)
-            throw new RuntimeException(OrderSheetException.EXCEED_AVAILABLE_POINT.getMessage() + itemSumPrice);
+            throw new RuntimeException(OrderSheetException.EXCEED_AVAILABLE_POINT.getMessage());
 
-        return itemSumPrice - point;
+        return calculateTotalPriceAfterPoints(itemSumPrice, point, deliverFee);
     }
 
-    public int calculateTotalPriceAfterPoints(int totalPriceAfterPoints, int deliverFee){
-        this.finalPrice = totalPriceAfterPoints + deliverFee;
+    public int calculateTotalPriceAfterPoints(int itemSumPrice, int point, int deliverFee){
+        this.finalPrice = itemSumPrice + deliverFee - point;
         return this.finalPrice;
     }
 
 
-//    public int calculateItemSumPrice(List<OrderItemRequest> orderItemRequestList) {
-//
-//        return orderItemRequestList.stream()
-//                .mapToInt(item -> item.itemPrice() * item.itemCount())
-//                .sum();
-//    }
-//
-//    public int calculateDeliverFee(int itemSumPrice){
-//
-//        if(itemSumPrice >= 50000)
-//            return 0;
-//        else  return 2500;
-//
-//    }
-//
-//    public int calculateTotalPrice(int itemSumPrice, int deliverFee, int usingPoint) {
-//
-//        int totalPrice = itemSumPrice + deliverFee;
-//        int finalPrice = totalPrice - usingPoint;
-//
-//        if(finalPrice < 0)
-//            throw new RuntimeException(PointException.AVAILABLE_MAXIMUM_POINT.getMessage() + totalPrice );
-//
-//        return finalPrice;
-//    }
 }

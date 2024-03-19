@@ -4,6 +4,8 @@ import com.project.shop.item.domain.Item;
 import com.project.shop.member.domain.Address;
 import com.project.shop.member.domain.Member;
 import com.project.shop.member.exception.MemberException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -24,9 +26,12 @@ public class OrderSheetTest {
     @Mock
     Item item;
 
+    @DisplayName("주문서 생성 테스트")
+    @Order(2)
     @Test
     public void createOrderSheet(){
 
+        //given
         List<OrderSheetItem> mockOrderItems = orderSheetItems;
         int usedPoint = 500;
         int itemSumPrice = 148000;
@@ -35,8 +40,10 @@ public class OrderSheetTest {
         Address mockAddress = address;
         LocalDateTime dateTime = LocalDateTime.now();
 
+        //when
         OrderSheet orderSheet = new OrderSheet(mockOrderItems, usedPoint, itemSumPrice, finalPrice, deliverFee, mockAddress, dateTime);
 
+        //then
         assertEquals(mockOrderItems, orderSheet.getOrderSheetItems());
         assertEquals(usedPoint, orderSheet.getUsedPoint());
         assertEquals(itemSumPrice, orderSheet.getItemSumPrice());
@@ -47,73 +54,75 @@ public class OrderSheetTest {
 
     }
 
+    @DisplayName("주문서 상품 금액 계산 테스트")
+    @Order(2)
     @Test
     public void sumAllPriceAndAmount(){
+
+        //given
         OrderSheet orderSheet = new OrderSheet();
 
         List<OrderSheetItem> orderItems = new ArrayList<>();
-        orderItems.add(new OrderSheetItem(item, 1, 2,24000)); // 상품 가격 10000원, 수량 2개
-        orderItems.add(new OrderSheetItem(item, 2, 5,20000)); // 상품 가격 20000원, 수량 1개
+        orderItems.add(new OrderSheetItem(orderSheet,item, 1, 2,24000)); // 상품 가격 10000원, 수량 2개
+        orderItems.add(new OrderSheetItem(orderSheet,item, 2, 5,20000)); // 상품 가격 20000원, 수량 1개
 
         orderSheet.addOrderSheetItem(orderItems);
 
+        //when
         int itemSumPrice = orderSheet.sumAllPriceAndAmount(orderItems);
 
+        //then
         assertThat(itemSumPrice).isEqualTo(148000);
 
     }
+
+    @DisplayName("상품 가격 > 사용 포인트인 경우 테스트")
+    @Order(3)
     @Test
-    public void applyPoints(){
+    public void checkAvailablePoint_itemSumPriceMoreThanPoints(){
 
         //given
         OrderSheet orderSheet = new OrderSheet();
 
         int point = 5000;
         int itemSumPrice = 148000;
+        int deliverFee = 2500;
 
         //when
-        int calculateSumPriceAfterPoints = orderSheet.applyPoints(itemSumPrice, point);
+        int finalPrice = orderSheet.checkAvailablePoint(itemSumPrice, point,deliverFee);
 
         //then
-        assertThat(calculateSumPriceAfterPoints).isEqualTo(143000);
+        assertThat(finalPrice).isEqualTo(145500);
+
 
     }
 
+    @DisplayName("상품 가격 < 사용 포인트인 경우 테스트")
+    @Order(4)
     @Test
-    public void applyPoints_WithNoPoint(){
-
-        //given
-        OrderSheet orderSheet = new OrderSheet();
-
-        int point = 0;
-        int itemSumPrice = 148000;
-
-        //when
-        int calculateSumPriceAfterPoints = orderSheet.applyPoints(itemSumPrice, point);
-
-        //then
-        assertThat(calculateSumPriceAfterPoints).isEqualTo(148000);
-
-    }
-
-    @Test
-    public void applyPoints_WithManyPoints(){
+    public void checkAvailablePoint_PointsMoreThanitemSumPrice(){
 
         //given
         OrderSheet orderSheet = new OrderSheet();
 
         int point = 150000;
         int itemSumPrice = 148000;
+        int deliverFee = 2500;
 
         //when
-        //then
-        assertThrows(RuntimeException.class,
-                () -> orderSheet.applyPoints(
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> orderSheet.checkAvailablePoint(
                         itemSumPrice,
-                        point));
+                        point,
+                        deliverFee));
+
+        //then
+        assertThat(exception.getMessage()).isEqualTo("포인트는 상품 금액 이상 사용할 수 없습니다.");
 
     }
 
+    @DisplayName("총 금액 계산 테스트")
+    @Order(5)
     @Test
     public void calculateFinalPrice(){
 
@@ -122,11 +131,14 @@ public class OrderSheetTest {
 
         int point = 5000;
         int itemSumPrice = 148000;
-        int totalPriceAfterPoints = orderSheet.applyPoints(itemSumPrice, point);
         int deliverFee = 2500;
 
-        int finalPrice = orderSheet.calculateTotalPriceAfterPoints(totalPriceAfterPoints, deliverFee);
+        //when
+        int finalPrice = orderSheet.calculateTotalPriceAfterPoints(itemSumPrice, point, deliverFee);
 
+        //then
         assertThat(finalPrice).isEqualTo(145500);
     }
+
+
 }
