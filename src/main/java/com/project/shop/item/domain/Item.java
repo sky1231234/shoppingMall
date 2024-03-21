@@ -1,11 +1,13 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.repository.ItemRepository;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Table(name = "item")
 @Entity
@@ -46,12 +48,24 @@ public class Item {
         this.updateDate = dateTime;
     }
 
+    private ItemRepository itemRepository;
+    public boolean checkItemExist(Item item){
+        Item findItem = itemRepository.findByItem(item)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+
+        return true;
+    }
+
+
+
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
         editMetaInfo(itemName, explain);
         changePrice(price);
 
     }
+
+
     //비즈니스 룰이 명확히 드러나거나
     //책임을 완전히 나눈다.
 //    public void updateCategoryWithMetaData(Category category, int price, MetaData metaData){

@@ -11,7 +11,7 @@ public class CategoryFixture {
 
     public static Category createCategory(long id, String categoryName, String brandName, LocalDateTime now){
 
-        return new Category(id, categoryName, brandName, now, now);
+        return new Category(categoryName, brandName, now);
     }
 
     public static Category createCategory2(){
@@ -19,8 +19,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("스니커즈")
                 .brandName("뉴발란스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -29,8 +28,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("운동화")
                 .brandName("뉴발란스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -39,8 +37,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("슬리퍼")
                 .brandName("아디다스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

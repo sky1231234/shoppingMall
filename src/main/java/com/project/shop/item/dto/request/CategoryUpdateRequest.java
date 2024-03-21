@@ -16,8 +16,7 @@ public record CategoryUpdateRequest(
                 return Category.builder()
                         .categoryName(categoryName)
                         .brandName(brandName)
-                        .insertDate(LocalDateTime.now())
-                        .updateDate(LocalDateTime.now())
+                        .dateTime(LocalDateTime.now())
                         .build();
         }
 }
