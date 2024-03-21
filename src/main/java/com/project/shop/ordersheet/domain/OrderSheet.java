@@ -2,7 +2,6 @@ package com.project.shop.ordersheet.domain;
 
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,8 @@ import java.util.List;
 public class OrderSheet {
 
   private List<OrderSheetItem> itemList;
-  LocalDateTime now = LocalDateTime.now();
+
+  private final String ITEM_LIST_IF_EMPTY_MESSAGE = "주문 상품은 최소 1개 이상이여야한다.";
 
   public OrderSheet(List<OrderSheetItem> itemList){
     validation(itemList);
@@ -21,7 +21,7 @@ public class OrderSheet {
   public void validation(List<OrderSheetItem> itemList){
 
     if(itemList.isEmpty()){
-      throw new IllegalArgumentException("주문 상품은 최소 1개 이상이여야한다.");
+      throw new IllegalArgumentException(ITEM_LIST_IF_EMPTY_MESSAGE);
     }
   }
 
@@ -31,7 +31,7 @@ public class OrderSheet {
 
       for (OrderSheetItem item : orderSheetItems) {
         OrderSheetItem orderSheetItem = new OrderSheetItem(item.getItem(), item.getItemOptionId(),
-                item.getItemPrice(), item.getOrderQuantity());
+                item.getOrderQuantity());
 
         this.itemList.add(orderSheetItem);
       }

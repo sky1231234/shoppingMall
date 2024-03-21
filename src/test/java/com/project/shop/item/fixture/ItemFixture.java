@@ -1,4 +1,4 @@
-package com.project.shop.item.builder;
+package com.project.shop.item.fixture;
 
 import com.project.shop.item.domain.*;
 import com.project.shop.item.dto.request.*;
@@ -9,6 +9,15 @@ import java.util.List;
 public class ItemFixture {
 
     static LocalDateTime now = LocalDateTime.now();
+    public static Item createItemFixture(Category category){
+
+        String itemName = "조던";
+        int price = 100000;
+        String explain = "한정판매";
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        return new Item(category, itemName, price,explain, dateTime);
+    }
 
     public static Item createItem(Category category, String itemName, int price, String explain, LocalDateTime now){
 

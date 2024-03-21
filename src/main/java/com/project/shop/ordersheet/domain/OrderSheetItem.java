@@ -13,40 +13,29 @@ public class OrderSheetItem {
 
     private Item item;     //상품
     private long itemOptionId;     //옵션번호
-    private int itemPrice;     //상품 가격
     private int orderQuantity;     //주문 수량
 
-    @Builder
+    private final String ORDER_QUANTITY_IF_NOT_POSITIVE_MESSAGE =  "상품의 주문 수량은 1개 이상이여야한다.";
+
+    private final int MIN_ORDER_QUANTITY = 1;
+
     public OrderSheetItem(
             Item item, long itemOptionId,
-            int itemPrice ,int orderQuantity
+            int orderQuantity
      ){
-        validation(item,itemOptionId,itemPrice,orderQuantity);
+        validation(orderQuantity);
         this.item = item;
         this.itemOptionId = itemOptionId;
-        this.itemPrice = itemPrice;
         this.orderQuantity = orderQuantity;
     }
 
-    public void validation(Item item, long itemOptionId,
-                            int orderQuantity,int itemPrice){
-//        item.checkItemExist(item);
+    public void validation(int orderQuantity){
 
-        validateItemPrice(itemPrice);
-        validateOrderQuantity(orderQuantity);
-
-    }
-
-    public void validateItemPrice(int itemPrice){
-        if(itemPrice <= 0){
-            throw new IllegalArgumentException("상품의 가격은 0원 초과여야한다.");
+        if (orderQuantity < MIN_ORDER_QUANTITY){
+            throw new IllegalArgumentException(ORDER_QUANTITY_IF_NOT_POSITIVE_MESSAGE);
         }
+
     }
 
-    public void validateOrderQuantity(int orderQuantity){
-        if (orderQuantity < 1){
-            throw new IllegalArgumentException("상품의 주문 수량은 1개 이상이여야한다.");
-        }
-    }
 }
 

@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Table(name = "item")
 @Entity
@@ -48,12 +47,20 @@ public class Item {
         this.updateDate = dateTime;
     }
 
-    private ItemRepository itemRepository;
-    public boolean checkItemExist(Item item){
-        Item findItem = itemRepository.findByItem(item)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+    ItemRepository itemRepository;
 
-        return true;
+    public void checkItemExist(Item item){
+        itemRepository.findByItem(item)
+                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+    }
+
+    private final int MIN_ITEM_PRICE = 1;
+    private final String ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE =  "상품의 가격은 1원 이상여야한다.";
+
+    public void validateItemPrice(int itemPrice){
+        if(itemPrice < MIN_ITEM_PRICE){
+            throw new IllegalArgumentException(ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE);
+        }
     }
 
 

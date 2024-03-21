@@ -1,4 +1,4 @@
-package com.project.shop.item.builder;
+package com.project.shop.item.fixture;
 
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
@@ -8,6 +8,18 @@ import java.time.LocalDateTime;
 
 
 public class CategoryFixture {
+
+    public static Category createCategoryFixture(){
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        String categoryName = "운동화";
+        String brandName = "나이키";
+
+        return  new Category(
+                categoryName,
+                brandName,
+                dateTime);
+    }
 
     public static Category createCategory(long id, String categoryName, String brandName, LocalDateTime now){
 
