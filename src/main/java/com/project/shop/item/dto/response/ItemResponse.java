@@ -1,14 +1,9 @@
 package com.project.shop.item.dto.response;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.domain.Review;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor

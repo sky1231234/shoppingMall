@@ -55,10 +55,8 @@ public class SecurityConfig{
 
                 .and()
                 .authorizeRequests()
-//                    .mvcMatchers("/api/admin/**").access("hasRole('USER')")
                     .mvcMatchers("/api/admin/**").hasRole("ADMIN")
                     .mvcMatchers("/api/users/**").hasAnyRole("ADMIN","USER")
-//                    .mvcMatchers("/api/users/**").access("hasRole('ADMIN') OR hasRole('USER')")
                     .anyRequest().permitAll()
 
                 .and()

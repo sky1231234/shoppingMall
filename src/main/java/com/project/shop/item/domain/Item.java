@@ -1,5 +1,6 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.repository.ItemRepository;
 import lombok.*;
 
@@ -47,41 +48,26 @@ public class Item {
         this.updateDate = dateTime;
     }
 
-    ItemRepository itemRepository;
+//    private final int MIN_ITEM_PRICE = 1;
+//    private final String ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE =  "상품의 가격은 1원 이상여야한다.";
+//
+//    public void validateItemPrice(int itemPrice){
+//        if(itemPrice < MIN_ITEM_PRICE){
+//            throw new IllegalArgumentException(ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE);
+//        }
+//    }
 
-    public void checkItemExist(Item item){
-        itemRepository.findByItem(item)
-                .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
+    public Item toItem(Category category, ItemRequest itemRequest) {
+        return itemRequest.toEntity(category);
     }
-
-    private final int MIN_ITEM_PRICE = 1;
-    private final String ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE =  "상품의 가격은 1원 이상여야한다.";
-
-    public void validateItemPrice(int itemPrice){
-        if(itemPrice < MIN_ITEM_PRICE){
-            throw new IllegalArgumentException(ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE);
-        }
-    }
-
-
 
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
-        editMetaInfo(itemName, explain);
+        editItemMainInfo(itemName, explain);
         changePrice(price);
-
     }
 
-
-    //비즈니스 룰이 명확히 드러나거나
-    //책임을 완전히 나눈다.
-//    public void updateCategoryWithMetaData(Category category, int price, MetaData metaData){
-//        this.category = category;
-//        changePrice(price);
-//        editMetaInfo(itemName, explain);
-//    }
-
-    public void editMetaInfo(String itemName, String explain){
+    public void editItemMainInfo(String itemName, String explain){
         this.itemName = itemName;
         this.explain = explain;
 

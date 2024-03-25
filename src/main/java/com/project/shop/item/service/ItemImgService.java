@@ -1,10 +1,10 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.dto.request.ImgRequest;
+import com.project.shop.item.dto.request.ImgUpdateRequest;
+import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
-import com.project.shop.item.repository.ItemImgRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,36 +16,21 @@ import java.util.List;
 public class ItemImgService {
 
     private final ItemImgRepository itemImgRepository;
+    private final ItemImg itemImg;
 
     @Transactional
-    public void createItemImg(ItemRequest itemRequest, Item item){
+    public void createItemImg(List<ImgRequest> itemImgRequestList, Item item){
 
-        List<ItemImg> itemImgList = itemRequest.itemImgRequestList()
-                .stream()
-                .map(ImgRequest -> ImgRequest.toEntity(item))
-                .toList();
+        List<ItemImg> itemImgList = itemImg.toItemImgList(itemImgRequestList, item);
 
         itemImgRepository.saveAll(itemImgList);
     }
 
-    private void createItemImgForUpdate(Item item, ItemUpdateRequest itemUpdateRequest){
+    public void updateItemImg(Item item, List<ImgUpdateRequest> imgUpdateRequestList){
 
-        List<ItemImg> itemImgUpdateList = itemUpdateRequest
-                .itemImgUpdateRequestList()
-                .stream()
-                .map(ImgUpdateRequest -> ImgUpdateRequest.toEntity(item))
-                .toList();
-
-        itemImgRepository.saveAll(itemImgUpdateList);
-    }
-
-    public void updateItemImg(Item item, ItemUpdateRequest itemUpdateRequest){
-
-        //기존 이미지 삭제 후 등록
         deleteItemImgByItemIfNotEmpty(item);
 
-        //고치기 : createItemImg와 메소드 합치고싶음
-        createItemImgForUpdate(item, itemUpdateRequest);
+        createItemImgForUpdate(item, imgUpdateRequestList);
 
     }
 
@@ -56,4 +41,12 @@ public class ItemImgService {
             itemImgRepository.deleteAll(itemImgList);
         }
     }
+
+    private void createItemImgForUpdate(Item item, List<ImgUpdateRequest> imgUpdateRequestList){
+
+        List<ItemImg> itemImgUpdateList = itemImg.toItemImgListForUpdate(imgUpdateRequestList, item);
+
+        itemImgRepository.saveAll(itemImgUpdateList);
+    }
+
 }

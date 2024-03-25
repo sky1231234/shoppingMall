@@ -1,20 +1,20 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.request.ItemUpdateRequest;
+import com.project.shop.item.repository.CategoryRepository;
+import com.project.shop.item.repository.ItemImgRepository;
+import com.project.shop.item.repository.OptionRepository;
 import com.project.shop.common.service.ServiceCommon;
-import com.project.shop.item.builder.CategoryFixture;
-import com.project.shop.item.builder.ItemFixture;
+import com.project.shop.item.fixture.CategoryFixture;
+import com.project.shop.item.fixture.ItemFixture;
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.domain.Item;
 import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.domain.Option;
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.item.dto.response.ItemListResponse;
-import com.project.shop.item.repository.CategoryRepository;
-import com.project.shop.item.repository.ItemImgRepository;
 import com.project.shop.item.repository.ItemRepository;
-import com.project.shop.item.repository.OptionRepository;
-import com.project.shop.member.builder.MemberBuilder;
+import com.project.shop.member.fixture.MemberBuilder;
 import com.project.shop.member.domain.Authority;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,7 +121,7 @@ public class ItemServiceTest extends ServiceCommon {
         ItemRequest itemRequest = ItemFixture.createItemRequest1();
 
         //when
-        var result = itemService.create(member2.getLoginId(),itemRequest);
+        var result = itemService.create(itemRequest);
 
         Item item = itemRepository.findById(result)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM"));
@@ -142,7 +142,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.update(member2.getLoginId(),itemId, itemUpdateRequest);
+        itemService.update(itemId, itemUpdateRequest);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_ITEM_TEST"));
@@ -162,7 +162,7 @@ public class ItemServiceTest extends ServiceCommon {
         long itemId = 1;
 
         //when
-        itemService.delete(member2.getLoginId(),itemId);
+        itemService.delete(itemId);
 
         Assertions.assertThat(itemRepository.findAll().size()).isEqualTo(0);
         Assertions.assertThat(optionRepository.findAll().size()).isEqualTo(0);

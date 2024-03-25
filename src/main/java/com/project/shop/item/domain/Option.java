@@ -1,9 +1,16 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.request.OptionRequest;
+import com.project.shop.item.dto.request.OptionUpdateRequest;
+import com.project.shop.item.repository.OptionRepository;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "option")
 @Entity
@@ -38,4 +45,13 @@ public class Option {
         this.insertDate = dateTime;
         this.updateDate = dateTime;
     }
+
+    public List<Option> toOptionList(List<OptionRequest> optionRequestList, Item item){
+        return optionRequestList
+                .stream()
+                .map(OptionRequest -> OptionRequest.toEntity(item))
+                .toList();
+    }
+
+
 }
