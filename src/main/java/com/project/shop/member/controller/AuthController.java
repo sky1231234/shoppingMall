@@ -22,7 +22,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    //회원가입
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signup(@RequestBody SignUpRequest signUpRequest){
         long signUpId = authService.signUp(signUpRequest);
@@ -30,7 +29,6 @@ public class AuthController {
 
     }
 
-    //로그인
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest){
         return ResponseEntity.ok()

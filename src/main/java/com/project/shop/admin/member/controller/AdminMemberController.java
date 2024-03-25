@@ -1,15 +1,12 @@
 package com.project.shop.admin.member.controller;
 
-import com.project.shop.global.config.security.domain.UserDto;
-import com.project.shop.member.dto.request.PointRequest;
-import com.project.shop.member.dto.request.PointUseRequest;
 import com.project.shop.member.dto.response.MemberResponse;
 import com.project.shop.member.service.MemberService;
-import com.project.shop.member.service.PointService;
+import com.project.shop.global.config.security.domain.UserDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +22,7 @@ public class AdminMemberController {
 
     private final MemberService memberService;
 
-    //회원 전체 조회
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<List<MemberResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
         return ResponseEntity.ok()
