@@ -34,7 +34,7 @@ public class AddressResponse {
     public static AddressResponse fromEntity(Address address) {
 
         return AddressResponse.builder()
-                .addressId(address.getAddrId())
+                .addressId(address.getAddressId())
                 .receiverName(address.getName())
                 .zipcode(address.getZipcode())
                 .address(address.getAddress())

@@ -26,8 +26,7 @@ public record AddressRequest(
                         .addrDetail(this.addressDetail())
                         .phoneNum(this.receiverPhoneNum())
                         .addressType(this.defaultAddr())
-                        .insertDate(LocalDateTime.now())
-                        .updateDate(LocalDateTime.now())
+                        .dateTime(LocalDateTime.now())
                         .build();
         }
 }

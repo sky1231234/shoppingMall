@@ -1,24 +1,16 @@
 package com.project.shop.item.domain;
 
-import com.project.shop.global.common.BaseTimeEntity;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "category")
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Category extends BaseTimeEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +28,13 @@ public class Category extends BaseTimeEntity {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
+    @Builder
+    public Category(String categoryName, String brandName,LocalDateTime dateTime){
+        this.categoryName = categoryName;
+        this.brandName = brandName;
+        this.insertDate = dateTime;
+        this.updateDate = dateTime;
+    }
     public Category updateCategory(CategoryUpdateRequest categoryUpdateRequest){
         this.categoryName = categoryUpdateRequest.categoryName();
         this.brandName = categoryUpdateRequest.brandName();

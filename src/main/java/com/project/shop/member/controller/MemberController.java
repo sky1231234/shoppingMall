@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,21 +23,21 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //내 정보 조회
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<MemberResponse> detailFind(@AuthenticationPrincipal UserDto userDto){
         return ResponseEntity.ok()
                 .body(memberService.detailFind(userDto.getLoginId()));
     }
 
-    //회원정보 수정
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @PutMapping
     public ResponseEntity<HttpStatus> update(@AuthenticationPrincipal UserDto userDto, @RequestBody MemberUpdateRequest memberUpdateRequest){
         memberService.update(userDto.getLoginId(), memberUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
-    //회원정보 탈퇴
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @DeleteMapping
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal UserDto userDto){
         memberService.delete(userDto.getLoginId());

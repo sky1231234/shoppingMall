@@ -7,6 +7,7 @@ import com.project.shop.item.service.ItemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    //상품 전체 조회
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<List<ItemListResponse>> findAll(){
         return ResponseEntity.ok()
                 .body(itemService.findAll());
     }
 
-    //상품 상세 조회
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponse> detailFind(@PathVariable("itemId") long itemId){
         return ResponseEntity.ok()

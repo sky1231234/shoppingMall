@@ -1,14 +1,21 @@
 package com.project.shop.item.domain;
 
+import com.project.shop.item.dto.request.ItemRequest;
+import com.project.shop.item.dto.request.OptionRequest;
+import com.project.shop.item.dto.request.OptionUpdateRequest;
+import com.project.shop.item.repository.OptionRepository;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "option")
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Option {
 
     @Id
@@ -38,4 +45,6 @@ public class Option {
         this.insertDate = dateTime;
         this.updateDate = dateTime;
     }
+
+
 }

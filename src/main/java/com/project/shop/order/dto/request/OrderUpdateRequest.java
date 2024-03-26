@@ -82,7 +82,7 @@ public record OrderUpdateRequest(
                                 .order(order)
                                 .itemOptionId(option.getOptionId())
                                 .totalQuantity(this.itemCount())
-                                .totalPrice(this.itemCount() * this.itemPrice())
+                                .totalItemPrice(this.itemCount() * this.itemPrice())
                                 .itemPrice(this.itemPrice())
                                 .orderItemType(OrderItemType.완료)
                                 .build();

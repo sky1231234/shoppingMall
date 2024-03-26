@@ -1,4 +1,4 @@
-package com.project.shop.item.builder;
+package com.project.shop.item.fixture;
 
 import com.project.shop.item.domain.Category;
 import com.project.shop.item.dto.request.CategoryRequest;
@@ -9,9 +9,21 @@ import java.time.LocalDateTime;
 
 public class CategoryFixture {
 
+    public static Category createCategoryFixture(){
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        String categoryName = "운동화";
+        String brandName = "나이키";
+
+        return  new Category(
+                categoryName,
+                brandName,
+                dateTime);
+    }
+
     public static Category createCategory(long id, String categoryName, String brandName, LocalDateTime now){
 
-        return new Category(id, categoryName, brandName, now, now);
+        return new Category(categoryName, brandName, now);
     }
 
     public static Category createCategory2(){
@@ -19,8 +31,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("스니커즈")
                 .brandName("뉴발란스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -29,8 +40,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("운동화")
                 .brandName("뉴발란스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -39,8 +49,7 @@ public class CategoryFixture {
         return Category.builder()
                 .categoryName("슬리퍼")
                 .brandName("아디다스")
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

@@ -5,8 +5,8 @@ import com.project.shop.order.dto.response.OrderResponse;
 import com.project.shop.order.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class AdminOrderController {
 
     private final OrderService orderService;
 
-    //주문내역 전체 조회
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
         return ResponseEntity.ok()

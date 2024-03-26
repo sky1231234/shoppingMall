@@ -21,8 +21,7 @@ public class AddressBuilder {
                 .addrDetail("상세등록주소")
                 .phoneNum("010100200")
                 .addressType(AddressType.Y)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -36,8 +35,7 @@ public class AddressBuilder {
                 .addrDetail("해운대")
                 .phoneNum("11111111")
                 .addressType(AddressType.N)
-                .insertDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 

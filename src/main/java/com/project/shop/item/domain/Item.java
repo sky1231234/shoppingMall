@@ -33,7 +33,6 @@ public class Item {
     @Column(name = "updateDate", nullable = false)
     private LocalDateTime updateDate;   //상품 수정일
 
-    @Builder.Default
     @OneToMany(mappedBy = "item")
     private List<ItemImg> itemImgList = new ArrayList<>();
 
@@ -49,10 +48,19 @@ public class Item {
 
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
-        this.itemName = itemName;
-        this.price = price;
-        this.explain = explain;
+        editItemMainInfo(itemName, explain);
+        changePrice(price);
     }
+
+    public void editItemMainInfo(String itemName, String explain){
+        this.itemName = itemName;
+        this.explain = explain;
+
+    }
+    private void changePrice(int price){
+        this.price = price;
+    }
+
 
 }
 

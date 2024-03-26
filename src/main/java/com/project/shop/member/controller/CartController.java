@@ -4,12 +4,12 @@ import com.project.shop.global.config.security.domain.UserDto;
 import com.project.shop.item.dto.response.ReviewResponse;
 import com.project.shop.member.dto.request.CartRequest;
 import com.project.shop.member.dto.request.CartUpdateRequest;
-import com.project.shop.member.dto.response.CartResponse;
 import com.project.shop.member.service.CartService;
+import com.project.shop.member.dto.response.CartResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/members/carts")
+@RequestMapping ("/carts")
 @RequiredArgsConstructor
 @Validated
 @Tag( name = "CartController", description = "[사용자] 장바구니 API")
@@ -26,14 +26,14 @@ public class CartController {
 
     private final CartService cartService;
 
-    //장바구니 조회
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<List<CartResponse>> findAll(@AuthenticationPrincipal UserDto userDto){
         return ResponseEntity.ok()
                 .body(cartService.findAll(userDto.getLoginId()));
     }
 
-    //장바구니 등록
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @PostMapping
     public ResponseEntity<ReviewResponse> create(@AuthenticationPrincipal UserDto userDto, @RequestBody CartRequest cartRequest){
         long cartId = cartService.create(userDto.getLoginId(), cartRequest);
@@ -41,14 +41,14 @@ public class CartController {
 
     }
 
-    //장바구니 수정
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @PutMapping("/{cartId}")
     public ResponseEntity<ReviewResponse> update(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId, @RequestBody CartUpdateRequest cartUpdateRequest){
         cartService.update(userDto.getLoginId(), cartId, cartUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
-    //장바구니 삭제
+    @PreAuthorize("hasRole('ADMIN','USER')")
     @DeleteMapping("/{cartId}")
     public ResponseEntity<ReviewResponse> delete(@AuthenticationPrincipal UserDto userDto, @PathVariable("cartId") long cartId){
         cartService.delete(userDto.getLoginId(), cartId);

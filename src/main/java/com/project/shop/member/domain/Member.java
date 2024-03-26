@@ -1,5 +1,6 @@
 package com.project.shop.member.domain;
 
+import com.project.shop.global.config.security.domain.UserRole;
 import com.project.shop.member.dto.request.MemberUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,26 +27,26 @@ public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long userId;     //고객번호
+    private long userId;
     @Column(name = "loginId", nullable = false, unique = true)
-    private String loginId;     //아이디
+    private String loginId;
     @Column(name = "password", nullable = false)
-    private String password;    //비밀번호
+    private String password;
     @Column(name = "name", nullable = false)
-    private String name;    //이름
+    private String name;
     @Column(name = "phoneNum", nullable = false)
-    private String phoneNum;    //전화번호
+    private String phoneNum;
+
+    @Column(name = "userRole")
+    private String userRole;
 
     @Column(name = "insertDate", nullable = false)
-    private LocalDateTime insertDate;   //가입일
+    private LocalDateTime insertDate;
     @Column(name = "updateDate", nullable = false)
-    private LocalDateTime updateDate;   //수정일
+    private LocalDateTime updateDate;
     @Column(name = "deleteDate")
-    private LocalDateTime deleteDate;   //탈퇴일
+    private LocalDateTime deleteDate;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
-    private Set<Authority> authorities  = new HashSet<>();
 
     public Member updateMember(MemberUpdateRequest memberUpdateRequest){
         this.password = memberUpdateRequest.password();

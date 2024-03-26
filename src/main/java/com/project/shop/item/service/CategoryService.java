@@ -1,11 +1,8 @@
 package com.project.shop.item.service;
 
 import com.project.shop.item.domain.Category;
-import com.project.shop.item.domain.Item;
-import com.project.shop.item.domain.ItemImg;
 import com.project.shop.item.dto.request.CategoryRequest;
 import com.project.shop.item.dto.request.CategoryUpdateRequest;
-import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.response.CategoryResponse;
 import com.project.shop.item.repository.CategoryRepository;
 import com.project.shop.member.domain.Authority;
@@ -66,7 +63,7 @@ public class CategoryService {
     @Transactional
     public long create(String loginId, CategoryRequest categoryRequest){
 
-        authCheck(loginId);
+//        authCheck(loginId);
 
         //동일한 브랜드명, 카테고리명 조회
         if(categoryRepository.findByCategoryNameAndBrandName(categoryRequest.categoryName(),categoryRequest.brandName()).isPresent()){
@@ -121,7 +118,7 @@ public class CategoryService {
             throw new RuntimeException("ONLY_ADMIN");
     }
 
-    public Category getCategory(String categoryName, String brandName) {
+    public Category findCategoryByCategoryData(String categoryName, String brandName) {
         return categoryRepository
                 .findByCategoryNameAndBrandName(categoryName, brandName)
                 .orElseThrow(() -> new RuntimeException("NOT_FOUND_CATEGORY"));

@@ -1,6 +1,7 @@
 package com.project.shop.item.dto.request;
 
-import com.project.shop.item.domain.*;
+import com.project.shop.item.domain.Category;
+import com.project.shop.item.domain.Item;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
