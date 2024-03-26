@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Table(name = "option")
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Option {
 
     @Id
@@ -44,13 +44,6 @@ public class Option {
         this.size = size;
         this.insertDate = dateTime;
         this.updateDate = dateTime;
-    }
-
-    public List<Option> toOptionList(List<OptionRequest> optionRequestList, Item item){
-        return optionRequestList
-                .stream()
-                .map(OptionRequest -> OptionRequest.toEntity(item))
-                .toList();
     }
 
 

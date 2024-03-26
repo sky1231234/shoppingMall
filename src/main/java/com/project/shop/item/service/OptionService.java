@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.OptionDomain;
 import com.project.shop.item.dto.request.ItemRequest;
 import com.project.shop.item.dto.request.ItemUpdateRequest;
 import com.project.shop.item.dto.request.OptionRequest;
@@ -19,12 +20,12 @@ import java.util.stream.Collectors;
 public class OptionService {
 
     private final OptionRepository optionRepository;
-    private final Option option;
+    private final OptionDomain optionDomain;
 
     @Transactional
     public void createOption(List<OptionRequest> optionRequestList, Item item){
 
-        List<Option> optionList = option.toOptionList(optionRequestList, item);
+        List<Option> optionList = optionDomain.toOptionList(optionRequestList, item);
 
         optionRepository.saveAll(optionList);
     }

@@ -1,7 +1,5 @@
 package com.project.shop.item.domain;
 
-import com.project.shop.item.dto.request.ItemRequest;
-import com.project.shop.item.repository.ItemRepository;
 import lombok.*;
 
 import javax.persistence.*;
@@ -48,19 +46,6 @@ public class Item {
         this.updateDate = dateTime;
     }
 
-//    private final int MIN_ITEM_PRICE = 1;
-//    private final String ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE =  "상품의 가격은 1원 이상여야한다.";
-//
-//    public void validateItemPrice(int itemPrice){
-//        if(itemPrice < MIN_ITEM_PRICE){
-//            throw new IllegalArgumentException(ITEM_PRICE_IF_NOT_POSITIVE_MESSAGE);
-//        }
-//    }
-
-    public Item toItem(Category category, ItemRequest itemRequest) {
-        return itemRequest.toEntity(category);
-    }
-
     public void updateItemInfo(Category category, String itemName, int price, String explain){
         this.category = category;
         editItemMainInfo(itemName, explain);
@@ -75,6 +60,7 @@ public class Item {
     private void changePrice(int price){
         this.price = price;
     }
+
 
 }
 

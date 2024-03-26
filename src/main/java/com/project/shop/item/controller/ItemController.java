@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping ("/users/items")
+@RequestMapping ("/items")
 @Tag( name = "ItemController", description = "[사용자] 상품 API")
 @RequiredArgsConstructor
 @RestController
@@ -30,8 +30,6 @@ public class ItemController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponse> detailFind(@PathVariable("itemId") long itemId){
-        //여기 들어오기전에 admin 체크한다 여기서
-
         return ResponseEntity.ok()
                 .body(itemService.findItemDetailInfo(itemId));
     }

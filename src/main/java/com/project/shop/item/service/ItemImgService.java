@@ -1,5 +1,6 @@
 package com.project.shop.item.service;
 
+import com.project.shop.item.domain.ItemImgDomain;
 import com.project.shop.item.dto.request.ImgRequest;
 import com.project.shop.item.dto.request.ImgUpdateRequest;
 import com.project.shop.item.repository.ItemImgRepository;
@@ -16,12 +17,12 @@ import java.util.List;
 public class ItemImgService {
 
     private final ItemImgRepository itemImgRepository;
-    private final ItemImg itemImg;
+    private final ItemImgDomain itemImgDomain;
 
     @Transactional
     public void createItemImg(List<ImgRequest> itemImgRequestList, Item item){
 
-        List<ItemImg> itemImgList = itemImg.toItemImgList(itemImgRequestList, item);
+        List<ItemImg> itemImgList = itemImgDomain.toItemImgList(itemImgRequestList, item);
 
         itemImgRepository.saveAll(itemImgList);
     }
@@ -44,7 +45,7 @@ public class ItemImgService {
 
     private void createItemImgForUpdate(Item item, List<ImgUpdateRequest> imgUpdateRequestList){
 
-        List<ItemImg> itemImgUpdateList = itemImg.toItemImgListForUpdate(imgUpdateRequestList, item);
+        List<ItemImg> itemImgUpdateList = itemImgDomain.toItemImgListForUpdate(imgUpdateRequestList, item);
 
         itemImgRepository.saveAll(itemImgUpdateList);
     }

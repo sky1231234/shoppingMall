@@ -1,19 +1,20 @@
 package com.project.shop.ordersheet.domain;
 
 import com.project.shop.item.domain.Item;
-import com.project.shop.order.domain.Order;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Component
 public class OrderSheetItem {
 
-    private Item item;     //상품
-    private long itemOptionId;     //옵션번호
-    private int orderQuantity;     //주문 수량
+    private Item item;
+    private long itemOptionId;
+    private int orderQuantity;
 
     private final String ORDER_QUANTITY_IF_NOT_POSITIVE_MESSAGE =  "상품의 주문 수량은 1개 이상이여야한다.";
 

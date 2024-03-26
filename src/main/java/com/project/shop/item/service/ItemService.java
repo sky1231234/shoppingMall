@@ -17,8 +17,9 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    private final Item item;
-    private final ItemImg itemImg;
+
+    private final ItemDomain itemDomain;
+    private final ItemImgDomain itemImgDomain;
     private final OptionData optionData;
 
     private final CategoryService categoryService;
@@ -30,7 +31,7 @@ public class ItemService {
         return itemRepository.findAll().stream()
                 .map(item -> {
 
-                    ItemImgResponse thumbnailItemImg = itemImg.getMainImgByItem(item);
+                    ItemImgResponse thumbnailItemImg = itemImgDomain.getMainImgByItem(item);
 
                     return ItemListResponse.of(item, thumbnailItemImg);
                     }
@@ -43,9 +44,9 @@ public class ItemService {
 
         Item item = getItemById(itemId);
 
-        ItemImgResponse ItemMainImgResponses = itemImg.getMainImgByItem(item);
+        ItemImgResponse ItemMainImgResponses = itemImgDomain.getMainImgByItem(item);
 
-        List<ItemImgResponse> itemImgResponses = itemImg.getItemImgListByItemType(item, ItemImgType.N);
+        List<ItemImgResponse> itemImgResponses = itemImgDomain.getItemImgListByItemType(item, ItemImgType.N);
 
         OptionData optionDataResponse = optionData.ofOptionDataByOption(item);
 
@@ -69,7 +70,7 @@ public class ItemService {
                 itemRequest.categoryRequest().categoryName(),
                 itemRequest.categoryRequest().brandName());
 
-        Item toItem = item.toItem(category, itemRequest);
+        Item toItem = itemDomain.toItem(category, itemRequest);
 
         return saveItemAndImgAndOption(toItem, itemRequest.itemImgRequestList(), itemRequest.optionRequestList());
     }

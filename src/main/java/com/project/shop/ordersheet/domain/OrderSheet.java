@@ -1,12 +1,13 @@
 package com.project.shop.ordersheet.domain;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Component
 public class OrderSheet {
 
   private List<OrderSheetItem> itemList;
